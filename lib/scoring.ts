@@ -103,7 +103,3 @@ export async function scoreForm(formId: string, answers: Record<string, any>): P
     color,
   };
 }
-
-    suggestedAction,
-  };
-}
