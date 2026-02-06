@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { prisma } from '@/lib/prisma';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,22 +14,32 @@ export async function POST(req: NextRequest) {
     const userId = (session.user as any).id;
     const companyId = (session.user as any).companyId;
 
-    const lead = await prisma.lead.findFirst({
-      where: { id: leadId, companyId },
-    });
+    const supabase = createAdminClient();
+
+    // Verify lead belongs to company
+    const { data: lead } = await supabase
+      .from('leads_leads')
+      .select('*')
+      .eq('id', leadId)
+      .eq('company_id', companyId)
+      .single();
 
     if (!lead) {
       return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
     }
 
-    const note = await prisma.note.create({
-      data: {
-        leadId,
-        userId,
+    // Create note (assuming you have a notes table)
+    const { data: note, error } = await supabase
+      .from('leads_notes')
+      .insert({
+        lead_id: leadId,
+        user_id: userId,
         content,
-      },
-      include: { user: true },
-    });
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
 
     return NextResponse.json(note);
   } catch (e) {
