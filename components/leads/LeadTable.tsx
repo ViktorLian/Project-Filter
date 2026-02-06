@@ -1,0 +1,82 @@
+import { Lead, Score, LeadStatus } from '@prisma/client';
+import Link from 'next/link';
+import LeadStatusBadge from './LeadStatusBadge';
+import LeadScoreBadge from './LeadScoreBadge';
+
+type LeadWithScore = Lead & { score: Score | null };
+
+export default function LeadTable({ leads }: { leads: LeadWithScore[] }) {
+  return (
+    <div className="rounded-lg border bg-white shadow-sm overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-slate-50 border-b">
+            <tr>
+              <th className="px-4 py-3 text-left font-medium text-slate-600">
+                Customer
+              </th>
+              <th className="px-4 py-3 text-left font-medium text-slate-600">
+                Status
+              </th>
+              <th className="px-4 py-3 text-left font-medium text-slate-600">
+                Score
+              </th>
+              <th className="px-4 py-3 text-left font-medium text-slate-600">
+                Created
+              </th>
+              <th className="px-4 py-3 text-right font-medium text-slate-600">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y">
+            {leads.length === 0 && (
+              <tr>
+                <td colSpan={5} className="px-4 py-12 text-center text-slate-400">
+                  No leads yet. Share your intake form to start collecting
+                  project inquiries.
+                </td>
+              </tr>
+            )}
+            {leads.map((lead) => (
+              <tr key={lead.id} className="hover:bg-slate-50">
+                <td className="px-4 py-3">
+                  <div className="font-medium text-slate-900">
+                    {lead.customerName || 'Unknown'}
+                  </div>
+                  <div className="text-xs text-slate-500">
+                    {lead.customerEmail}
+                  </div>
+                </td>
+                <td className="px-4 py-3">
+                  <LeadStatusBadge status={lead.status} />
+                </td>
+                <td className="px-4 py-3">
+                  {lead.score ? (
+                    <LeadScoreBadge
+                      riskLevel={lead.score.riskLevel}
+                      score={lead.score.totalScore}
+                    />
+                  ) : (
+                    <span className="text-xs text-slate-400">Not scored</span>
+                  )}
+                </td>
+                <td className="px-4 py-3 text-slate-600">
+                  {new Date(lead.createdAt).toLocaleDateString()}
+                </td>
+                <td className="px-4 py-3 text-right">
+                  <Link
+                    href={`/dashboard/leads/${lead.id}`}
+                    className="text-sm text-blue-600 hover:underline font-medium"
+                  >
+                    View
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
