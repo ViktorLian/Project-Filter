@@ -73,10 +73,8 @@ export async function GET(req: NextRequest) {
       .order('created_at', { ascending: false });
 
     if (error) throw error;
-      take: 100,
-    });
 
-    return NextResponse.json(leads);
+    return NextResponse.json({ leads });
   } catch (e) {
     console.error('[GET LEADS ERROR]', e);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
