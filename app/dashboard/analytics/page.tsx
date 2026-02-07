@@ -128,15 +128,15 @@ export default async function AnalyticsPage() {
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
             <p className="text-muted-foreground">
-              📊 You&apos;ve collected <strong>{totalLeads}</strong> project
+              You&apos;ve collected <strong>{totalLeads}</strong> project
               inquiries
             </p>
             <p className="text-muted-foreground">
-              ✅ <strong>{acceptanceRate}%</strong> acceptance rate shows{' '}
+              <strong>{acceptanceRate}%</strong> acceptance rate shows{' '}
               {acceptanceRate > 50 ? 'strong' : 'good'} lead quality
             </p>
             <p className="text-muted-foreground">
-              ⭐ Average qualification score: <strong>{avgScore}</strong>
+              Average qualification score: <strong>{avgScore}</strong>
             </p>
           </CardContent>
         </Card>
