@@ -1,4 +1,5 @@
-import { LeadStatus } from '@prisma/client';
+// Define LeadStatus locally since we removed Prisma
+type LeadStatus = 'NEW' | 'REVIEWED' | 'ACCEPTED' | 'REJECTED' | 'IN_PROGRESS' | 'ARCHIVED';
 
 const statusConfig: Record<
   LeadStatus,

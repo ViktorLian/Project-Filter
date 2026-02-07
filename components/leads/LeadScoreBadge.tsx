@@ -1,4 +1,5 @@
-import { RiskLevel } from '@prisma/client';
+// Define RiskLevel locally since we removed Prisma
+type RiskLevel = 'LOW' | 'MEDIUM' | 'HIGH';
 
 const riskConfig: Record<RiskLevel, { label: string; className: string }> = {
   LOW: { label: 'Low Risk', className: 'bg-emerald-100 text-emerald-800' },

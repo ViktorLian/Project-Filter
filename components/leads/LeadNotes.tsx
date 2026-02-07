@@ -5,7 +5,21 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Note, User } from '@prisma/client';
+
+// Define types locally since we removed Prisma
+type User = {
+  id: string;
+  name: string | null;
+  email: string;
+};
+
+type Note = {
+  id: string;
+  leadId: string;
+  userId: string;
+  content: string;
+  createdAt: Date;
+};
 
 type NoteWithUser = Note & { user: User };
 

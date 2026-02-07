@@ -1,7 +1,30 @@
-import { Lead, Score, LeadStatus } from '@prisma/client';
 import Link from 'next/link';
 import LeadStatusBadge from './LeadStatusBadge';
 import LeadScoreBadge from './LeadScoreBadge';
+
+// Define types locally since we removed Prisma
+type LeadStatus = 'NEW' | 'REVIEWED' | 'ACCEPTED' | 'REJECTED' | 'IN_PROGRESS' | 'ARCHIVED';
+type RiskLevel = 'LOW' | 'MEDIUM' | 'HIGH';
+
+type Lead = {
+  id: string;
+  formId: string;
+  customerName: string | null;
+  customerEmail: string | null;
+  customerPhone: string | null;
+  status: LeadStatus;
+  createdAt: Date;
+};
+
+type Score = {
+  id: string;
+  leadId: string;
+  totalScore: number;
+  maxScore: number;
+  riskLevel: RiskLevel;
+  details: any;
+  createdAt: Date;
+};
 
 type LeadWithScore = Lead & { score: Score | null };
 
