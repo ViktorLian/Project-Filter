@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, FileText, BarChart3, Settings } from 'lucide-react';
+import { LayoutDashboard, FileText, BarChart3, Settings, DollarSign, Receipt, Users } from 'lucide-react';
 
 const navItems = [
   {
@@ -20,6 +20,21 @@ const navItems = [
     href: '/dashboard/forms',
     label: 'Forms',
     icon: FileText,
+  },
+  {
+    href: '/dashboard/cashflow',
+    label: 'Cash Flow',
+    icon: DollarSign,
+  },
+  {
+    href: '/dashboard/invoices',
+    label: 'Invoices',
+    icon: Receipt,
+  },
+  {
+    href: '/dashboard/invoices/customers',
+    label: 'Customers',
+    icon: Users,
   },
   {
     href: '/dashboard/analytics',

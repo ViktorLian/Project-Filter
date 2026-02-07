@@ -213,7 +213,7 @@ export default function HomePage() {
             <div className="flex gap-8 text-sm text-slate-600">
               <Link href="/privacy" className="hover:text-slate-900">Privacy</Link>
               <Link href="/terms" className="hover:text-slate-900">Terms</Link>
-              <a href="mailto:hello@projectfilter.com" className="hover:text-slate-900">Contact</a>
+              <a href="mailto:Flowpilot@hotmail.com" className="hover:text-slate-900">Contact</a>
             </div>
             <p className="text-sm text-slate-500">
               © 2026 ProjectFilter. All rights reserved.
