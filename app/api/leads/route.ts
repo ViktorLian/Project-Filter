@@ -49,6 +49,26 @@ export async function POST(req: NextRequest) {
 
     if (leadError) throw leadError;
 
+    // Trigger Zapier webhook for new lead
+    try {
+      const webhookUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/zapier`;
+      const webhookSecret = process.env.ZAPIER_WEBHOOK_SECRET;
+      
+      if (webhookSecret) {
+        await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${webhookSecret}`,
+          },
+          body: JSON.stringify({ leadId: lead.id }),
+        });
+      }
+    } catch (webhookError) {
+      // Don't fail lead creation if webhook fails
+      console.error('[ZAPIER WEBHOOK TRIGGER ERROR]', webhookError);
+    }
+
     return NextResponse.json({ success: true, leadId: lead.id });
   } catch (e) {
     console.error('[LEAD SUBMISSION ERROR]', e);
