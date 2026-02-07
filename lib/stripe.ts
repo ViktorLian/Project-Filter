@@ -34,8 +34,8 @@ export const SUBSCRIPTION_PLANS = {
       'Inntil 500 leads per måned',
       'Opptil 20 forms',
       'Avansert analytics',
-      'Zapier integrasjon',
-      'API tilgang',
+      'Webhooks og API tilgang',
+      'Prioritert support',
       'E-post notifikasjoner'
     ]
   },
@@ -48,13 +48,12 @@ export const SUBSCRIPTION_PLANS = {
       forms: 999999
     },
     features: [
-      'Ubegrensede leads',
-      'Ubegrensede forms',
-      'Avansert scoring og AI',
+      'Ubegrensede leads og forms',
+      'Avansert AI scoring',
       'Full API tilgang',
       'Custom integrasjoner',
-      'Dedikert support 24/7',
-      'Onboarding hjelp'
+      'White-label muligheter',
+      'Dedikert support'
     ]
   }
 }
