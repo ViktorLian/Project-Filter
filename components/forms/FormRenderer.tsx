@@ -1,11 +1,35 @@
 'use client';
 
 import { useState } from 'react';
-import { Question, QuestionType } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+
+// Define types locally since we removed Prisma
+type QuestionType = 'TEXT' | 'EMAIL' | 'PHONE' | 'ADDRESS' | 'NUMBER' | 'DATE' | 'DROPDOWN' | 'MULTIPLE_CHOICE' | 'FILE' | 'TEXTAREA';
+
+type Question = {
+  id: string;
+  label: string;
+  type: QuestionType;
+  required: boolean;
+  options: string[];
+  order: number;
+};
+
+const QuestionType = {
+  TEXT: 'TEXT' as const,
+  EMAIL: 'EMAIL' as const,
+  PHONE: 'PHONE' as const,
+  ADDRESS: 'ADDRESS' as const,
+  NUMBER: 'NUMBER' as const,
+  DATE: 'DATE' as const,
+  DROPDOWN: 'DROPDOWN' as const,
+  MULTIPLE_CHOICE: 'MULTIPLE_CHOICE' as const,
+  FILE: 'FILE' as const,
+  TEXTAREA: 'TEXTAREA' as const,
+};
 
 export default function FormRenderer({
   formId,
