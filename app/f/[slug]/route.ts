@@ -104,7 +104,7 @@ export async function GET(
             <label>${label}</label>
             <select name="${q.id}" ${required}>
               <option value="">Select...</option>
-              ${q.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+              ${q.options.map((opt: any) => `<option value="${opt}">${opt}</option>`).join('')}
             </select>
           </div>`;
         } else {

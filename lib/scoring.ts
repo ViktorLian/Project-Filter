@@ -68,11 +68,11 @@ export async function scoreForm(formId: string, answers: Record<string, any>): P
           break;
 
         case 'greater':
-          matched = Number(answer) > (rule.value || 0);
+          matched = Number(answer) > Number(rule.value || 0);
           break;
 
         case 'less':
-          matched = Number(answer) < (rule.value || Infinity);
+          matched = Number(answer) < Number(rule.value || Infinity);
           break;
       }
     }
