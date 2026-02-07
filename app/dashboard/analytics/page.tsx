@@ -97,7 +97,7 @@ export default async function AnalyticsPage() {
           <CardContent className="space-y-3">
             {['NEW', 'REVIEWED', 'ACCEPTED', 'REJECTED', 'IN_PROGRESS', 'ARCHIVED'].map(
               (status) => {
-                const count = leads.filter((l) => l.status === status).length;
+                const count = leads?.filter((l) => l.status === status).length || 0;
                 const percentage = totalLeads
                   ? Math.round((count / totalLeads) * 100)
                   : 0;
