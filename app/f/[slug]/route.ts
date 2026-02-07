@@ -90,7 +90,7 @@ export async function GET(
     <div id="message"></div>
     
     <form id="leadForm">
-      ${form.questions.sort((a, b) => a.order - b.order).map(q => {
+      ${form.questions.sort((a: any, b: any) => a.order - b.order).map((q: any) => {
         const required = q.required ? 'required' : '';
         const label = q.label + (q.required ? ' *' : '');
         
