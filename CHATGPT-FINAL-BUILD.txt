@@ -1,0 +1,260 @@
+===============================================
+MEGA-MELDING TIL CHATGPT - BYGG ALT PÅ ÉN GANG
+===============================================
+
+Du har bygget solid fundament. Nå skal du fullføre hele produktet.
+
+EKSISTERENDE KODE:
+- ProjectFilter (leads, forms, analytics) ✅
+- FlowPilot CashFlow API ✅
+- FlowPilot Invoice API ✅  
+- Dashboard UI (cashflow, invoices, customers) ✅
+
+BYGG DISSE NYE FUNKSJONENE (ALL CODE I ÉN RESPONS):
+
+===============================================
+1. DASHBOARD OVERVIEW PAGE (app/dashboard/page.tsx)
+===============================================
+Lag en oversiktsside som viser:
+- Health status badge (GREEN/YELLOW/RED fra cashflow)
+- 4 stat cards:
+  - Total leads this month
+  - Total income (cashflow)
+  - Total expenses (cashflow)
+  - Outstanding invoices (status != PAID)
+- Recent activity feed (siste 5 leads + siste 5 invoices)
+- Quick actions: "Add Transaction", "Create Invoice", "View Reports"
+
+Bruk samme design som leads-siden. Fetch data fra:
+- GET /api/leads
+- GET /api/cashflow/health
+- GET /api/invoices
+
+===============================================
+2. PDF GENERATION FOR INVOICES
+===============================================
+Lag PDF-generering med @react-pdf/renderer:
+
+FILE: app/api/invoices/[id]/pdf/route.ts
+- GET endpoint som genererer PDF
+- Hent invoice med customer info
+- Generer profesjonell PDF med:
+  - Company logo/name
+  - Invoice number, date, due date
+  - Customer info
+  - Line items (description, amount)
+  - Total amount
+  - Payment instructions
+- Return PDF as download
+
+FILE: components/invoices/InvoicePDF.tsx
+- React PDF component med layout
+- Bruk norsk format (kr, dato)
+
+Oppdater app/dashboard/invoices/page.tsx:
+- Legg til "Download PDF" knapp per faktura
+- Link til /api/invoices/[id]/pdf
+
+===============================================
+3. EMAIL SENDING (RESEND.COM)
+===============================================
+Lag email-sending med Resend:
+
+FILE: app/api/invoices/[id]/send/route.ts
+- POST endpoint som sender faktura på email
+- Hent invoice med customer email
+- Send email med:
+  - Subject: "Faktura #[number] fra [company]"
+  - Body: Profesjonell HTML email
+  - Attachment: PDF faktura
+- Oppdater invoice status til SENT
+
+FILE: lib/email.ts
+- Email templates (invoice, reminder)
+- Send function med Resend
+
+Environment variables:
+- RESEND_API_KEY
+
+Oppdater app/dashboard/invoices/page.tsx:
+- Legg til "Send Email" knapp
+- Vis success melding
+
+===============================================
+4. INVOICE REMINDERS (AUTOMATED)
+===============================================
+FILE: app/api/cron/invoice-reminders/route.ts
+- Cron job (kjøres daglig via Vercel)
+- Finn alle invoices med status SENT
+- Sjekk due_date - hvis forfalt, sett status OVERDUE
+- Send reminder email til customer
+- Logg aktivitet
+
+Vercel config (vercel.json):
+```json
+{
+  "crons": [{
+    "path": "/api/cron/invoice-reminders",
+    "schedule": "0 9 * * *"
+  }]
+}
+```
+
+===============================================
+5. DATE RANGE FILTERS
+===============================================
+Oppdater disse sidene med date range filter:
+
+app/dashboard/cashflow/page.tsx:
+- Dropdown: "Last 7 days", "Last 30 days", "Last 90 days", "All time"
+- Filter transactions basert på occurred_at
+
+app/dashboard/invoices/page.tsx:
+- Samme filter basert på issued_date
+
+app/dashboard/leads/page.tsx:
+- Samme filter basert på created_at
+
+===============================================
+6. EXPORT FUNCTIONALITY
+===============================================
+FILE: app/api/cashflow/export/route.ts
+- GET endpoint som returnerer CSV
+- All transactions med kolonne: date, type, category, amount, description
+
+FILE: app/api/invoices/export/route.ts
+- GET endpoint som returnerer CSV
+- All invoices med kolonne: number, customer, amount, status, due_date
+
+Oppdater UI:
+- Legg til "Export CSV" knapp på cashflow og invoices pages
+
+===============================================
+7. LEAD TO INVOICE CONVERSION
+===============================================
+FILE: app/dashboard/leads/[id]/convert/page.tsx
+- Form for å konvertere lead til invoice
+- Pre-fill customer info fra lead
+- Velg customer eller opprett ny
+- Sett amount, due_date, description
+- POST til /api/leads/[id]/convert
+
+FILE: app/api/leads/[id]/convert/route.ts
+- POST endpoint
+- Opprett customer hvis ny
+- Opprett invoice linked til lead
+- Return success
+
+Oppdater app/dashboard/leads/page.tsx:
+- Legg til "Convert to Invoice" knapp per lead
+
+===============================================
+8. INVOICE STATUS MANAGEMENT
+===============================================
+Oppdater app/dashboard/invoices/page.tsx:
+- Status badges med farger (DRAFT=gray, SENT=blue, PAID=green, OVERDUE=red)
+- Inline status change: dropdown per invoice
+- PUT /api/invoices/[id] for å oppdatere status
+
+FILE: app/api/invoices/[id]/route.ts
+- PUT endpoint for å oppdatere status
+- Validation: kun DRAFT -> SENT -> PAID / OVERDUE
+
+===============================================
+9. CASHFLOW CATEGORIES
+===============================================
+Pre-definerte kategorier for bedre tracking:
+
+IN categories:
+- Kundebetalinger
+- Investering
+- Lån
+- Annet
+
+OUT categories:
+- Lønn
+- Materialer
+- Verktøy
+- Markedsføring
+- Kontorleie
+- Forsikring
+- Annet
+
+Oppdater app/dashboard/cashflow/page.tsx:
+- Replace text input med dropdown av kategorier
+- Vis category breakdown chart (optional - simple bars)
+
+===============================================
+10. ANALYTICS ENHANCEMENTS
+===============================================
+Oppdater app/dashboard/analytics/page.tsx:
+- Legg til FlowPilot metrics:
+  - Monthly income/expense trend (line chart)
+  - Category breakdown (pie chart)
+  - Invoice status distribution
+  - Average invoice value
+  - Payment cycle (days from sent to paid)
+
+Bruk recharts for visualisering (already installed).
+
+===============================================
+VIKTIG REGLER:
+===============================================
+1. IKKE endre eksisterende ProjectFilter kode
+2. Alle nye API routes skal bruke createAdminClient()
+3. Error handling: try/catch med console.error
+4. TypeScript: definer types lokalt i hver fil
+5. Tailwind CSS: samme design som eksisterende sider
+6. Norsk format: "kr" for beløp, DD.MM.YYYY for dato
+7. Environment variables: RESEND_API_KEY
+8. Test at API routes fungerer med getServerSession
+9. Mobile responsive: bruk grid og flexbox
+10. Ingen emojis i production code
+
+===============================================
+DEPENDENCIES (LEGG TIL I package.json):
+===============================================
+@react-pdf/renderer (PDF generation)
+@react-email/components (email templates)
+resend (email sending)
+date-fns (date formatting)
+
+===============================================
+EKSEMPEL FILE STRUCTURE:
+===============================================
+app/
+  api/
+    invoices/
+      [id]/
+        pdf/route.ts (PDF generation)
+        send/route.ts (email sending)
+        route.ts (PUT status update)
+      export/route.ts (CSV export)
+    cashflow/
+      export/route.ts (CSV export)
+    leads/
+      [id]/
+        convert/route.ts (lead to invoice)
+    cron/
+      invoice-reminders/route.ts
+  dashboard/
+    page.tsx (overview - NEW)
+    leads/
+      [id]/
+        convert/page.tsx (NEW)
+lib/
+  email.ts (NEW)
+components/
+  invoices/
+    InvoicePDF.tsx (NEW)
+
+===============================================
+DELIVER ALL CODE IN ONE RESPONSE
+===============================================
+Gi meg alle filer i én respons. Format:
+```typescript
+// FILE: path/to/file.ts
+code here
+```
+
+Begynn nå. Bygg alt jeg har beskrevet.
