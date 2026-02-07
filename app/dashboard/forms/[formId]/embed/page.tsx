@@ -1,22 +1,20 @@
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import { createAdminClient } from '@/lib/supabase/admin'
+'use client'
+
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Code, Copy } from 'lucide-react'
+import { Copy } from 'lucide-react'
 
-export default async function FormEmbedPage({ params }: { params: { formId: string } }) {
-  const session = await getServerSession(authOptions)
-  if (!session) return null
+export default function FormEmbedPage({ params }: { params: { formId: string } }) {
+  const [form, setForm] = useState<any>(null)
 
-  const supabase = createAdminClient()
-  const { data: form } = await supabase
-    .from('forms')
-    .select('*')
-    .eq('id', params.formId)
-    .single()
+  useEffect(() => {
+    fetch(`/api/forms/${params.formId}`)
+      .then(r => r.json())
+      .then(data => setForm(data))
+  }, [params.formId])
 
-  if (!form) return <div>Form not found</div>
+  if (!form) return <div>Loading...</div>
 
   const embedCode = `<script src="${process.env.NEXT_PUBLIC_APP_URL}/embed/${form.id}.js"></script>
 <div id="projectfilter-form-${form.id}"></div>`
