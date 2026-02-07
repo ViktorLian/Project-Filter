@@ -3,7 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { LeadStatus } from '@prisma/client';
+
+// Define LeadStatus locally since we removed Prisma
+type LeadStatus = 'NEW' | 'REVIEWED' | 'ACCEPTED' | 'REJECTED';
 
 export default function LeadActions({
   leadId,
