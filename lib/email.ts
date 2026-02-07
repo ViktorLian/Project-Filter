@@ -40,3 +40,35 @@ export async function sendLeadNotification(lead: {
     console.error('Failed to send email:', error)
   }
 }
+
+export async function sendInvoiceEmail(
+  to: string,
+  subject: string,
+  html: string,
+  pdfBuffer: Buffer
+) {
+  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    console.log('SMTP not configured - skipping invoice email')
+    return
+  }
+
+  try {
+    await transporter.sendMail({
+      from: process.env.SMTP_USER,
+      to,
+      subject,
+      html,
+      attachments: [
+        {
+          filename: 'invoice.pdf',
+          content: pdfBuffer,
+          contentType: 'application/pdf'
+        }
+      ]
+    })
+    console.log('Invoice email sent to', to)
+  } catch (error) {
+    console.error('Failed to send invoice email:', error)
+    throw error
+  }
+}
