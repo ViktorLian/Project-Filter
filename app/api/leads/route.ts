@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-// Prisma removed - using Supabase client
+import { createAdminClient } from '@/lib/supabase/admin';
 import { publicLeadSubmissionSchema } from '@/lib/validation';
-import { runLeadScoringAndAutomation } from '@/lib/automation';
-import { notifyNewLead } from '@/lib/notifications';
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,44 +19,37 @@ export async function POST(req: NextRequest) {
     const { formId, answers, customerName, customerEmail, customerPhone } =
       parsed.data;
 
-    const form = await prisma.form.findUnique({
-      where: { id: formId },
-      include: {
-        company: { include: { users: true } },
-        questions: true,
-      },
-    });
+    const supabase = createAdminClient();
 
-    if (!form || !form.isActive) {
+    // Get form with company info
+    const { data: form, error: formError } = await supabase
+      .from('leads_forms')
+      .select('*, company:leads_companies(*)')
+      .eq('id', formId)
+      .eq('is_active', true)
+      .single();
+
+    if (formError || !form) {
       return NextResponse.json({ error: 'Form not found' }, { status: 404 });
     }
 
-    const lead = await prisma.lead.create({
-      data: {
-        companyId: form.companyId,
-        formId: form.id,
-        customerName: customerName ?? null,
-        customerEmail: customerEmail ?? null,
-        customerPhone: customerPhone ?? null,
-        answers: {
-          create: answers.map((a) => ({
-            questionId: a.questionId,
-            value: a.value,
-          })),
-        },
-      },
-    });
+    // Create lead
+    const { data: lead, error: leadError } = await supabase
+      .from('leads_leads')
+      .insert({
+        company_id: form.company_id,
+        form_id: form.id,
+        customer_name: customerName ?? null,
+        customer_email: customerEmail ?? null,
+        customer_phone: customerPhone ?? null,
+        answers: answers,
+      })
+      .select()
+      .single();
 
-    const updatedLead = await runLeadScoringAndAutomation(lead.id);
+    if (leadError) throw leadError;
 
-    const owners = form.company.users.filter((u) => u.role === 'OWNER');
-    await Promise.all(
-      owners.map((owner) =>
-        notifyNewLead(owner.email, updatedLead.id, form.company.name)
-      )
-    );
-
-    return NextResponse.json({ success: true, leadId: updatedLead.id });
+    return NextResponse.json({ success: true, leadId: lead.id });
   } catch (e) {
     console.error('[LEAD SUBMISSION ERROR]', e);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
@@ -73,11 +64,15 @@ export async function GET(req: NextRequest) {
     }
 
     const companyId = (session.user as any).companyId;
+    const supabase = createAdminClient();
 
-    const leads = await prisma.lead.findMany({
-      where: { companyId },
-      include: { score: true, form: true },
-      orderBy: { createdAt: 'desc' },
+    const { data: leads, error } = await supabase
+      .from('leads_leads')
+      .select('*, form:leads_forms(*)')
+      .eq('company_id', companyId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
       take: 100,
     });
 
