@@ -1,0 +1,464 @@
+===============================================
+PROJEKTFILTER KODEBASE FOR CHATGPT
+===============================================
+
+SI TIL CHATGPT:
+"Bygg CashFlow og Invoice moduler som SEPARATE filer. IKKE endre noe i ProjectFilter koden. 
+Bruk samme mønster: Supabase admin client, Next.js API routes, NextAuth session. 
+Lag NYE tabeller i databasen (ikke endre leads tabellene)."
+
+===============================================
+1. DATABASE STRUKTUR (supabase-schema.sql)
+===============================================
+
+-- Leads Database Schema for Supabase
+-- Run this in Supabase SQL Editor
+
+-- Enable UUID extension
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+-- Companies table
+CREATE TABLE IF NOT EXISTS public.companies (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  name TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Users table
+CREATE TABLE IF NOT EXISTS public.users (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL UNIQUE,
+  password TEXT NOT NULL,
+  role TEXT DEFAULT 'USER' CHECK (role IN ('USER', 'OWNER', 'ADMIN')),
+  company_id UUID REFERENCES public.companies(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Leads table
+CREATE TABLE IF NOT EXISTS public.leads (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  company_id UUID REFERENCES public.companies(id) ON DELETE CASCADE NOT NULL,
+  name TEXT NOT NULL,
+  email TEXT,
+  phone TEXT,
+  company TEXT,
+  project_type TEXT,
+  budget TEXT,
+  timeline TEXT,
+  status TEXT DEFAULT 'NEW' CHECK (status IN ('NEW', 'CONTACTED', 'QUALIFIED', 'PROPOSAL', 'WON', 'LOST')),
+  risk_level TEXT,
+  score INTEGER,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Notes table
+CREATE TABLE IF NOT EXISTS public.notes (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  lead_id UUID REFERENCES public.leads(id) ON DELETE CASCADE NOT NULL,
+  user_id UUID REFERENCES public.users(id) ON DELETE CASCADE NOT NULL,
+  content TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Forms table
+CREATE TABLE IF NOT EXISTS public.forms (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  company_id UUID REFERENCES public.companies(id) ON DELETE CASCADE NOT NULL,
+  name TEXT NOT NULL,
+  description TEXT,
+  slug TEXT NOT NULL,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(company_id, slug)
+);
+
+-- Questions table
+CREATE TABLE IF NOT EXISTS public.questions (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  form_id UUID REFERENCES public.forms(id) ON DELETE CASCADE NOT NULL,
+  question_text TEXT NOT NULL,
+  question_type TEXT NOT NULL CHECK (question_type IN ('text', 'textarea', 'number', 'select', 'radio', 'checkbox')),
+  options JSONB,
+  required BOOLEAN DEFAULT false,
+  order_index INTEGER NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Form submissions (store form-lead relationship)
+CREATE TABLE IF NOT EXISTS public.form_submissions (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  form_id UUID REFERENCES public.forms(id) ON DELETE CASCADE NOT NULL,
+  lead_id UUID REFERENCES public.leads(id) ON DELETE CASCADE NOT NULL,
+  answers JSONB NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Create indexes
+CREATE INDEX IF NOT EXISTS idx_users_email ON public.users(email);
+CREATE INDEX IF NOT EXISTS idx_users_company_id ON public.users(company_id);
+CREATE INDEX IF NOT EXISTS idx_leads_company_id ON public.leads(company_id);
+CREATE INDEX IF NOT EXISTS idx_leads_status ON public.leads(status);
+CREATE INDEX IF NOT EXISTS idx_notes_lead_id ON public.notes(lead_id);
+CREATE INDEX IF NOT EXISTS idx_forms_company_id ON public.forms(company_id);
+CREATE INDEX IF NOT EXISTS idx_forms_slug ON public.forms(slug);
+CREATE INDEX IF NOT EXISTS idx_questions_form_id ON public.questions(form_id);
+CREATE INDEX IF NOT EXISTS idx_form_submissions_form_id ON public.form_submissions(form_id);
+CREATE INDEX IF NOT EXISTS idx_form_submissions_lead_id ON public.form_submissions(lead_id);
+
+-- Enable RLS
+ALTER TABLE public.companies ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.leads ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.notes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.forms ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.questions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.form_submissions ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies
+DROP POLICY IF EXISTS "Users can view own company" ON public.companies;
+CREATE POLICY "Users can view own company" ON public.companies
+  FOR SELECT USING (
+    id IN (SELECT company_id FROM public.users WHERE id = auth.uid())
+  );
+
+DROP POLICY IF EXISTS "Users can view own profile" ON public.users;
+CREATE POLICY "Users can view own profile" ON public.users
+  FOR SELECT USING (id = auth.uid());
+
+DROP POLICY IF EXISTS "Users can view company users" ON public.users;
+CREATE POLICY "Users can view company users" ON public.users
+  FOR SELECT USING (
+    company_id IN (SELECT company_id FROM public.users WHERE id = auth.uid())
+  );
+
+DROP POLICY IF EXISTS "Users can view company leads" ON public.leads;
+CREATE POLICY "Users can view company leads" ON public.leads
+  FOR SELECT USING (
+    company_id IN (SELECT company_id FROM public.users WHERE id = auth.uid())
+  );
+
+DROP POLICY IF EXISTS "Users can create company leads" ON public.leads;
+CREATE POLICY "Users can create company leads" ON public.leads
+  FOR INSERT WITH CHECK (
+    company_id IN (SELECT company_id FROM public.users WHERE id = auth.uid())
+  );
+
+DROP POLICY IF EXISTS "Users can update company leads" ON public.leads;
+CREATE POLICY "Users can update company leads" ON public.leads
+  FOR UPDATE USING (
+    company_id IN (SELECT company_id FROM public.users WHERE id = auth.uid())
+  );
+
+DROP POLICY IF EXISTS "Users can view lead notes" ON public.notes;
+CREATE POLICY "Users can view lead notes" ON public.notes
+  FOR SELECT USING (
+    lead_id IN (
+      SELECT id FROM public.leads 
+      WHERE company_id IN (SELECT company_id FROM public.users WHERE id = auth.uid())
+    )
+  );
+
+DROP POLICY IF EXISTS "Users can create notes" ON public.notes;
+CREATE POLICY "Users can create notes" ON public.notes
+  FOR INSERT WITH CHECK (
+    user_id = auth.uid() AND
+    lead_id IN (
+      SELECT id FROM public.leads 
+      WHERE company_id IN (SELECT company_id FROM public.users WHERE id = auth.uid())
+    )
+  );
+
+-- Forms policies
+DROP POLICY IF EXISTS "Users can view company forms" ON public.forms;
+CREATE POLICY "Users can view company forms" ON public.forms
+  FOR SELECT USING (
+    company_id IN (SELECT company_id FROM public.users WHERE id = auth.uid())
+  );
+
+DROP POLICY IF EXISTS "Users can create forms" ON public.forms;
+CREATE POLICY "Users can create forms" ON public.forms
+  FOR INSERT WITH CHECK (
+    company_id IN (SELECT company_id FROM public.users WHERE id = auth.uid())
+  );
+
+DROP POLICY IF EXISTS "Users can update company forms" ON public.forms;
+CREATE POLICY "Users can update company forms" ON public.forms
+  FOR UPDATE USING (
+    company_id IN (SELECT company_id FROM public.users WHERE id = auth.uid())
+  );
+
+DROP POLICY IF EXISTS "Public can view active forms" ON public.forms;
+CREATE POLICY "Public can view active forms" ON public.forms
+  FOR SELECT USING (is_active = true);
+
+-- Questions policies
+DROP POLICY IF EXISTS "Users can view form questions" ON public.questions;
+CREATE POLICY "Users can view form questions" ON public.questions
+  FOR SELECT USING (
+    form_id IN (
+      SELECT id FROM public.forms 
+      WHERE company_id IN (SELECT company_id FROM public.users WHERE id = auth.uid())
+    )
+  );
+
+DROP POLICY IF EXISTS "Users can manage form questions" ON public.questions;
+CREATE POLICY "Users can manage form questions" ON public.questions
+  FOR ALL USING (
+    form_id IN (
+      SELECT id FROM public.forms 
+      WHERE company_id IN (SELECT company_id FROM public.users WHERE id = auth.uid())
+    )
+  );
+
+DROP POLICY IF EXISTS "Public can view questions for active forms" ON public.questions;
+CREATE POLICY "Public can view questions for active forms" ON public.questions
+  FOR SELECT USING (
+    form_id IN (SELECT id FROM public.forms WHERE is_active = true)
+  );
+
+-- Form submissions policies
+DROP POLICY IF EXISTS "Public can submit forms" ON public.form_submissions;
+CREATE POLICY "Public can submit forms" ON public.form_submissions
+  FOR INSERT WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Users can view company submissions" ON public.form_submissions;
+CREATE POLICY "Users can view company submissions" ON public.form_submissions
+  FOR SELECT USING (
+    form_id IN (
+      SELECT id FROM public.forms 
+      WHERE company_id IN (SELECT company_id FROM public.users WHERE id = auth.uid())
+    )
+  );
+
+===============================================
+2. SUPABASE CONNECTION (lib/supabase/admin.ts)
+===============================================
+
+import { createClient } from '@supabase/supabase-js';
+
+// Admin client that bypasses RLS - use only for server-side operations like registration
+export function createAdminClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Missing Supabase admin credentials');
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  });
+}
+
+===============================================
+3. BROWSER CLIENT (lib/supabase/client.ts)
+===============================================
+
+import { createBrowserClient } from '@supabase/ssr'
+
+export function createClient() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+}
+
+===============================================
+4. SERVER CLIENT (lib/supabase/server.ts)
+===============================================
+
+import { createServerClient } from '@supabase/ssr'
+import { cookies } from 'next/headers'
+
+export async function createClient() {
+  const cookieStore = await cookies()
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll()
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookieStore.set(name, value, options)
+            )
+          } catch {
+            // Called from Server Component - ignore
+          }
+        },
+      },
+    }
+  )
+}
+
+===============================================
+5. API EXAMPLE (app/api/leads/route.ts)
+===============================================
+
+import { NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { publicLeadSubmissionSchema } from '@/lib/validation';
+
+export async function POST(req: NextRequest) {
+  try {
+    const json = await req.json();
+    const parsed = publicLeadSubmissionSchema.safeParse(json);
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: 'Invalid submission data' },
+        { status: 400 }
+      );
+    }
+
+    const { formId, answers, customerName, customerEmail, customerPhone } =
+      parsed.data;
+
+    const supabase = createAdminClient();
+
+    // Get form with company info
+    const { data: form, error: formError } = await supabase
+      .from('leads_forms')
+      .select('*, company:leads_companies(*)')
+      .eq('id', formId)
+      .eq('is_active', true)
+      .single();
+
+    if (formError || !form) {
+      return NextResponse.json({ error: 'Form not found' }, { status: 404 });
+    }
+
+    // Create lead
+    const { data: lead, error: leadError } = await supabase
+      .from('leads_leads')
+      .insert({
+        company_id: form.company_id,
+        form_id: form.id,
+        customer_name: customerName ?? null,
+        customer_email: customerEmail ?? null,
+        customer_phone: customerPhone ?? null,
+        answers: answers,
+      })
+      .select()
+      .single();
+
+    if (leadError) throw leadError;
+
+    // Trigger Zapier webhook for new lead
+    try {
+      const webhookUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/zapier`;
+      const webhookSecret = process.env.ZAPIER_WEBHOOK_SECRET;
+      
+      if (webhookSecret) {
+        await fetch(webhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${webhookSecret}`,
+          },
+          body: JSON.stringify({ leadId: lead.id }),
+        });
+      }
+    } catch (webhookError) {
+      // Don't fail lead creation if webhook fails
+      console.error('[ZAPIER WEBHOOK TRIGGER ERROR]', webhookError);
+    }
+
+    return NextResponse.json({ success: true, leadId: lead.id });
+  } catch (e) {
+    console.error('[LEAD SUBMISSION ERROR]', e);
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+  }
+}
+
+export async function GET(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const companyId = (session.user as any).companyId;
+    const supabase = createAdminClient();
+
+    const { data: leads, error } = await supabase
+      .from('leads_leads')
+      .select('*, form:leads_forms(*)')
+      .eq('company_id', companyId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    return NextResponse.json({ leads });
+  } catch (e) {
+    console.error('[GET LEADS ERROR]', e);
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+  }
+}
+
+===============================================
+VIKTIG INFO TIL CHATGPT
+===============================================
+
+ENVIRONMENT VARIABLES:
+- NEXT_PUBLIC_SUPABASE_URL
+- NEXT_PUBLIC_SUPABASE_ANON_KEY  
+- SUPABASE_SERVICE_ROLE_KEY
+- NEXTAUTH_SECRET
+- NEXTAUTH_URL
+- STRIPE_SECRET_KEY
+- NEXT_PUBLIC_APP_URL
+
+TEKNOLOGI STACK:
+- Next.js 14.2.35 (App Router)
+- TypeScript (strict mode)
+- Supabase (PostgreSQL database)
+- NextAuth (authentication)
+- Stripe (payments)
+- Tailwind CSS
+
+FILSTRUKTUR:
+app/
+  api/
+    [endpoint]/
+      route.ts
+  dashboard/
+    [page]/
+      page.tsx
+lib/
+  supabase/
+    admin.ts
+    client.ts
+    server.ts
+components/
+
+REGLER FOR NY KODE:
+1. Lag BARE nye filer, ikke endre eksisterende
+2. Bruk samme mønster som vist ovenfor
+3. Alle API routes: app/api/[navn]/route.ts
+4. Database queries: bruk createAdminClient() fra @/lib/supabase/admin
+5. TypeScript: definer alle types lokalt i filen
+6. NextAuth session: import { getServerSession } from 'next-auth'
+7. Alle tabeller får prefix (eks: cashflow_, invoice_)
+8. RLS policies for alle tabeller
+9. Foreign key til companies(id) for company-data
+10. Følg samme error handling pattern
+
+===============================================
+SLUTT PÅ KODEBASE
+===============================================
