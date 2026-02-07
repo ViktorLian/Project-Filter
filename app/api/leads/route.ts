@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
 
     // Create lead
     const { data: lead, error: leadError } = await supabase
-      .from('leads_leads')
+      .from('leads')
       .insert({
         company_id: form.company_id,
         form_id: form.id,
@@ -87,7 +87,7 @@ export async function GET(req: NextRequest) {
     const supabase = createAdminClient();
 
     const { data: leads, error } = await supabase
-      .from('leads_leads')
+      .from('leads')
       .select('*, form:leads_forms(*)')
       .eq('company_id', companyId)
       .order('created_at', { ascending: false });
