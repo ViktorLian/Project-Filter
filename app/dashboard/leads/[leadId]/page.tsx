@@ -169,9 +169,9 @@ export default async function LeadDetailPage({
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {lead.form.questions.map((question) => {
+            {lead.form.questions.map((question: any) => {
               const answer = lead.answers.find(
-                (a) => a.questionId === question.id
+                (a: any) => a.questionId === question.id
               );
               return (
                 <div key={question.id} className="border-b pb-3 last:border-0">
