@@ -1,0 +1,185 @@
+Create a professional, modern landing page for FlowPilot - a 3-in-1 business management platform.
+
+TECH STACK:
+- Next.js 14 App Router
+- TypeScript
+- Tailwind CSS
+- Shadcn/ui components
+- Lucide React icons
+
+BRAND:
+- Name: FlowPilot
+- Tagline: "Streamline Your Business Operations"
+- Colors: Blue primary (#2563eb), Emerald accents (#10b981), Professional gray tones
+- Style: Clean, modern, professional SaaS design
+
+PLATFORM FEATURES (3 Core Modules):
+
+1. PROJECT FILTER (Lead Management)
+- Create custom intake forms with drag-and-drop builder
+- Automatic lead qualification scoring system
+- Real-time dashboard with analytics
+- Lead status tracking (New, Accepted, Rejected)
+- Email notifications for new submissions
+- Embeddable forms for any website
+
+2. CASHFLOW TRACKER (Financial Health)
+- Track income and expense transactions
+- Automatic financial health calculation (Green/Yellow/Red status)
+- Revenue runway projections
+- Monthly/yearly transaction history
+- CSV export functionality
+- Real-time metrics dashboard
+
+3. INVOICE GENERATOR (Client Billing)
+- Professional PDF invoice generation
+- Automated email delivery to clients
+- Customer database management
+- Invoice status tracking (Draft, Sent, Paid, Overdue)
+- Automatic overdue invoice detection
+- Convert qualified leads directly to invoices
+
+INTEGRATIONS:
+- Zapier webhook support (automate workflows)
+- Supabase backend (secure, scalable)
+- Stripe payments (coming soon)
+- Email delivery via Resend API
+
+PRICING STRUCTURE:
+Starter Plan - 500 NOK/month
+- Up to 50 leads/month
+- 20 invoices/month
+- Basic cashflow tracking
+- Email support
+
+Pro Plan - 1,500 NOK/month (Most Popular)
+- Unlimited leads
+- Unlimited invoices
+- Advanced analytics
+- Zapier integration
+- Priority support
+
+Enterprise Plan - 3,500 NOK/month
+- Everything in Pro
+- Custom branding
+- API access
+- Dedicated account manager
+- White-label options
+
+CONTACT:
+Email: Flowpilot@hotmail.com
+Website: [to be added]
+
+PAGE STRUCTURE:
+1. Hero Section
+   - Powerful headline: "Manage Leads, Track Cashflow, Generate Invoices - All in One Platform"
+   - Subheadline explaining the 3-in-1 solution
+   - Primary CTA: "Start Free Trial" (button)
+   - Secondary CTA: "View Demo" (link)
+   - Hero image/illustration showing dashboard preview
+
+2. Problem Statement
+   - Brief section explaining the pain points:
+     * Juggling multiple tools for business management
+     * Time wasted on manual invoice creation
+     * No clear visibility into financial health
+     * Lost leads due to slow response times
+
+3. Features Overview (3 Columns)
+   - PROJECT FILTER card with icon
+   - CASHFLOW TRACKER card with icon
+   - INVOICE GENERATOR card with icon
+   - Each with 3-4 bullet points of key features
+
+4. How It Works (4 Steps)
+   Step 1: Create Your Forms - Design custom intake forms in minutes
+   Step 2: Qualify Leads - Automatic scoring helps prioritize
+   Step 3: Track Finances - Monitor income/expenses in real-time
+   Step 4: Generate Invoices - Convert leads to paid clients seamlessly
+
+5. Detailed Features Section
+   For each module, create an alternating layout (image left/right):
+   
+   A. Project Filter Details:
+   - Form builder with conditional logic
+   - Automatic lead scoring based on custom criteria
+   - Analytics: acceptance rate, lead quality metrics
+   - Webhook integration for automation
+   - Embed forms anywhere with simple code snippet
+   
+   B. CashFlow Tracker Details:
+   - Visual financial health indicator
+   - Transaction categorization (income/expense)
+   - Monthly/yearly reporting
+   - CSV export for accounting software
+   - Runway calculation (months until cash runs out)
+   - Real-time dashboard with charts
+   
+   C. Invoice Generator Details:
+   - Professional PDF templates
+   - Automatic email delivery to clients
+   - Customer relationship management
+   - Payment status tracking
+   - Overdue invoice alerts
+   - One-click conversion from qualified leads
+
+6. Pricing Section
+   - 3 pricing cards (Starter, Pro, Enterprise)
+   - Toggle for monthly/yearly billing
+   - Feature comparison table
+   - "All plans include: SSL security, daily backups, 99.9% uptime"
+   - CTA buttons for each tier
+
+7. FAQ Section (Accordion)
+   Common questions:
+   - "Can I cancel anytime?" → Yes, no long-term contracts
+   - "Is my data secure?" → Bank-level encryption, hosted on Supabase
+   - "Do you offer a free trial?" → 14-day free trial, no credit card required
+   - "Can I import existing data?" → Yes, CSV import supported
+   - "What payment methods do you accept?" → All major credit cards via Stripe
+   - "Is there a setup fee?" → No, get started immediately
+
+8. Contact Section
+   - Contact form with fields: Name, Email, Company, Message
+   - Business email: Flowpilot@hotmail.com
+   - "Get in touch for custom enterprise solutions"
+
+9. Footer
+   - Product links (Features, Pricing, Documentation)
+   - Company links (About, Contact, Terms, Privacy)
+   - Social media placeholders
+   - Copyright notice
+
+DESIGN REQUIREMENTS:
+- Fully responsive (mobile-first approach)
+- Smooth scroll animations
+- Modern gradients and shadows
+- Clean typography (Inter or similar)
+- Micro-interactions on buttons/cards
+- Fast loading (<3s)
+- Accessible (WCAG 2.1 AA)
+
+TONE OF VOICE:
+- Professional but approachable
+- Clear and concise
+- Focus on benefits, not just features
+- Action-oriented CTAs
+- No false claims or fake testimonials
+- Honest about capabilities
+
+FILE STRUCTURE:
+Create as a single Next.js page component: app/(landing)/page.tsx
+Include necessary components in: components/landing/
+Use Tailwind for all styling
+Implement with TypeScript strict mode
+
+IMPORTANT NOTES:
+- All text in English (international market)
+- Prices in NOK (Norwegian Krone) - acceptable for international customers
+- No emojis in production code
+- No fake customer reviews or testimonials
+- Focus on actual platform capabilities
+- Clean, professional aesthetic
+- Fast, performant code
+
+Generate the complete code for this landing page now.
