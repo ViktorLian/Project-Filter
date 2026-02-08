@@ -1,5 +1,3 @@
-'use client'
-
 import { Hero } from '@/components/landing/hero'
 import { Problems } from '@/components/landing/problems'
 import { FeaturesOverview } from '@/components/landing/features-overview'
@@ -9,8 +7,6 @@ import { Pricing } from '@/components/landing/pricing'
 import { FAQ } from '@/components/landing/faq'
 import { Contact } from '@/components/landing/contact'
 import { Footer } from '@/components/landing/footer'
-
-export const dynamic = 'force-dynamic'
 
 export default function LandingPage() {
   return (
