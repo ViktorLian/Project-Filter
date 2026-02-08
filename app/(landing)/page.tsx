@@ -1,3 +1,5 @@
+'use client'
+
 import { Hero } from '@/components/landing/hero'
 import { Problems } from '@/components/landing/problems'
 import { FeaturesOverview } from '@/components/landing/features-overview'

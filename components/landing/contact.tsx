@@ -1,3 +1,5 @@
+'use client'
+
 export function Contact() {
   return (
     <section className="bg-white py-20">
