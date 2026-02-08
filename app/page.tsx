@@ -1,10 +1,28 @@
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { CheckCircle, Mail, Shield, Zap, TrendingUp, Users } from 'lucide-react'
-import { SUBSCRIPTION_PLANS } from '@/lib/stripe'
+import { Hero } from '@/components/landing/hero'
+import { Problems } from '@/components/landing/problems'
+import { FeaturesOverview } from '@/components/landing/features-overview'
+import { HowItWorks } from '@/components/landing/how-it-works'
+import { DetailedFeatures } from '@/components/landing/detailed-features'
+import { Pricing } from '@/components/landing/pricing'
+import { FAQ } from '@/components/landing/faq'
+import { Contact } from '@/components/landing/contact'
+import { Footer } from '@/components/landing/footer'
 
 export default function HomePage() {
+  return (
+    <main className="flex flex-col">
+      <Hero />
+      <Problems />
+      <FeaturesOverview />
+      <HowItWorks />
+      <DetailedFeatures />
+      <Pricing />
+      <FAQ />
+      <Contact />
+      <Footer />
+    </main>
+  )
+}
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       {/* Header */}
@@ -179,34 +197,22 @@ export default function HomePage() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="container mx-auto px-4 py-20 bg-white">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Get in Touch</h2>
-          <p className="text-lg text-slate-600 mb-8">
-            Have questions? We're here to help.
-          </p>
-          <div className="flex flex-col items-center gap-4">
-            <a 
-              href="mailto:hello@projectfilter.com" 
-              className="flex items-center gap-2 text-lg hover:text-slate-600"
-            >
-              <Mail className="h-5 w-5" />
-              hello@projectfilter.com
-            </a>
-            <p className="text-sm text-slate-500">
-              We typically respond within 24 hours
-            </p>
-          </div>
-        </div>
-      </section>
+export default function HomePage() {
+  return (
+    <main className="flex flex-col">
+      <Hero />
+      <Problems />
+      <FeaturesOverview />
+      <HowItWorks />
+      <DetailedFeatures />
+      <Pricing />
+      <FAQ />
+      <Contact />
+      <Footer />
+    </main>
+  )
+}
 
-      {/* Footer */}
-      <footer className="border-t bg-slate-50">
-        <div className="container mx-auto px-4 py-12">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-2">
-              <div className="h-6 w-6 rounded-lg bg-slate-900 flex items-center justify-center">
-                <span className="text-white text-sm font-bold">PF</span>
               </div>
               <span className="font-semibold">ProjectFilter</span>
             </div>
