@@ -23,31 +23,7 @@ export default function HomePage() {
     </main>
   )
 }
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <nav className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-slate-900 flex items-center justify-center">
-                <span className="text-white font-bold">PF</span>
-              </div>
-              <span className="text-xl font-bold">ProjectFilter</span>
-            </div>
-            <div className="hidden md:flex items-center gap-8">
-              <a href="#features" className="text-sm hover:text-slate-900">Features</a>
-              <a href="#pricing" className="text-sm hover:text-slate-900">Pricing</a>
-              <a href="#contact" className="text-sm hover:text-slate-900">Contact</a>
-            </div>
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" asChild>
-                <Link href="/dashboard">Login</Link>
-              </Button>
-              <Button asChild>
-                <Link href="/dashboard/billing">Get Started</Link>
-              </Button>
-            </div>
+
           </nav>
         </div>
       </header>
