@@ -8,9 +8,7 @@ import { FAQ } from '@/components/landing/faq'
 import { Contact } from '@/components/landing/contact'
 import { Footer } from '@/components/landing/footer'
 
-export const dynamic = 'force-dynamic'
-
-export default function LandingPage() {
+export default async function LandingPage() {
   return (
     <main className="flex flex-col">
       <Hero />
