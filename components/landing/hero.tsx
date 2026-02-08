@@ -1,5 +1,3 @@
-'use client'
-
 import { ArrowRight, BarChart3, FileText, Filter } from 'lucide-react'
 
 export function Hero() {
