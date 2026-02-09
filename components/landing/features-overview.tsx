@@ -89,9 +89,3 @@ function Card({ icon: Icon, title, description, points, color }: any) {
     </div>
   )
 }
-          <li key={p}>• {p}</li>
-        ))}
-      </ul>
-    </div>
-  )
-}
