@@ -3,10 +3,7 @@ import type { NextRequest } from 'next/server'
 import { getToken } from 'next-auth/jwt'
 
 export async function middleware(request: NextRequest) {
-  // TEMPORARY: Disabled for local testing
-  return NextResponse.next()
-  
-  /* const path = request.nextUrl.pathname
+  const path = request.nextUrl.pathname
   
   // Skip auth check in development mode for easy testing
   if (process.env.NODE_ENV === 'development') {
@@ -28,7 +25,7 @@ export async function middleware(request: NextRequest) {
     }
   }
   
-  return NextResponse.next() */
+  return NextResponse.next()
 }
 
 export const config = {

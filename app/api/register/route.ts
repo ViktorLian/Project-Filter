@@ -62,7 +62,8 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (companyError || !company) {
-      throw new Error('Failed to create company');
+      console.error('[COMPANY CREATE ERROR]', companyError);
+      throw new Error('Failed to create company: ' + (companyError?.message || 'Unknown'));
     }
 
     // Create user
