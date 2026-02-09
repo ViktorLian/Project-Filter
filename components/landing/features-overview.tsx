@@ -1,4 +1,4 @@
-import { Filter, BarChart3, FileText, ArrowRight } from 'lucide-react'
+import { Filter, BarChart3, FileText, ArrowRight, LucideIcon } from 'lucide-react'
 import Link from 'next/link'
 
 export function FeaturesOverview() {
@@ -55,8 +55,18 @@ export function FeaturesOverview() {
   )
 }
 
-function Card({ icon: Icon, title, description, points, color }: any) {
-  const colorClasses = {
+type CardColor = 'blue' | 'emerald' | 'purple'
+
+interface CardProps {
+  icon: LucideIcon
+  title: string
+  description: string
+  points: string[]
+  color: CardColor
+}
+
+function Card({ icon: Icon, title, description, points, color }: CardProps) {
+  const colorClasses: Record<CardColor, string> = {
     blue: 'from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
     emerald: 'from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700',
     purple: 'from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
