@@ -9,6 +9,31 @@ const transporter = nodemailer.createTransport({
   }
 })
 
+// Generic email sending function
+export async function sendEmail(
+  to: string,
+  subject: string,
+  html: string
+) {
+  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
+    console.log('SMTP not configured - skipping email')
+    return
+  }
+
+  try {
+    await transporter.sendMail({
+      from: process.env.SMTP_USER,
+      to,
+      subject,
+      html
+    })
+    console.log('Email sent to', to)
+  } catch (error) {
+    console.error('Failed to send email:', error)
+    throw error
+  }
+}
+
 export async function sendLeadNotification(lead: {
   name: string
   email: string
