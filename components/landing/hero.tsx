@@ -92,7 +92,7 @@ export function Hero() {
                     </div>
                   </div>
 
-                  {/* Top-left bubble - Project Filter */}
+                  {/* Top-left bubble - Lead Management */}
                   <div className="absolute left-[10%] top-[15%] flex h-32 w-32 items-center justify-center rounded-full bg-gradient-to-br from-slate-100 to-slate-200 shadow-lg hover:scale-110 transition-transform">
                     <div className="text-center">
                       <Filter className="mx-auto h-8 w-8 text-slate-700" />

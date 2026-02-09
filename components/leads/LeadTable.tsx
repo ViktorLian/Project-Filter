@@ -2,6 +2,28 @@ import Link from 'next/link';
 import LeadStatusBadge from './LeadStatusBadge';
 import LeadScoreBadge from './LeadScoreBadge';
 
+function getLeadStatusBadge(status: 'NEW' | 'CONTACTED' | 'CUSTOMER' | 'REJECTED') {
+  const styles = {
+    NEW: 'bg-blue-100 text-blue-800',
+    CONTACTED: 'bg-yellow-100 text-yellow-800',
+    CUSTOMER: 'bg-green-100 text-green-800',
+    REJECTED: 'bg-gray-100 text-gray-800'
+  };
+  
+  const labels = {
+    NEW: '🔵 New',
+    CONTACTED: '🟡 Contacted',
+    CUSTOMER: '🟢 Customer',
+    REJECTED: '⚪ Rejected'
+  };
+
+  return (
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${styles[status]}`}>
+      {labels[status]}
+    </span>
+  );
+}
+
 // Define types locally since we removed Prisma
 type LeadStatus = 'NEW' | 'REVIEWED' | 'ACCEPTED' | 'REJECTED' | 'IN_PROGRESS' | 'ARCHIVED';
 type RiskLevel = 'LOW' | 'MEDIUM' | 'HIGH';
@@ -13,6 +35,7 @@ type Lead = {
   customerEmail: string | null;
   customerPhone: string | null;
   status: LeadStatus;
+  leadStatus?: 'NEW' | 'CONTACTED' | 'CUSTOMER' | 'REJECTED'; // New field
   createdAt: Date;
 };
 
@@ -42,6 +65,9 @@ export default function LeadTable({ leads }: { leads: LeadWithScore[] }) {
                 Status
               </th>
               <th className="px-4 py-3 text-left font-medium text-slate-600">
+                Lead Status
+              </th>
+              <th className="px-4 py-3 text-left font-medium text-slate-600">
                 Score
               </th>
               <th className="px-4 py-3 text-left font-medium text-slate-600">
@@ -55,7 +81,7 @@ export default function LeadTable({ leads }: { leads: LeadWithScore[] }) {
           <tbody className="divide-y">
             {leads.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-4 py-12 text-center text-slate-400">
+                <td colSpan={6} className="px-4 py-12 text-center text-slate-400">
                   No leads yet. Share your intake form to start collecting
                   project inquiries.
                 </td>
@@ -73,6 +99,9 @@ export default function LeadTable({ leads }: { leads: LeadWithScore[] }) {
                 </td>
                 <td className="px-4 py-3">
                   <LeadStatusBadge status={lead.status} />
+                </td>
+                <td className="px-4 py-3">
+                  {getLeadStatusBadge(lead.leadStatus || 'NEW')}
                 </td>
                 <td className="px-4 py-3">
                   {lead.score ? (

@@ -22,7 +22,7 @@ export function Pricing() {
             'CSV export',
             'Up to 3 users',
           ]} />
-          <Plan title="Enterprise" price="4,499" features={[
+          <Plan title="Enterprise" price="4,990" features={[
             'Everything in Pro',
             'Unlimited users',
             'Dedicated account manager',

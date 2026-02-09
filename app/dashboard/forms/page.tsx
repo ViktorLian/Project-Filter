@@ -8,7 +8,31 @@ import { createAdminClient } from '@/lib/supabase/admin';
 
 export default async function FormsPage() {
   const session = await getServerSession(authOptions);
-  if (!session) return null;
+  
+  // Show demo content when no session (for testing)
+  if (!session) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Intake Forms</h1>
+            <p className="text-muted-foreground">
+              Create and manage your project qualification forms
+            </p>
+          </div>
+          <Button asChild>
+            <Link href="/dashboard/forms/new">
+              <Plus className="h-4 w-4 mr-2" />
+              New Form
+            </Link>
+          </Button>
+        </div>
+        <div className="text-center py-12 text-slate-500">
+          <p>No forms created yet. Click "New Form" to create your first intake form.</p>
+        </div>
+      </div>
+    );
+  }
 
   const companyId = (session.user as any).companyId;
   const supabase = createAdminClient();

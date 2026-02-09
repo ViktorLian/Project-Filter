@@ -5,7 +5,79 @@ import { createAdminClient } from '@/lib/supabase/admin';
 
 export default async function AnalyticsPage() {
   const session = await getServerSession(authOptions);
-  if (!session) return null;
+  
+  // Show demo analytics when no session
+  if (!session) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
+          <p className="text-muted-foreground">
+            Track performance metrics and lead quality
+          </p>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Total Leads
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold">0</div>
+              <p className="text-xs text-muted-foreground mt-1">Last 30 days</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Conversion Rate
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold text-emerald-600">0%</div>
+              <p className="text-xs text-muted-foreground mt-1">Leads to customers</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Revenue (MTD)
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold">0 kr</div>
+              <p className="text-xs text-muted-foreground mt-1">Month to date</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
+                Active Forms
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-3xl font-bold">0</div>
+              <p className="text-xs text-muted-foreground mt-1">Published forms</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Lead Activity</CardTitle>
+          </CardHeader>
+          <CardContent className="h-64 flex items-center justify-center text-muted-foreground">
+            <p>No data yet. Create forms and capture leads to see analytics.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   const companyId = (session.user as any).companyId;
   const supabase = createAdminClient();

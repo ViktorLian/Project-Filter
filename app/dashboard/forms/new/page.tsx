@@ -68,6 +68,10 @@ export default function NewFormPage() {
       }
 
       const form = await res.json();
+      
+      // Show success message with share links
+      alert(`Form created! Share link: ${window.location.origin}/f/${form.slug}`);
+      
       router.push(`/dashboard/forms`);
       router.refresh();
     } catch (e: any) {
