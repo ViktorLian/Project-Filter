@@ -42,7 +42,7 @@ export function Pricing() {
 
 function Plan({ title, price, features, highlighted }: any) {
   return (
-    <div className={`rounded-2xl border-2 p-8 transition-all hover:shadow-xl ${highlighted ? 'border-blue-600 shadow-lg scale-105 bg-blue-50/50' : 'border-slate-200 hover:border-slate-300'}`)>
+    <div className={`rounded-2xl border-2 p-8 transition-all hover:shadow-xl ${highlighted ? 'border-blue-600 shadow-lg scale-105 bg-blue-50/50' : 'border-slate-200 hover:border-slate-300'}`}>
       {highlighted && (
         <div className="mb-4 inline-block rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">
           MOST POPULAR

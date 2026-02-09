@@ -42,14 +42,24 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Create your account</CardTitle>
-          <CardDescription>
-            Start qualifying your project leads today
-          </CardDescription>
-        </CardHeader>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-emerald-50 p-4">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <Link href="/" className="inline-flex items-center gap-2 mb-4">
+            <div className="h-10 w-10 rounded-lg bg-blue-600 flex items-center justify-center">
+              <span className="text-white font-bold">FP</span>
+            </div>
+            <span className="text-2xl font-bold text-slate-900">FlowPilot</span>
+          </Link>
+        </div>
+        
+        <Card className="shadow-xl">
+          <CardHeader>
+            <CardTitle>Start your free trial</CardTitle>
+            <CardDescription>
+              14 days free. No credit card required.
+            </CardDescription>
+          </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
