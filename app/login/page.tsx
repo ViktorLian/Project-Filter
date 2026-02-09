@@ -100,6 +100,7 @@ function LoginForm() {
           </form>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 }
