@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     let i = 1;
     while (true) {
       const { data } = await supabase
-        .from('companies')
+        .from('leads_companies')
         .select('id')
         .eq('slug', slug)
         .single();
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
 
     // Create company
     const { data: company, error: companyError } = await supabase
-      .from('companies')
+      .from('leads_companies')
       .insert({ name: companyName, slug })
       .select()
       .single();
