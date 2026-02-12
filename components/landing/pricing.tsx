@@ -17,18 +17,17 @@ export function Pricing() {
             'Unlimited leads',
             'Unlimited invoices',
             'Advanced analytics',
-            'Zapier integration',
             'Priority support',
             'CSV export',
             'Up to 3 users',
           ]} />
           <Plan title="Enterprise" price="4,990" features={[
             'Everything in Pro',
-            'Unlimited users',
-            'Dedicated account manager',
-            'Phone support',
-            'SLA guarantee',
-            'Quarterly business reviews',
+            'Custom user limits',
+            'Priority support',
+            'Custom integrations',
+            'API access',
+            'Dedicated support',
           ]} />
         </div>
 
