@@ -66,7 +66,7 @@ function Plan({ title, price, features, highlighted }: any) {
       </ul>
       <a
         href="/register"
-        className={`mt-8 inline-block w-full rounded-lg px-6 py-3 text-sm font-semibold transition ${highlighted ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-md' : 'bg-slate-100 text-slate-900 hover:bg-slate-200'}`}
+        className={`mt-8 inline-block w-full rounded-lg px-6 py-3 text-sm font-semibold transition text-center ${highlighted ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-md' : 'bg-slate-100 text-slate-900 hover:bg-slate-200'}`}
       >
         Get Started
       </a>
