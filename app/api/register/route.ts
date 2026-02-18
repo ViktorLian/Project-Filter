@@ -24,14 +24,9 @@ export async function POST(req: NextRequest) {
 
     const supabase = createAdminClient();
 
-    // Check if user exists
-    const { data: existing } = await supabase
-      .from('users')
-      .select('id')
-      .eq('email', email)
-      .single();
-
-    if (existing) {
+    // Check if user exists in Supabase Auth
+    const { data: authUser, error: authError } = await supabase.auth.admin.listUsers({ email });
+    if (authUser && authUser.users && authUser.users.length > 0) {
       return NextResponse.json(
         { error: 'Email already in use' },
         { status: 400 }
@@ -66,7 +61,21 @@ export async function POST(req: NextRequest) {
       throw new Error('Failed to create company: ' + (companyError?.message || 'Unknown'));
     }
 
-    // Create user
+    // Create user in Supabase Auth
+    const { data: createdUser, error: createUserError } = await supabase.auth.admin.createUser({
+      email,
+      password,
+      user_metadata: {
+        name,
+        company_id: company.id,
+        role: 'OWNER',
+      },
+    });
+    if (createUserError || !createdUser) {
+      throw new Error('Failed to create user in Auth');
+    }
+
+    // Create user in users-tabell for ekstra data
     const { error: userError } = await supabase
       .from('users')
       .insert({
@@ -75,10 +84,11 @@ export async function POST(req: NextRequest) {
         password: hashed,
         role: 'OWNER',
         company_id: company.id,
+        auth_id: createdUser.user?.id || null,
       });
 
     if (userError) {
-      throw new Error('Failed to create user');
+      throw new Error('Failed to create user in users-tabell');
     }
 
     return NextResponse.json({ success: true });
