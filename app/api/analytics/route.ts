@@ -1,12 +1,15 @@
+export const dynamic = 'force-dynamic';
+
 import { supabaseAdmin } from '@/lib/supabase';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get('userId');
+    const searchParams = (request as any).nextUrl?.searchParams;
+    const userId = searchParams?.get('userId');
 
     if (!userId) {
-      return Response.json({ error: 'userId required' }, { status: 400 });
+      return NextResponse.json({ error: 'userId required' }, { status: 400 });
     }
 
     // Get today's analytics
@@ -30,9 +33,9 @@ export async function GET(request: Request) {
       conversion_count: 0,
     };
 
-    return Response.json(result);
+    return NextResponse.json(result);
   } catch (error) {
     console.error('[ANALYTICS ERROR]', error);
-    return Response.json({ error: 'Failed to fetch analytics' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to fetch analytics' }, { status: 500 });
   }
 }

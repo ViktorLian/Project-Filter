@@ -7,6 +7,8 @@ interface UpdateSettingsRequest {
   score_threshold?: number;
 }
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   try {
     const authHeader = request.headers.get('Authorization');
