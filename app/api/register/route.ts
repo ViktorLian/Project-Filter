@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import bcrypt from 'bcryptjs';
-import slugify from 'slugify';
 
 export async function POST(req: NextRequest) {
   try {
@@ -24,41 +22,14 @@ export async function POST(req: NextRequest) {
 
     const supabase = createAdminClient();
 
-    // Check if user exists in Supabase Auth
-    const { data: authUser, error: authError } = await supabase.auth.admin.listUsers({ email });
-    if (authUser && authUser.users && authUser.users.length > 0) {
+    // Check if email already exists
+    const { data: authUser } = await supabase.auth.admin.listUsers();
+    const emailExists = authUser?.users?.some(u => u.email === email);
+    if (emailExists) {
       return NextResponse.json(
         { error: 'Email already in use' },
         { status: 400 }
       );
-    }
-
-    // Generate unique slug
-    const slugBase = slugify(companyName, { lower: true, strict: true });
-    let slug = slugBase;
-    let i = 1;
-    while (true) {
-      const { data } = await supabase
-        .from('leads_companies')
-        .select('id')
-        .eq('slug', slug)
-        .single();
-      if (!data) break;
-      slug = `${slugBase}-${i++}`;
-    }
-
-    const hashed = await bcrypt.hash(password, 10);
-
-    // Create company
-    const { data: company, error: companyError } = await supabase
-      .from('leads_companies')
-      .insert({ name: companyName, slug })
-      .select()
-      .single();
-
-    if (companyError || !company) {
-      console.error('[COMPANY CREATE ERROR]', companyError);
-      throw new Error('Failed to create company: ' + (companyError?.message || 'Unknown'));
     }
 
     // Create user in Supabase Auth
@@ -67,33 +38,67 @@ export async function POST(req: NextRequest) {
       password,
       user_metadata: {
         name,
-        company_id: company.id,
-        role: 'OWNER',
+        business_name: companyName,
       },
     });
-    if (createUserError || !createdUser) {
-      throw new Error('Failed to create user in Auth');
+
+    if (createUserError || !createdUser?.user) {
+      console.error('[AUTH CREATE ERROR]', createUserError);
+      return NextResponse.json(
+        { error: 'Failed to create user: ' + (createUserError?.message || 'Unknown error') },
+        { status: 400 }
+      );
     }
 
-    // Create user in users-tabell for ekstra data
-    const { error: userError } = await supabase
+    // Create user in public.users table
+    const { data: newUser, error: userError } = await supabase
       .from('users')
       .insert({
-        name,
+        auth_user_id: createdUser.user.id,
         email,
-        password: hashed,
-        role: 'OWNER',
-        company_id: company.id,
-        auth_id: createdUser.user?.id || null,
-      });
+        business_name: companyName,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
 
-    if (userError) {
-      throw new Error('Failed to create user in users-tabell');
+    if (userError || !newUser) {
+      console.error('[USER CREATE ERROR]', userError);
+      // Delete auth user if database insert fails
+      await supabase.auth.admin.deleteUser(createdUser.user.id);
+      return NextResponse.json(
+        { error: 'Failed to create user profile' },
+        { status: 500 }
+      );
     }
 
-    return NextResponse.json({ success: true });
+    // Create default user_settings
+    const { error: settingsError } = await supabase
+      .from('user_settings')
+      .insert({
+        user_id: newUser.id,
+        alert_email: email,
+        auto_reply_template: 'template_1',
+        score_threshold: 80,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+
+    if (settingsError) {
+      console.error('[SETTINGS CREATE ERROR]', settingsError);
+      // Continue anyway - settings can be created later
+    }
+
+    return NextResponse.json({ 
+      success: true,
+      message: 'Account created successfully'
+    });
   } catch (e) {
     console.error('[REGISTER ERROR]', e);
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Server error: ' + (e instanceof Error ? e.message : 'Unknown') },
+      { status: 500 }
+    );
   }
 }

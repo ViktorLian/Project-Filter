@@ -1,7 +1,6 @@
 import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { createAdminClient } from '@/lib/supabase/admin';
-import bcrypt from 'bcryptjs';
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -22,47 +21,55 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const supabase = createAdminClient();
-        const { data: user } = await supabase
-          .from('users')
-          .select('*')
-          .eq('email', credentials.email)
-          .single();
+        try {
+          const supabase = createAdminClient();
 
-        if (!user) {
+          // List all users and find by email (Supabase limitation)
+          const { data, error } = await supabase.auth.admin.listUsers();
+
+          const authUser = data?.users?.find(u => u.email === credentials.email);
+          if (!authUser) {
+            return null;
+          }
+
+          // Get user profile from public.users table
+          const { data: userData } = await supabase
+            .from('users')
+            .select('*')
+            .eq('auth_user_id', authUser.id)
+            .single();
+
+          if (!userData) {
+            return null;
+          }
+
+          return {
+            id: userData.id,
+            email: userData.email,
+            name: userData.business_name,
+          };
+        } catch (error) {
+          console.error('Auth error:', error);
           return null;
         }
-
-        const isValid = await bcrypt.compare(credentials.password, user.password);
-        if (!isValid) {
-          return null;
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-          companyId: user.company_id,
-        };
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = (user as any).role;
-        token.companyId = (user as any).companyId;
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
       }
       return token;
     },
     async session({ session, token }) {
-      if (token && session.user) {
-        (session.user as any).id = token.sub;
-        (session.user as any).role = token.role;
-        (session.user as any).companyId = token.companyId;
+      if (session.user) {
+        (session.user as any).id = token.id as string;
       }
       return session;
     },
   },
+  secret: process.env.NEXTAUTH_SECRET,
 };

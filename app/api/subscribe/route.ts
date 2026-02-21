@@ -2,11 +2,16 @@ import { createClient } from '@supabase/supabase-js'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { NextResponse } from 'next/server'
-import { stripe, SUBSCRIPTION_PLANS, type SubscriptionPlan } from '@/lib/stripe'
+import Stripe from 'stripe'
+import { PRICING_PLANS, TRIAL_DAYS, PlanId } from '@/lib/pricing'
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+  apiVersion: '2023-10-16',
+});
 
 export async function POST(request: Request) {
   try {
-    // Use NextAuth session instead of Supabase auth
+    // Use NextAuth session
     const session = await getServerSession(authOptions)
     
     if (!session?.user) {
@@ -16,7 +21,6 @@ export async function POST(request: Request) {
       )
     }
     
-    // Use service role key to bypass RLS
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
@@ -27,94 +31,159 @@ export async function POST(request: Request) {
         }
       }
     )
-    const userId = (session.user as any).id
     
-    const { plan } = await request.json()
+    const { planId } = await request.json()
     
-    if (!plan || !SUBSCRIPTION_PLANS[plan as SubscriptionPlan]) {
+    if (!planId || !PRICING_PLANS[planId as PlanId]) {
       return NextResponse.json(
         { error: 'Invalid plan' },
         { status: 400 }
       )
     }
+
+    const plan = PRICING_PLANS[planId as PlanId];
+    const userId = (session.user as any).id;
     
-    const selectedPlan = SUBSCRIPTION_PLANS[plan as SubscriptionPlan]
-    
-    // Get company - for now use first company or create with email-based slug
-    const { data: companies } = await supabase
-      .from('leads_companies')
-      .select('*')
-      .limit(1)
-    
-    let company = companies?.[0]
-    
-    // If no company exists, create one
-    if (!company) {
-      const slug = session.user.email?.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase() || 'company-' + Date.now()
-      const { data: newCompany, error: createError } = await supabase
-        .from('leads_companies')
-        .insert({
-          name: session.user.email?.split('@')[0] || 'My Company',
-          slug: slug
-        })
-        .select()
-        .single()
-      
-      if (createError) {
-        console.error('Error creating company:', createError)
-        return NextResponse.json(
-          { error: 'Could not create company' },
-          { status: 500 }
-        )
-      }
-      
-      company = newCompany
+    // Get user
+    const { data: userData } = await supabase
+      .from('users')
+      .select('id, email, business_name, auth_user_id')
+      .eq('id', userId)
+      .single();
+
+    if (!userData) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
-    
-    // Create Stripe Checkout session with dynamic price
-    const checkoutSession = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      mode: 'subscription',
-      line_items: [
-        {
-          price_data: {
-            currency: 'nok',
-            product_data: {
-              name: selectedPlan.name,
-              description: selectedPlan.features.join(', ')
-            },
-            unit_amount: selectedPlan.price * 100, // Convert kr to øre
-            recurring: {
-              interval: 'month'
-            }
-          },
-          quantity: 1
-        }
-      ],
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/settings?success=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/settings?canceled=true`,
-      customer_email: session.user.email!,
-      subscription_data: {
-        trial_period_days: 14,
+
+    // Create or get Stripe customer
+    let customerId = '';
+    const { data: existingCustomer } = await supabase
+      .from('stripe_customers')
+      .select('stripe_customer_id')
+      .eq('user_id', userData.id)
+      .single();
+
+    if (existingCustomer?.stripe_customer_id) {
+      customerId = existingCustomer.stripe_customer_id;
+    } else {
+      const customer = await stripe.customers.create({
+        email: userData.email,
         metadata: {
-          userId: userId,
-          companyId: company.id,
-          plan
-        }
-      },
+          user_id: userData.id,
+          business_name: userData.business_name,
+        },
+      });
+      customerId = customer.id;
+
+      await supabase
+        .from('stripe_customers')
+        .insert({
+          user_id: userData.id,
+          stripe_customer_id: customerId,
+        });
+    }
+
+    // Calculate trial end date (14 days from now)
+    const trialEnd = Math.floor(
+      (Date.now() + TRIAL_DAYS * 24 * 60 * 60 * 1000) / 1000
+    );
+
+    // Create subscription with trial
+    const subscription = await stripe.subscriptions.create({
+      customer: customerId,
+      items: [
+        {
+          price: plan.stripeId,
+        },
+      ],
+      trial_end: trialEnd,
       metadata: {
-        userId: userId,
-        companyId: company.id,
-        plan
+        user_id: userData.id,
+        plan_id: planId,
+      },
+      payment_settings: {
+        save_default_payment_method: 'on_subscription',
+      },
+    });
+
+    // Save subscription
+    await supabase
+      .from('subscriptions')
+      .upsert({
+        user_id: userData.id,
+        stripe_subscription_id: subscription.id,
+        plan_id: planId,
+        trial_end_date: new Date(trialEnd * 1000).toISOString(),
+        status: subscription.status,
+      });
+
+    // Send trial email
+    await sendTrialStartedEmail(userData.email, userData.business_name, planId);
+
+    return NextResponse.json({ 
+      success: true,
+      subscription: {
+        id: subscription.id,
+        status: subscription.status,
+        trial_end: new Date(trialEnd * 1000).toISOString(),
+        plan: planId,
       }
-    })
-    
-    return NextResponse.json({ url: checkoutSession.url })
+    });
   } catch (error) {
-    console.error('Subscribe error:', error)
+    console.error('[SUBSCRIBE ERROR]', error);
     return NextResponse.json(
-      { error: 'Failed to create subscription' },
+      { error: 'Failed to create subscription: ' + (error instanceof Error ? error.message : 'Unknown error') },
       { status: 500 }
-    )
+    );
+  }
+}
+
+async function sendTrialStartedEmail(
+  email: string,
+  businessName: string,
+  planId: string
+) {
+  const plan = PRICING_PLANS[planId as PlanId];
+  const trialEnd = new Date();
+  trialEnd.setDate(trialEnd.getDate() + TRIAL_DAYS);
+
+  const emailHtml = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h2>Trial Started! 🎉</h2>
+      <p>Hei ${businessName},</p>
+      <p>Du har startet en <strong>${TRIAL_DAYS} dagers gratis trial</strong> på <strong>${plan.name}</strong> planen!</p>
+      
+      <h3>Din trial ender: ${trialEnd.toLocaleDateString('no-NO')}</h3>
+      
+      <p>Etter trialen vil kortet ditt bli belastet <strong>${plan.price},-/måned</strong>.</p>
+      
+      <h3>Du kan:</h3>
+      <ul>
+        <li><a href="https://app.flowpilot.io/dashboard/billing">Endre plan eller avbryte her</a></li>
+        <li><a href="https://app.flowpilot.io/dashboard/settings">Se dine innstillinger</a></li>
+        <li>Kontakt oss på support@flowpilot.io hvis du har spørsmål</li>
+      </ul>
+      
+      <p>Vi gleder oss til å hjelpe deg!</p>
+      <p>FlowPilot Team</p>
+    </div>
+  `;
+
+  try {
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'noreply@flowpilot.io',
+        to: email,
+        subject: `Trial startet på ${plan.name} plan - 14 dager gratis`,
+        html: emailHtml,
+      }),
+    });
+  } catch (error) {
+    console.error('Error sending trial email:', error);
   }
 }
