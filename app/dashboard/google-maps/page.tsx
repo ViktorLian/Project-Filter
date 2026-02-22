@@ -30,8 +30,8 @@ export default function GoogleMapsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Google Maps Leads</h1>
-        <p className="text-slate-500 text-sm mt-0.5">Finn potensielle kunder i nærområdet og legg dem til som leads</p>
+        <h1 className="text-2xl font-bold text-slate-900">Lokal Synlighet – Google Maps</h1>
+        <p className="text-slate-500 text-sm mt-0.5">Optimaliser din Google Maps-profil, overvak anmeldelser og finn lokale leads i ditt nærområde</p>
       </div>
 
       {/* Search controls */}

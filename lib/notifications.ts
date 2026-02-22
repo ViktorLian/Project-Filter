@@ -20,10 +20,16 @@ export async function notifyNewLead(to: string, leadId: string, companyName: str
   await resend({
     to,
     subject: `Ny henvendelse – ${companyName}`,
-    html: `<div style="font-family:Arial,sans-serif;max-width:600px">
-      <h2 style="color:#1e40af">📋 Ny lead mottatt</h2>
-      <p>Du har fått en ny prosjekthenvendelse via ${companyName}.</p>
-      <p><a href="${process.env.NEXTAUTH_URL ?? process.env.NEXT_PUBLIC_APP_URL}/dashboard/leads/${leadId}" style="background:#1e40af;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;display:inline-block">Se lead</a></p>
+    html: `<div style="font-family:Arial,sans-serif;max-width:600px;color:#1e293b">
+      <div style="background:#1e40af;padding:24px 32px;border-radius:8px 8px 0 0">
+        <h1 style="color:#fff;margin:0;font-size:20px;font-weight:700">Ny lead mottatt</h1>
+        <p style="color:#bfdbfe;margin:4px 0 0;font-size:14px">${companyName}</p>
+      </div>
+      <div style="background:#fff;padding:24px 32px;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 8px 8px">
+        <p style="margin:0 0 20px;color:#475569">Du har mottatt en ny prosjekthenvendelse. Åpne dashboardet for å se detaljer og ta kontakt raskt.</p>
+        <a href="${process.env.NEXTAUTH_URL ?? process.env.NEXT_PUBLIC_APP_URL}/dashboard/leads/${leadId}" style="display:inline-block;background:#1e40af;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">Se lead i dashboardet</a>
+        <p style="margin:24px 0 0;font-size:12px;color:#94a3b8">FlowPilot – automatisk varsel</p>
+      </div>
     </div>`,
   });
 }
@@ -40,18 +46,23 @@ export async function notifyHighQualityLead(
 ) {
   await resend({
     to,
-    subject: `🔥 Høykvalitetslead (score ${score}) – ${companyName}`,
-    html: `<div style="font-family:Arial,sans-serif;max-width:600px">
-      <h2 style="color:#16a34a">⭐ Høykvalitetslead mottatt!</h2>
-      <p>En ny lead med høy score (${score}/100) har nettopp kommet inn via <strong>${companyName}</strong>.</p>
-      <table style="border-collapse:collapse;width:100%;margin:16px 0">
-        ${customerName ? `<tr><td style="padding:8px;border:1px solid #e2e8f0;color:#64748b">Navn</td><td style="padding:8px;border:1px solid #e2e8f0;font-weight:600">${customerName}</td></tr>` : ''}
-        ${customerEmail ? `<tr><td style="padding:8px;border:1px solid #e2e8f0;color:#64748b">E-post</td><td style="padding:8px;border:1px solid #e2e8f0"><a href="mailto:${customerEmail}">${customerEmail}</a></td></tr>` : ''}
-        ${customerPhone ? `<tr><td style="padding:8px;border:1px solid #e2e8f0;color:#64748b">Telefon</td><td style="padding:8px;border:1px solid #e2e8f0"><a href="tel:${customerPhone}">${customerPhone}</a></td></tr>` : ''}
-        <tr><td style="padding:8px;border:1px solid #e2e8f0;color:#64748b">Score</td><td style="padding:8px;border:1px solid #e2e8f0;font-weight:700;color:#16a34a">${score} / 100</td></tr>
-      </table>
-      <p><a href="${process.env.NEXTAUTH_URL ?? process.env.NEXT_PUBLIC_APP_URL}/dashboard/leads/${leadId}" style="background:#16a34a;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;display:inline-block">Svar på lead nå</a></p>
-      <p style="margin-top:16px;color:#64748b;font-size:12px">Tips: Firmaer som svarer innen 2 timer har 3x høyere sjanse for å vinne jobben.</p>
+    subject: `Høykvalitetslead (score ${score}/100) – ${companyName}`,
+    html: `<div style="font-family:Arial,sans-serif;max-width:600px;color:#1e293b">
+      <div style="background:#16a34a;padding:24px 32px;border-radius:8px 8px 0 0">
+        <h1 style="color:#fff;margin:0;font-size:20px;font-weight:700">Høykvalitetslead mottatt</h1>
+        <p style="color:#bbf7d0;margin:4px 0 0;font-size:14px">${companyName} – score ${score}/100</p>
+      </div>
+      <div style="background:#fff;padding:24px 32px;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 8px 8px">
+        <p style="margin:0 0 20px;color:#475569">En ny lead med høy score har kommet inn. Kontakt dem raskt – bedrifter som svarer innen 2 timer har 3x høyere sjansefor å vinne jobben.</p>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:20px">
+          ${customerName ? `<tr><td style="padding:10px 12px;border:1px solid #e2e8f0;color:#64748b;font-size:14px;width:120px">Navn</td><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:600;font-size:14px">${customerName}</td></tr>` : ''}
+          ${customerEmail ? `<tr><td style="padding:10px 12px;border:1px solid #e2e8f0;color:#64748b;font-size:14px">E-post</td><td style="padding:10px 12px;border:1px solid #e2e8f0;font-size:14px"><a href="mailto:${customerEmail}" style="color:#1e40af">${customerEmail}</a></td></tr>` : ''}
+          ${customerPhone ? `<tr><td style="padding:10px 12px;border:1px solid #e2e8f0;color:#64748b;font-size:14px">Telefon</td><td style="padding:10px 12px;border:1px solid #e2e8f0;font-size:14px"><a href="tel:${customerPhone}" style="color:#1e40af">${customerPhone}</a></td></tr>` : ''}
+          <tr><td style="padding:10px 12px;border:1px solid #e2e8f0;color:#64748b;font-size:14px">Lead score</td><td style="padding:10px 12px;border:1px solid #e2e8f0;font-weight:700;font-size:14px;color:#16a34a">${score} / 100</td></tr>
+        </table>
+        <a href="${process.env.NEXTAUTH_URL ?? process.env.NEXT_PUBLIC_APP_URL}/dashboard/leads/${leadId}" style="display:inline-block;background:#16a34a;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">Svar på lead nå</a>
+        <p style="margin:24px 0 0;font-size:12px;color:#94a3b8">FlowPilot – automatisk varsel</p>
+      </div>
     </div>`,
   });
 }
@@ -65,10 +76,15 @@ export async function sendLeadConfirmation(
   await resend({
     to,
     subject: `Vi har mottatt din henvendelse – ${companyName}`,
-    html: `<div style="font-family:Arial,sans-serif;max-width:600px">
-      <h2 style="color:#1e40af">Takk for din henvendelse, ${customerName || 'der'}!</h2>
-      <p><strong>${companyName}</strong> har mottatt din forespørsel og vil ta kontakt med deg så snart som mulig.</p>
-      <p style="margin-top:24px;color:#64748b;font-size:12px">Denne e-posten ble sendt automatisk via FlowPilot.</p>
+    html: `<div style="font-family:Arial,sans-serif;max-width:600px;color:#1e293b">
+      <div style="background:#1e40af;padding:24px 32px;border-radius:8px 8px 0 0">
+        <h1 style="color:#fff;margin:0;font-size:20px;font-weight:700">Henvendelse mottatt</h1>
+      </div>
+      <div style="background:#fff;padding:24px 32px;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 8px 8px">
+        <p style="margin:0 0 16px">Hei ${customerName || 'der'},</p>
+        <p style="margin:0 0 16px;color:#475569"><strong>${companyName}</strong> har mottatt din forespørsel og vil ta kontakt med deg så snart som mulig.</p>
+        <p style="margin:24px 0 0;font-size:12px;color:#94a3b8">Denne e-posten ble sendt automatisk via FlowPilot.</p>
+      </div>
     </div>`,
   });
 }
