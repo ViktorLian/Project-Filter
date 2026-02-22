@@ -9,7 +9,7 @@ import {
   Users, Briefcase, ChevronLeft, ChevronRight, ChevronDown, ChevronUp,
   Bot, Brain, Calendar, Map, Zap, TrendingUp, Target, BookOpen,
   MessageSquare, Star, Bell, RefreshCw, Lightbulb, PieChart,
-  ClipboardList, Award, Shield, Rocket, Activity
+  ClipboardList, Award, Shield, Rocket, Activity, Gift, Sparkles, GraduationCap
 } from 'lucide-react';
 
 interface NavItem { href: string; label: string; icon: React.ElementType }
@@ -80,6 +80,8 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/growth-playbook', label: 'Vekstplan', icon: Lightbulb },
       { href: '/dashboard/roi-tracker', label: 'ROI Oversikt', icon: Award },
       { href: '/dashboard/benchmarks', label: 'Bransje­sammenligning', icon: Activity },
+      { href: '/dashboard/upsell-coach', label: 'Vekst-coach', icon: Sparkles },
+      { href: '/dashboard/referral', label: 'Vervprogram', icon: Gift },
     ],
   },
   {
@@ -87,6 +89,7 @@ const navGroups: NavGroup[] = [
     icon: Settings,
     color: 'text-slate-400',
     items: [
+      { href: '/dashboard/onboarding', label: 'Kom i gang', icon: GraduationCap },
       { href: '/dashboard/manual', label: 'Brukermanual', icon: BookOpen },
       { href: '/dashboard/settings', label: 'Innstillinger', icon: Settings },
     ],
