@@ -4,6 +4,7 @@ import { Pricing } from '@/components/landing/pricing'
 import { FAQ } from '@/components/landing/faq'
 import { Contact } from '@/components/landing/contact'
 import { Footer } from '@/components/landing/footer'
+import { ChatWidget } from '@/components/landing/ChatWidget'
 
 export default function HomePage() {
   return (
@@ -14,6 +15,7 @@ export default function HomePage() {
       <FAQ />
       <Contact />
       <Footer />
+      <ChatWidget />
     </main>
   )
 }
