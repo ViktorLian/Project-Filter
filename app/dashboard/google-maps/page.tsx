@@ -24,7 +24,7 @@ export default function GoogleMapsPage() {
   );
 
   function addToLeads(lead: Lead) {
-    setAddedIds(prev => new Set([...prev, lead.id]));
+    setAddedIds(prev => new Set([...Array.from(prev), lead.id]));
   }
 
   return (
