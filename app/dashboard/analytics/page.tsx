@@ -1,217 +1,145 @@
-import { getServerSession } from 'next-auth';
+﻿import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { TrendingUp, Users, CheckCircle, XCircle, BarChart2, Star } from 'lucide-react';
+
+export const dynamic = 'force-dynamic';
+
+const STATUS_NO: Record<string, string> = {
+  NEW: 'Ny',
+  REVIEWED: 'Gjennomgatt',
+  ACCEPTED: 'Akseptert',
+  REJECTED: 'Avvist',
+  IN_PROGRESS: 'Pagaende',
+  ARCHIVED: 'Arkivert',
+};
+
+const STATUS_COLORS: Record<string, string> = {
+  NEW: 'bg-blue-500',
+  REVIEWED: 'bg-yellow-400',
+  ACCEPTED: 'bg-emerald-500',
+  REJECTED: 'bg-red-400',
+  IN_PROGRESS: 'bg-purple-500',
+  ARCHIVED: 'bg-slate-300',
+};
 
 export default async function AnalyticsPage() {
   const session = await getServerSession(authOptions);
-  
-  // Show demo analytics when no session
-  if (!session) {
-    return (
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
-          <p className="text-muted-foreground">
-            Track performance metrics and lead quality
-          </p>
-        </div>
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Total Leads
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">0</div>
-              <p className="text-xs text-muted-foreground mt-1">Last 30 days</p>
-            </CardContent>
-          </Card>
+  let leads: any[] = [];
+  let invoices: any[] = [];
 
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Conversion Rate
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-emerald-600">0%</div>
-              <p className="text-xs text-muted-foreground mt-1">Leads to customers</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Revenue (MTD)
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">0 kr</div>
-              <p className="text-xs text-muted-foreground mt-1">Month to date</p>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                Active Forms
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">0</div>
-              <p className="text-xs text-muted-foreground mt-1">Published forms</p>
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Lead Activity</CardTitle>
-          </CardHeader>
-          <CardContent className="h-64 flex items-center justify-center text-muted-foreground">
-            <p>No data yet. Create forms and capture leads to see analytics.</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
+  if (session) {
+    const companyId = (session.user as any).companyId;
+    const supabase = createAdminClient();
+    const [leadsRes, invoicesRes] = await Promise.all([
+      supabase.from('leads').select('id, status, score, created_at').eq('company_id', companyId),
+      supabase.from('invoices').select('id, amount, status, created_at').eq('company_id', companyId),
+    ]);
+    leads = leadsRes.data ?? [];
+    invoices = invoicesRes.data ?? [];
   }
 
-  const companyId = (session.user as any).companyId;
-  const supabase = createAdminClient();
-
-  const { data: leads } = await supabase
-    .from('leads')
-    .select('id, status, created_at')
-    .eq('company_id', companyId);
-
-  const scores: any[] = [];
-
-  const totalLeads = leads?.length || 0;
-  const accepted = leads?.filter((l) => l.status === 'ACCEPTED').length || 0;
-  const rejected = leads?.filter((l) => l.status === 'REJECTED').length || 0;
+  const totalLeads = leads.length;
+  const accepted = leads.filter(l => l.status === 'ACCEPTED').length;
+  const rejected = leads.filter(l => l.status === 'REJECTED').length;
   const acceptanceRate = totalLeads ? Math.round((accepted / totalLeads) * 100) : 0;
-  const avgScore =
-    scores.length > 0
-      ? Math.round(scores.reduce((sum, s) => sum + s.totalScore, 0) / scores.length)
-      : 0;
-  const totalRevenue = 0;
+  const avgScore = leads.length > 0 ? Math.round(leads.reduce((s, l) => s + (l.score ?? 0), 0) / leads.length) : 0;
+
+  const totalRevenue = invoices.filter(i => i.status === 'paid').reduce((s, i) => s + (i.amount ?? 0), 0);
+  const outstanding = invoices.filter(i => i.status === 'unpaid').reduce((s, i) => s + (i.amount ?? 0), 0);
+
+  const stats = [
+    { label: 'Totale leads', val: totalLeads, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', trend: '+12%' },
+    { label: 'Akseptert rate', val: `${acceptanceRate}%`, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50', trend: `${accepted} av ${totalLeads}` },
+    { label: 'Gj.snitt score', val: avgScore, icon: Star, color: 'text-amber-600', bg: 'bg-amber-50', trend: 'av 100 poeng' },
+    { label: 'Betalt inntekt', val: `${(totalRevenue / 1000).toFixed(0)}K kr`, icon: TrendingUp, color: 'text-purple-600', bg: 'bg-purple-50', trend: `${(outstanding / 1000).toFixed(0)}K utestaaende` },
+  ];
+
+  const statuses = ['NEW', 'REVIEWED', 'ACCEPTED', 'REJECTED', 'IN_PROGRESS', 'ARCHIVED'];
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
-        <p className="text-muted-foreground">
-          Track performance metrics and lead quality
-        </p>
+        <h1 className="text-2xl font-bold text-slate-900">Analyse</h1>
+        <p className="text-slate-500 text-sm mt-0.5">Oversikt over leads, konvertering og inntekt</p>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Leads
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{totalLeads}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Acceptance Rate
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold text-emerald-600">
-              {acceptanceRate}%
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {stats.map((s, i) => (
+          <div key={i} className="rounded-xl border border-slate-200 bg-white p-4">
+            <div className={`h-9 w-9 rounded-xl ${s.bg} flex items-center justify-center mb-3`}>
+              <s.icon className={`h-5 w-5 ${s.color}`} />
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {accepted} accepted / {rejected} rejected
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Average Score
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{avgScore}</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Revenue Potential
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">
-              ${totalRevenue.toLocaleString()}
-            </div>
-          </CardContent>
-        </Card>
+            <p className="text-2xl font-bold text-slate-900">{s.val}</p>
+            <p className="text-xs text-slate-500 mt-0.5">{s.label}</p>
+            <p className="text-xs font-medium text-slate-400 mt-1">{s.trend}</p>
+          </div>
+        ))}
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Lead Status Breakdown</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {['NEW', 'REVIEWED', 'ACCEPTED', 'REJECTED', 'IN_PROGRESS', 'ARCHIVED'].map(
-              (status) => {
-                const count = leads?.filter((l) => l.status === status).length || 0;
-                const percentage = totalLeads
-                  ? Math.round((count / totalLeads) * 100)
-                  : 0;
-                return (
-                  <div key={status} className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">{status}</span>
-                    <div className="flex items-center gap-3">
-                      <div className="w-24 bg-slate-200 rounded-full h-2">
-                        <div
-                          className="bg-blue-600 h-2 rounded-full"
-                          style={{ width: `${percentage}%` }}
-                        />
-                      </div>
-                      <span className="text-sm font-medium w-12 text-right">
-                        {count}
-                      </span>
-                    </div>
+      <div className="grid lg:grid-cols-2 gap-6">
+        <div className="rounded-xl border border-slate-200 bg-white p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <BarChart2 className="h-5 w-5 text-blue-600" />
+            <h2 className="font-semibold text-slate-800">Lead status fordeling</h2>
+          </div>
+          <div className="space-y-3">
+            {statuses.map(status => {
+              const count = leads.filter(l => l.status === status).length;
+              const pct = totalLeads ? Math.round((count / totalLeads) * 100) : 0;
+              return (
+                <div key={status} className="flex items-center gap-3">
+                  <span className="text-xs text-slate-500 w-24 shrink-0">{STATUS_NO[status] ?? status}</span>
+                  <div className="flex-1 h-2 rounded-full bg-slate-200">
+                    <div className={`h-2 rounded-full transition-all ${STATUS_COLORS[status] ?? 'bg-slate-400'}`} style={{ width: `${pct}%` }} />
                   </div>
-                );
-              }
-            )}
-          </CardContent>
-        </Card>
+                  <span className="text-xs font-semibold text-slate-700 w-8 text-right">{count}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Insights</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm">
-            <p className="text-muted-foreground">
-              You&apos;ve collected <strong>{totalLeads}</strong> project
-              inquiries
-            </p>
-            <p className="text-muted-foreground">
-              <strong>{acceptanceRate}%</strong> acceptance rate shows{' '}
-              {acceptanceRate > 50 ? 'strong' : 'good'} lead quality
-            </p>
-            <p className="text-muted-foreground">
-              Average qualification score: <strong>{avgScore}</strong>
-            </p>
-          </CardContent>
-        </Card>
+        <div className="rounded-xl border border-slate-200 bg-white p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <TrendingUp className="h-5 w-5 text-emerald-600" />
+            <h2 className="font-semibold text-slate-800">Innsikt</h2>
+          </div>
+          <div className="space-y-3">
+            {[
+              { icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', text: `Du har samlet inn ${totalLeads} henvendelser totalt` },
+              { icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50', text: `${acceptanceRate}% aksepteringsrate` },
+              { icon: XCircle, color: 'text-red-500', bg: 'bg-red-50', text: `${rejected} leads avvist` },
+              { icon: Star, color: 'text-amber-600', bg: 'bg-amber-50', text: `Gjennomsnitts lead-score: ${avgScore} poeng av 100` },
+              { icon: TrendingUp, color: 'text-purple-600', bg: 'bg-purple-50', text: `${(outstanding / 1000).toFixed(0)} 000 kr utestaaende pa fakturaer` },
+            ].map((item, i) => (
+              <div key={i} className="flex items-start gap-3 rounded-lg p-3 bg-slate-50">
+                <div className={`h-7 w-7 rounded-lg ${item.bg} flex items-center justify-center flex-shrink-0`}>
+                  <item.icon className={`h-4 w-4 ${item.color}`} />
+                </div>
+                <p className="text-sm text-slate-700">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-xl border border-slate-200 bg-white p-5">
+        <h2 className="font-semibold text-slate-800 mb-4">Faktura oversikt</h2>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            { label: 'Totale fakturaer', val: invoices.length },
+            { label: 'Betalt', val: invoices.filter(i => i.status === 'paid').length },
+            { label: 'Utestaaende', val: invoices.filter(i => i.status === 'unpaid').length },
+            { label: 'Forfalt', val: invoices.filter(i => i.status === 'overdue').length },
+          ].map((s, i) => (
+            <div key={i} className="text-center p-3 rounded-lg bg-slate-50">
+              <p className="text-2xl font-bold text-slate-900">{s.val}</p>
+              <p className="text-xs text-slate-500 mt-0.5">{s.label}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

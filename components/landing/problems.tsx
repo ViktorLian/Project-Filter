@@ -3,7 +3,7 @@ export function Problems() {
     <section className="bg-white py-20">
       <div className="mx-auto max-w-5xl px-6 text-center">
         <h2 className="text-3xl font-semibold text-slate-900">
-          Å drive bedrift skal ikke bety å jonglere med ti verktøy
+          Å drive bedrift skal ikke bety å håndtere ti forskjellige verktøy
         </h2>
         <p className="mt-6 text-slate-600">
           De fleste små og mellomstore bedrifter bruker for mye tid på systemer
