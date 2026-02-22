@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, FileText, BarChart3, Settings, DollarSign, Receipt, Users } from 'lucide-react';
+import { LayoutDashboard, FileText, BarChart3, Settings, DollarSign, Receipt, Users, Briefcase } from 'lucide-react';
 
 const navItems = [
   {
@@ -35,6 +35,11 @@ const navItems = [
     href: '/dashboard/customers',
     label: 'Customers',
     icon: Users,
+  },
+  {
+    href: '/dashboard/jobs',
+    label: 'Jobber',
+    icon: Briefcase,
   },
   {
     href: '/dashboard/analytics',

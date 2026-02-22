@@ -4,7 +4,9 @@ import Stripe from 'stripe'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', { apiVersion: '2023-10-16' })
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2023-10-16' });
+}
 
 export async function POST(req: Request) {
   try {
@@ -17,7 +19,7 @@ export async function POST(req: Request) {
     const { priceId, billingTerm, plan } = body as { priceId: string; billingTerm: 'monthly' | 'prepaid6'; plan?: string }
     if (!priceId || !billingTerm) return NextResponse.json({ error: 'Missing params' }, { status: 400 })
 
-    // Retrieve price to get currency and unit amount
+    const stripe = getStripe();
     const price = await stripe.prices.retrieve(priceId)
     if (!price) return NextResponse.json({ error: 'Price not found' }, { status: 404 })
 

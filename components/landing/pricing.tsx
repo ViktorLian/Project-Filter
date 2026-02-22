@@ -63,6 +63,13 @@ const PLANS = [
   },
 ];
 
+// Fallback-priser vises hvis Stripe ikke er konfigurert
+const FALLBACK: Record<string, { display: string; amount: number; id: string | null }> = {
+  starter:    { display: '1 290', amount: 129000, id: null },
+  pro:        { display: '2 590', amount: 259000, id: null },
+  enterprise: { display: '3 990', amount: 399000, id: null },
+};
+
 export function Pricing() {
   const [prices, setPrices] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -74,6 +81,8 @@ export function Pricing() {
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
+
+  const getPrice = (key: string) => prices?.[key] ?? FALLBACK[key];
 
   return (
     <section id="pricing" className="bg-white py-24">
@@ -92,7 +101,7 @@ export function Pricing() {
         </div>
         <div className="grid gap-8 md:grid-cols-3">
           {PLANS.map((plan) => {
-            const price = prices?.[plan.key];
+            const price = getPrice(plan.key);
             return (
               <div
                 key={plan.key}
@@ -116,9 +125,9 @@ export function Pricing() {
                     ) : (
                       <div>
                         <span className="text-5xl font-extrabold text-slate-900">
-                          {price?.display ?? "—"}
+                          {getPrice(plan.key)?.display ?? '—'}
                         </span>
-                        <span className="ml-1 text-slate-500 text-base"> NOK/mnd</span>
+                        <span className="ml-1 text-slate-500 text-base"> kr/mnd</span>
                       </div>
                     )}
                   </div>
@@ -135,32 +144,23 @@ export function Pricing() {
                   ))}
                 </ul>
                 <div className="mt-8 space-y-3">
-                  {plan.key === "enterprise" ? (
-                    <a
-                      href="#contact"
-                      className="block w-full rounded-xl border-2 border-slate-300 px-6 py-3 text-center text-sm font-bold text-slate-900 hover:border-slate-400 transition"
-                    >
-                      Kontakt oss
-                    </a>
-                  ) : (
-                    <div>
-                      <StripeCheckoutButton
-                        plan={plan.key}
-                        priceId={price?.id}
-                        highlighted={plan.highlight}
-                        billingTerm="monthly"
-                        label="Start gratis (månedlig)"
-                      />
-                      <StripeCheckoutButton
-                        plan={plan.key}
-                        priceId={price?.id}
-                        highlighted={false}
-                        billingTerm="prepaid6"
-                        label="Betal 6 mnd – spar 20%"
-                        green={true}
-                      />
-                    </div>
-                  )}
+                  <div>
+                    <StripeCheckoutButton
+                      plan={plan.key}
+                      priceId={price?.id}
+                      highlighted={plan.highlight}
+                      billingTerm="monthly"
+                      label="Start gratis (månedlig)"
+                    />
+                    <StripeCheckoutButton
+                      plan={plan.key}
+                      priceId={price?.id}
+                      highlighted={false}
+                      billingTerm="prepaid6"
+                      label="Betal 6 mnd – spar 20 %"
+                      green={true}
+                    />
+                  </div>
                 </div>
               </div>
             );

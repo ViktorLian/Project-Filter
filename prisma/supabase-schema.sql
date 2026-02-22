@@ -251,4 +251,76 @@ CREATE TABLE IF NOT EXISTS recurring_bookings (
 CREATE INDEX IF NOT EXISTS idx_recurring_customer ON recurring_bookings(customer_id);
 CREATE INDEX IF NOT EXISTS idx_recurring_company ON recurring_bookings(company_id);
 
+-- JOBS (Jobbfortjeneste)
+CREATE TABLE IF NOT EXISTS jobs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  customer_id UUID REFERENCES customers(id) ON DELETE SET NULL,
+  company_id UUID,
+  job_title VARCHAR(255) NOT NULL,
+  job_date DATE,
+  completion_date DATE,
+  revenue DECIMAL(10, 2) DEFAULT 0,
+  expenses DECIMAL(10, 2) DEFAULT 0,
+  notes TEXT,
+  status VARCHAR(50) DEFAULT 'active',
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_jobs_user ON jobs(user_id);
+CREATE INDEX IF NOT EXISTS idx_jobs_customer ON jobs(customer_id);
+
+-- JOB EXPENSES
+CREATE TABLE IF NOT EXISTS job_expenses (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  job_id UUID NOT NULL REFERENCES jobs(id) ON DELETE CASCADE,
+  category VARCHAR(100) DEFAULT 'Annet',
+  amount DECIMAL(10, 2) NOT NULL DEFAULT 0,
+  description TEXT,
+  receipt_url VARCHAR(500),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_job_expenses_job ON job_expenses(job_id);
+
+-- FEEDBACK SURVEYS
+CREATE TABLE IF NOT EXISTS feedback_surveys (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  job_id UUID REFERENCES jobs(id) ON DELETE SET NULL,
+  customer_id UUID REFERENCES customers(id) ON DELETE SET NULL,
+  survey_token VARCHAR(100) UNIQUE NOT NULL,
+  question_1_rating INTEGER,
+  question_2_text TEXT,
+  question_3_text TEXT,
+  question_4_text TEXT,
+  question_5_text TEXT,
+  nps_score INTEGER,
+  testimonial_approved BOOLEAN DEFAULT FALSE,
+  testimonial_display_text TEXT,
+  sent_at TIMESTAMP,
+  completed_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_surveys_token ON feedback_surveys(survey_token);
+CREATE INDEX IF NOT EXISTS idx_surveys_job ON feedback_surveys(job_id);
+
+-- CONTRACT REMINDERS
+CREATE TABLE IF NOT EXISTS contract_reminders (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  customer_id UUID REFERENCES customers(id) ON DELETE SET NULL,
+  contract_type VARCHAR(100) DEFAULT 'Annet',
+  contract_name VARCHAR(255) NOT NULL,
+  start_date DATE,
+  end_date DATE NOT NULL,
+  renewal_reminder_sent BOOLEAN DEFAULT FALSE,
+  reminder_sent_date TIMESTAMP,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_contracts_user ON contract_reminders(user_id);
+CREATE INDEX IF NOT EXISTS idx_contracts_end ON contract_reminders(end_date);
+
 -- End of schema

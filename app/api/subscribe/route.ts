@@ -6,13 +6,14 @@ import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { PRICING_PLANS, TRIAL_DAYS, PlanId } from '@/lib/pricing'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2023-10-16',
-});
+function getStripe() {
+  return new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2023-10-16' });
+}
 
 export async function POST(request: Request) {
   try {
     // Use NextAuth session
+    const stripe = getStripe();
     const session = await getServerSession(authOptions)
     
     if (!session?.user) {
