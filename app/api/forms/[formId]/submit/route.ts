@@ -1,120 +1,95 @@
+export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { scoreForm } from '@/lib/scoring';
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { formId: string } }
-) {
+// Webhook endpoint for Zapier integration
+// Sends new lead data to Zapier when a lead is created
+export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { answers } = body;
+    // Verify webhook secret
+    const authHeader = req.headers.get('authorization');
+    const webhookSecret = process.env.ZAPIER_WEBHOOK_SECRET;
 
-    if (!answers || typeof answers !== 'object') {
-      return NextResponse.json({ error: 'Answers required' }, { status: 400 });
+    if (!webhookSecret || authHeader !== `Bearer ${webhookSecret}`) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { leadId } = await req.json();
+
+    if (!leadId) {
+      return NextResponse.json({ error: 'Missing leadId' }, { status: 400 });
     }
 
     const supabase = createAdminClient();
 
-    // Get form and company info
-    const { data: form } = await supabase
-      .from('forms')
-      .select('*, questions(*), leads_companies(id, subscription_plan)')
-      .eq('id', params.formId)
-      .eq('is_active', true)
+    // Get lead with company and form info
+    const { data: lead, error } = await supabase
+      .from('leads_leads')
+      .select(`
+        *,
+        company:leads_companies(*),
+        form:leads_forms(*)
+      `)
+      .eq('id', leadId)
       .single();
 
-    if (!form) {
-      return NextResponse.json({ error: 'Form not found' }, { status: 404 });
+    if (error || !lead) {
+      return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
     }
 
-    // Check lead limit
-    const { checkLimit } = await import('@/lib/subscription');
-    const limitCheck = await checkLimit(form.leads_companies.id, 'leads');
+    // Format data for Zapier
+    const zapierPayload = {
+      lead_id: lead.id,
+      customer_name: lead.customer_name,
+      customer_email: lead.customer_email,
+      customer_phone: lead.customer_phone,
+      company_name: lead.company?.name,
+      form_name: lead.form?.name,
+      status: lead.status,
+      score: lead.score,
+      risk_level: lead.risk_level,
+      answers: lead.answers,
+      created_at: lead.created_at,
+      dashboard_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/leads/${lead.id}`,
+    };
+
+    // Send to Zapier webhook URL
+    const zapierWebhookUrl = process.env.ZAPIER_WEBHOOK_URL;
     
-    if (!limitCheck.canCreate) {
-      return NextResponse.json(
-        { error: 'Lead limit reached. Please contact the form owner.' },
-        { status: 403 }
-      );
-    }
-
-    // Extract contact info and project details from answers
-    const answerValues = Object.values(answers);
-    const name = answerValues.find((v: any) => 
-      typeof v === 'string' && v.length > 2 && v.length < 100 && !v.includes('@')
-    ) as string || 'Unknown';
-    
-    const email = answerValues.find((v: any) => 
-      typeof v === 'string' && v.includes('@')
-    ) as string || null;
-    
-    const phone = answerValues.find((v: any) => 
-      typeof v === 'string' && /\d{8,}/.test(v)
-    ) as string || null;
-
-    // Calculate score using scoring criteria
-    const scoreResult = await scoreForm(params.formId, answers);
-
-    // Create lead with calculated score
-    const { data: lead, error: leadError } = await supabase
-      .from('leads')
-      .insert({
-        form_id: form.id,
-        company_id: form.company_id,
-        name,
-        email,
-        phone,
-        status: 'NEW',
-        score: scoreResult.score,
-        score_details: scoreResult.details,
-        answers,
-      })
-      .select()
-      .single();
-
-    if (leadError || !lead) {
-      console.error('[LEAD CREATE ERROR]', leadError);
-      throw new Error('Failed to create lead');
-    }
-
-    // Store form submission
-    const { error: submissionError } = await supabase
-      .from('form_submissions')
-      .insert({
-        form_id: form.id,
-        lead_id: lead.id,
-        answers,
+    if (zapierWebhookUrl) {
+      await fetch(zapierWebhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(zapierPayload),
       });
-
-    if (submissionError) {
-      console.error('[SUBMISSION ERROR]', submissionError);
-      // Don't fail the request if submission storage fails
     }
 
-    // Send email notification (async, don't block response)
-    const { sendLeadNotification } = await import('@/lib/email');
-    const { data: users } = await supabase
-      .from('leads_users')
-      .select('email')
-      .eq('company_id', form.company_id)
-      .limit(1);
-    
-    if (users?.[0]?.email) {
-      sendLeadNotification({
-        name,
-        email: email || 'No email provided',
-        formName: form.name,
-        companyOwnerEmail: users[0].email
-      }).catch(err => console.error('Email send failed:', err));
+    return NextResponse.json({ success: true });
+  } catch (e) {
+    console.error('[ZAPIER WEBHOOK ERROR]', e);
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+  }
+}
+
+// GET endpoint for Zapier to test connection
+export async function GET(req: NextRequest) {
+  try {
+    const authHeader = req.headers.get('authorization');
+    const webhookSecret = process.env.ZAPIER_WEBHOOK_SECRET;
+
+    if (!webhookSecret || authHeader !== `Bearer ${webhookSecret}`) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    return NextResponse.json({ success: true, leadId: lead.id });
-  } catch (e: any) {
-    console.error('[FORM SUBMIT ERROR]', e);
-    return NextResponse.json(
-      { error: e.message || 'Server error' },
-      { status: 500 }
-    );
+    return NextResponse.json({ 
+      status: 'ok',
+      message: 'Zapier webhook is configured correctly',
+      timestamp: new Date().toISOString()
+    });
+  } catch (e) {
+    console.error('[ZAPIER TEST ERROR]', e);
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }

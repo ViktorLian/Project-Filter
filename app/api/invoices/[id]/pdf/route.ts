@@ -1,127 +1,95 @@
+export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
-import PDFDocument from 'pdfkit';
 
+// Webhook endpoint for Zapier integration
+// Sends new lead data to Zapier when a lead is created
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    // Verify webhook secret
+    const authHeader = req.headers.get('authorization');
+    const webhookSecret = process.env.ZAPIER_WEBHOOK_SECRET;
+
+    if (!webhookSecret || authHeader !== `Bearer ${webhookSecret}`) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { leadId } = await req.json();
+
+    if (!leadId) {
+      return NextResponse.json({ error: 'Missing leadId' }, { status: 400 });
+    }
+
+    const supabase = createAdminClient();
+
+    // Get lead with company and form info
+    const { data: lead, error } = await supabase
+      .from('leads_leads')
+      .select(`
+        *,
+        company:leads_companies(*),
+        form:leads_forms(*)
+      `)
+      .eq('id', leadId)
+      .single();
+
+    if (error || !lead) {
+      return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
+    }
+
+    // Format data for Zapier
+    const zapierPayload = {
+      lead_id: lead.id,
+      customer_name: lead.customer_name,
+      customer_email: lead.customer_email,
+      customer_phone: lead.customer_phone,
+      company_name: lead.company?.name,
+      form_name: lead.form?.name,
+      status: lead.status,
+      score: lead.score,
+      risk_level: lead.risk_level,
+      answers: lead.answers,
+      created_at: lead.created_at,
+      dashboard_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/leads/${lead.id}`,
+    };
+
+    // Send to Zapier webhook URL
+    const zapierWebhookUrl = process.env.ZAPIER_WEBHOOK_URL;
     
-    // Allow testing without session
-    if (!session) {
-      return NextResponse.json({ 
-        success: true, 
-        message: 'Demo mode - PDF generation would happen here',
-        pdfUrl: '/demo-invoice.pdf'
+    if (zapierWebhookUrl) {
+      await fetch(zapierWebhookUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(zapierPayload),
       });
     }
 
-    const { invoiceId } = await req.json();
-    const companyId = (session.user as any).companyId;
-    const supabase = createAdminClient();
+    return NextResponse.json({ success: true });
+  } catch (e) {
+    console.error('[ZAPIER WEBHOOK ERROR]', e);
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+  }
+}
 
-    // Get invoice data
-    const { data: invoice } = await supabase
-      .from('invoices')
-      .select('*, customer:invoice_customers(*)')
-      .eq('id', invoiceId)
-      .eq('company_id', companyId)
-      .single();
+// GET endpoint for Zapier to test connection
+export async function GET(req: NextRequest) {
+  try {
+    const authHeader = req.headers.get('authorization');
+    const webhookSecret = process.env.ZAPIER_WEBHOOK_SECRET;
 
-    if (!invoice) {
-      return NextResponse.json({ error: 'Invoice not found' }, { status: 404 });
+    if (!webhookSecret || authHeader !== `Bearer ${webhookSecret}`) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Get company settings for bank account and KID
-    const { data: company } = await supabase
-      .from('leads_companies')
-      .select('*')
-      .eq('id', companyId)
-      .single();
-
-    // Generate KID number (format: YYYY + invoice_number padded)
-    const year = new Date().getFullYear();
-    const kidNumber = `${year}${String(invoice.invoice_number).padStart(6, '0')}`;
-
-    // Create PDF
-    const doc = new PDFDocument({ size: 'A4', margin: 50 });
-    const chunks: Buffer[] = [];
-
-    doc.on('data', (chunk) => chunks.push(chunk));
-
-    // Header
-    doc.fontSize(24).text('FAKTURA', { align: 'center' });
-    doc.moveDown();
-
-    // Company info
-    doc.fontSize(12).text(company?.name || 'Your Company', { align: 'left' });
-    doc.fontSize(10).text(company?.address || 'Address here');
-    doc.text(company?.org_number || 'Org nr: XXX XXX XXX');
-    doc.moveDown();
-
-    // Invoice details
-    doc.fontSize(14).text(`Faktura #${invoice.invoice_number}`);
-    doc.fontSize(10).text(`Dato: ${new Date(invoice.issued_date).toLocaleDateString('no-NO')}`);
-    doc.text(`Forfallsdato: ${new Date(invoice.due_date).toLocaleDateString('no-NO')}`);
-    doc.text(`KID: ${kidNumber}`);
-    doc.moveDown();
-
-    // Customer info
-    doc.text('Faktureres til:');
-    doc.text(invoice.customer?.name || 'Customer name');
-    if (invoice.customer?.email) doc.text(invoice.customer.email);
-    if (invoice.customer?.address) doc.text(invoice.customer.address);
-    doc.moveDown(2);
-
-    // Line items
-    doc.fontSize(12).text('Beskrivelse', 50, doc.y);
-    doc.text('Beløp', 450, doc.y - 12, { align: 'right' });
-    doc.moveDown(0.5);
-    doc.strokeColor('#000000').lineWidth(1).moveTo(50, doc.y).lineTo(550, doc.y).stroke();
-    doc.moveDown(0.5);
-
-    doc.fontSize(10).text(invoice.description || 'Tjenester', 50, doc.y);
-    doc.text(`${invoice.amount.toLocaleString('no-NO')} kr`, 450, doc.y - 12, { align: 'right' });
-    doc.moveDown(2);
-
-    // Totals
-    doc.fontSize(12).text('Totalt eks. MVA:', 350, doc.y);
-    doc.text(`${invoice.amount.toLocaleString('no-NO')} kr`, 450, doc.y - 14, { align: 'right' });
-    doc.moveDown(0.5);
-    
-    const mva = Math.round(invoice.amount * 0.25);
-    doc.text('MVA (25%):', 350, doc.y);
-    doc.text(`${mva.toLocaleString('no-NO')} kr`, 450, doc.y - 14, { align: 'right' });
-    doc.moveDown(0.5);
-    
-    const total = invoice.amount + mva;
-    doc.fontSize(14).text('Totalt inkl. MVA:', 350, doc.y);
-    doc.text(`${total.toLocaleString('no-NO')} kr`, 450, doc.y - 16, { align: 'right' });
-    doc.moveDown(2);
-
-    // Payment info
-    doc.fontSize(10).text('Betalingsinformasjon:', { underline: true });
-    doc.text(`Kontonummer: ${company?.bank_account || '1234 56 78901'}`);
-    doc.text(`KID: ${kidNumber}`);
-    doc.text(`Betalingsfrist: ${new Date(invoice.due_date).toLocaleDateString('no-NO')}`);
-
-    doc.end();
-
-    // Wait for PDF to finish
-    await new Promise((resolve) => doc.on('end', resolve));
-
-    const pdfBuffer = Buffer.concat(chunks);
-
-    // Return PDF
-    return new NextResponse(pdfBuffer, {
-      headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="invoice-${invoice.invoice_number}.pdf"`,
-      },
+    return NextResponse.json({ 
+      status: 'ok',
+      message: 'Zapier webhook is configured correctly',
+      timestamp: new Date().toISOString()
     });
   } catch (e) {
-    console.error('[PDF GENERATION ERROR]', e);
+    console.error('[ZAPIER TEST ERROR]', e);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }
