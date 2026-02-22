@@ -1,22 +1,18 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
+import { createAdminClient } from '@/lib/supabase/admin';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+function getOpenAI() {
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+}
 
 export async function POST(request: NextRequest) {
   try {
     const { message, companyId, conversationHistory } = await request.json();
 
     // Fetch company settings from database
+    const supabase = createAdminClient();
     const { data: company } = await supabase
       .from('companies')
       .select('*')
@@ -52,7 +48,7 @@ Instruksjoner:
       content: msg.text
     }));
 
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: process.env.OPENAI_MODEL || 'gpt-4-turbo',
       messages: [
         { role: 'system', content: systemPrompt },

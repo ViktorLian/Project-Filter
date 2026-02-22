@@ -2,9 +2,10 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+function getOpenAI() {
+  if (!process.env.OPENAI_API_KEY) throw new Error('Missing OPENAI_API_KEY')
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+}
 
 const SYSTEM_PROMPT = `Du er FlowPilot Assistant - en vennlig og hjelpsom chatbot.
 
@@ -49,7 +50,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
     }
 
-    const response = await client.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: 'gpt-4-turbo',
       messages: [
         {

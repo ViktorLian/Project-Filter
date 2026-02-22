@@ -4,7 +4,10 @@ import { NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { supabaseAdmin } from '@/lib/supabase'
 
-const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+function getOpenAI() {
+  if (!process.env.OPENAI_API_KEY) throw new Error('Missing OPENAI_API_KEY')
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+}
 
 export async function POST(req: Request) {
   try {
@@ -13,7 +16,7 @@ export async function POST(req: Request) {
 
     const prompt = `Analyze this lead inquiry:\nName: ${leadName}\nEmail: ${leadEmail}\nMessage: ${leadMessage}\nPhone: ${leadPhone}\n\nReturn JSON with keys: summary, category (price_sensitive|urgent|high_value|standard), sentiment (positive|neutral|negative), action_items (array), response_template (string)`
 
-    const resp = await client.chat.completions.create({
+    const resp = await getOpenAI().chat.completions.create({
       model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
       messages: [{ role: 'user', content: prompt }],
       max_tokens: 500,

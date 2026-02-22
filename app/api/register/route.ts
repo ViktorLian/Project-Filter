@@ -1,6 +1,7 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { sendTrialWelcomeEmail } from '@/lib/email';
 
 export async function POST(req: NextRequest) {
   try {
@@ -91,9 +92,36 @@ export async function POST(req: NextRequest) {
       // Continue anyway - settings can be created later
     }
 
+    // Create company with 14-day free trial
+    const trialEndsAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
+    const { data: company, error: companyError } = await supabase
+      .from('leads_companies')
+      .insert({
+        user_id: newUser.id,
+        name: companyName,
+        subscription_status: 'trialing',
+        subscription_plan: 'starter',
+        trial_ends_at: trialEndsAt,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
+
+    if (companyError) {
+      console.error('[COMPANY CREATE ERROR]', companyError);
+      // Continue - company can be created later
+    }
+
+    // Send welcome/trial email (non-blocking)
+    sendTrialWelcomeEmail(email, name, companyName).catch(e =>
+      console.error('[WELCOME EMAIL ERROR]', e)
+    );
+
     return NextResponse.json({ 
       success: true,
-      message: 'Account created successfully'
+      message: 'Account created successfully',
+      trialEndsAt,
     });
   } catch (e) {
     console.error('[REGISTER ERROR]', e);

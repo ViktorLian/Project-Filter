@@ -4,12 +4,7 @@ import { getToken } from 'next-auth/jwt'
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
-  
-  // Skip auth check in development mode for easy testing
-  if (process.env.NODE_ENV === 'development') {
-    return NextResponse.next()
-  }
-  
+
   // Protect dashboard routes
   if (path.startsWith('/dashboard')) {
     const token = await getToken({ 
@@ -18,7 +13,6 @@ export async function middleware(request: NextRequest) {
     })
     
     if (!token) {
-      // Not logged in - redirect to login
       const url = new URL('/login', request.url)
       url.searchParams.set('callbackUrl', path)
       return NextResponse.redirect(url)
