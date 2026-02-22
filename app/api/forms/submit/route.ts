@@ -1,5 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { supabaseAdmin } from '@/lib/supabase';
+import { NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
 
 interface SubmitFormRequest {
   customer_name: string;
@@ -24,7 +26,7 @@ export async function POST(request: Request) {
     } = body;
 
     if (!customer_email) {
-      return Response.json(
+      return NextResponse.json(
         { error: 'customer_email required' },
         { status: 400 }
       );
@@ -73,13 +75,13 @@ export async function POST(request: Request) {
       });
     }
 
-    return Response.json(
+    return NextResponse.json(
       { success: true, alert_email: alertEmail, template },
       { status: 200 }
     );
   } catch (error) {
     console.error('Form submission error:', error);
-    return Response.json(
+    return NextResponse.json(
       { error: 'Failed to process form' },
       { status: 500 }
     );
