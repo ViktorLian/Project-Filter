@@ -1,5 +1,7 @@
+export const dynamic = 'force-dynamic';
 import { supabaseAdmin } from '@/lib/supabase';
 import nodemailer from 'nodemailer';
+import { NextResponse } from 'next/server';
 
 // Create email transporter
 const transporter = nodemailer.createTransport({
@@ -18,7 +20,7 @@ export async function POST(request: Request) {
       .select('*');
 
     if (usersError || !users) {
-      return Response.json({ error: 'Failed to fetch users' }, { status: 500 });
+      return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 });
     }
 
     let emailsSent = 0;
@@ -63,14 +65,14 @@ export async function POST(request: Request) {
       }
     }
 
-    return Response.json({ 
+    return NextResponse.json({ 
       success: true,
       emailsSent,
       message: `Sent ${emailsSent} analytics emails`
     });
   } catch (error) {
     console.error('[DAILY ANALYTICS ERROR]', error);
-    return Response.json(
+    return NextResponse.json(
       { error: 'Failed to send analytics emails' },
       { status: 500 }
     );
