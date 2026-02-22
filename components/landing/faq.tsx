@@ -1,21 +1,23 @@
 export function FAQ() {
   const items = [
-    ['Can I cancel anytime?', 'Yes, there are no long-term contracts.'],
-    ['Is my data secure?', 'Yes. We use bank-level encryption via Supabase.'],
-    ['Do you offer a free trial?', 'Yes, 14 days with no credit card required.'],
-    ['Can I import existing data?', 'Yes, CSV import is supported.'],
-    ['What payment methods do you accept?', 'All major cards via Stripe.'],
-    ['Is there a setup fee?', 'No. Get started immediately.'],
+    ['Kan jeg avslutte når som helst?', 'Ja, det er ingen binding eller langtidskontrakter.'],
+    ['Er dataene mine sikre?', 'Ja. Vi bruker kryptering på banknivå via Supabase og Stripe.'],
+    ['Tilbyr dere gratis prøveperiode?', 'Ja, 14 dager gratis – ingen kredittkort nødvendig.'],
+    ['Kan jeg importere eksisterende data?', 'Ja, CSV-import er støttet.'],
+    ['Hvilke betalingsmåter godtar dere?', 'Alle vanlige kort via Stripe. Sikker og rask betaling.'],
+    ['Er det noe oppstartsgebyr?', 'Nei. Du kommer i gang med en gang – ingenting å betale før prøveperioden er over.'],
+    ['Hva inngår i prøveperioden?', 'Full tilgang til alle funksjoner i 14 dager. Ingen begrensninger.'],
+    ['Hvor får jeg support?', 'Via e-post og kontaktskjemaet under. Vi svarer raskt.'],
   ]
 
   return (
     <section className="bg-slate-50 py-20">
       <div className="mx-auto max-w-4xl px-6">
-        <h2 className="text-3xl font-semibold text-center">Frequently Asked Questions</h2>
+        <h2 className="text-3xl font-semibold text-center text-slate-900">Ofte stilte spørsmål</h2>
         <div className="mt-10 space-y-4">
           {items.map(([q, a]) => (
-            <div key={q} className="rounded-lg border bg-white p-4">
-              <p className="font-medium">{q}</p>
+            <div key={q} className="rounded-lg border bg-white p-5">
+              <p className="font-semibold text-slate-900">{q}</p>
               <p className="mt-2 text-sm text-slate-600">{a}</p>
             </div>
           ))}
@@ -24,3 +26,4 @@ export function FAQ() {
     </section>
   )
 }
+

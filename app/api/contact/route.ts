@@ -15,36 +15,36 @@ export async function POST(req: NextRequest) {
 
     // Send email to FlowPilot
     const emailHtml = `
-      <h2>New Contact Form Submission</h2>
-      <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Company:</strong> ${company || 'Not provided'}</p>
-      <p><strong>Message:</strong></p>
-      <p>${message.replace(/\n/g, '<br>')}</p>
+      <h2>Ny henvendelse fra FlowPilot-kontaktskjema</h2>
+      <p><strong>Navn:</strong> ${name}</p>
+      <p><strong>E-post:</strong> ${email}</p>
+      <p><strong>Bedrift:</strong> ${company || 'Ikke oppgitt'}</p>
+      <p><strong>Melding:</strong></p>
+      <p>${(message as string).replace(/\n/g, '<br>')}</p>
       <hr>
-      <p><small>Reply directly to ${email}</small></p>
+      <p><small>Svar direkte til ${email}</small></p>
     `
 
     await sendEmail(
       'Flowpilot@hotmail.com',
-      `FlowPilot Contact: ${name}`,
+      `FlowPilot kontakt: ${name}`,
       emailHtml
     )
 
-    // Send confirmation to customer
+    // Send bekreftelse til kunden
     const confirmationHtml = `
-      <h2>Thank you for contacting FlowPilot!</h2>
-      <p>Hi ${name},</p>
-      <p>We've received your message and will get back to you as soon as possible.</p>
-      <p><strong>Your message:</strong></p>
-      <p>${message.replace(/\n/g, '<br>')}</p>
-      <br>
-      <p>Best regards,<br>The FlowPilot Team</p>
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px">
+        <h2 style="color:#1e293b">Takk for henvendelsen, ${name}!</h2>
+        <p style="color:#475569">Vi har mottatt meldingen din og tar kontakt så snart som mulig.</p>
+        <p style="color:#475569"><strong>Din melding:</strong></p>
+        <p style="color:#475569;background:#f8fafc;padding:16px;border-radius:8px">${(message as string).replace(/\n/g, '<br>')}</p>
+        <p style="color:#94a3b8;font-size:13px;margin-top:30px">FlowPilot — automatiser og voks</p>
+      </div>
     `
 
     await sendEmail(
-      email,
-      'Thanks for reaching out to FlowPilot',
+      email as string,
+      'Takk for at du tok kontakt med FlowPilot',
       confirmationHtml
     )
 

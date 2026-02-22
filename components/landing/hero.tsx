@@ -71,13 +71,13 @@ export function Hero() {
           </div>
           <div className="mt-20 grid grid-cols-2 gap-4 sm:grid-cols-4 max-w-3xl mx-auto">
             {[
-              { value: '10x', label: 'Raskere lead-håndtering' },
-              { value: '80%', label: 'Færre no-shows med SMS' },
               { value: '14d', label: 'Gratis prøveperiode' },
-              { value: 'inf', label: 'Leads på Enterprise' },
+              { value: 'Alt-i-én', label: 'Ikke mange separate verktøy' },
+              { value: 'Kr 0', label: 'Oppstartsgebyr' },
+              { value: '24/7', label: 'AI-bot som aldri sover' },
             ].map((s) => (
               <div key={s.label} className="rounded-2xl border border-white/10 bg-white/5 p-5 text-center backdrop-blur-sm">
-                <p className="text-3xl font-extrabold text-white">{s.value === 'inf' ? '\u221e' : s.value}</p>
+                <p className="text-3xl font-extrabold text-white">{s.value}</p>
                 <p className="mt-1 text-xs text-slate-400 leading-snug">{s.label}</p>
               </div>
             ))}

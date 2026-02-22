@@ -33,7 +33,7 @@ export function Contact() {
       setSuccess(true)
       ;(e.target as HTMLFormElement).reset()
     } catch (err) {
-      setError('Failed to send message. Please try emailing us directly.')
+      setError('Klarte ikke sende meldingen. Send oss en e-post direkte på Flowpilot@hotmail.com')
     } finally {
       setLoading(false)
     }
@@ -43,9 +43,9 @@ export function Contact() {
     <section id="contact" className="bg-gradient-to-b from-white to-slate-50 py-24">
       <div className="mx-auto max-w-3xl px-6">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-slate-900">Get in Touch</h2>
+          <h2 className="text-4xl font-bold text-slate-900">Ta kontakt</h2>
           <p className="mt-4 text-lg text-slate-600">
-            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            Har du spørsmål? Vi svarer raskt. Send oss en melding så tar vi kontakt.
           </p>
         </div>
 
@@ -53,7 +53,7 @@ export function Contact() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {success && (
               <div className="bg-green-50 border border-green-200 text-green-800 text-sm p-4 rounded-lg">
-                ✓ Message sent successfully! We'll get back to you soon.
+                ✓ Meldingen er sendt! Vi tar kontakt så snart som mulig.
               </div>
             )}
             {error && (
@@ -64,20 +64,20 @@ export function Contact() {
 
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">
-                Your Name
+                Navn
               </label>
               <input
                 id="name"
                 name="name"
                 required
                 className="w-full rounded-lg border border-slate-300 p-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition"
-                placeholder="John Doe"
+                placeholder="Ola Nordmann"
               />
             </div>
 
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
-                Email Address
+                E-postadresse
               </label>
               <input
                 id="email"
@@ -85,25 +85,25 @@ export function Contact() {
                 type="email"
                 required
                 className="w-full rounded-lg border border-slate-300 p-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition"
-                placeholder="john@company.com"
+                placeholder="ola@bedriften.no"
               />
             </div>
 
             <div>
               <label htmlFor="company" className="block text-sm font-medium text-slate-700 mb-2">
-                Company Name
+                Bedriftsnavn (valgfritt)
               </label>
               <input
                 id="company"
                 name="company"
                 className="w-full rounded-lg border border-slate-300 p-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition"
-                placeholder="Your Company"
+                placeholder="Din bedrift AS"
               />
             </div>
 
             <div>
               <label htmlFor="message" className="block text-sm font-medium text-slate-700 mb-2">
-                Message
+                Melding
               </label>
               <textarea
                 id="message"
@@ -111,7 +111,7 @@ export function Contact() {
                 required
                 rows={5}
                 className="w-full rounded-lg border border-slate-300 p-3 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200 transition resize-none"
-                placeholder="Tell us about your needs..."
+                placeholder="Fortell oss hva du trenger hjelp med..."
               />
             </div>
 
@@ -120,13 +120,13 @@ export function Contact() {
               disabled={loading}
               className="w-full rounded-lg bg-blue-600 px-6 py-4 text-base font-semibold text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition shadow-lg hover:shadow-xl"
             >
-              {loading ? 'Sending...' : 'Send Message'}
+              {loading ? 'Sender...' : 'Send melding'}
             </button>
           </form>
 
           <div className="mt-8 pt-8 border-t border-slate-200 text-center">
             <p className="text-sm text-slate-600">
-              Or email us directly at{' '}
+              Eller send e-post direkte til{' '}
               <a href="mailto:Flowpilot@hotmail.com" className="font-semibold text-blue-600 hover:text-blue-700">
                 Flowpilot@hotmail.com
               </a>
