@@ -168,7 +168,7 @@ export default function CashflowPage() {
               </select>
               <select value={filterCat} onChange={e => setFilterCat(e.target.value)} className="rounded-lg border border-slate-200 px-2 py-1.5 text-xs text-slate-600">
                 <option value="ALL">Alle kategorier</option>
-                {[...new Set(transactions.map(t => t.category))].map(c => <option key={c}>{c}</option>)}
+                {Array.from(new Set(transactions.map(t => t.category))).map(c => <option key={c}>{c}</option>)}
               </select>
             </div>
           </div>
