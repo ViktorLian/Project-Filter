@@ -201,4 +201,54 @@ BEGIN
     END IF;
 END $$;
 
+-- CUSTOMERS (Mini-CRM)
+CREATE TABLE IF NOT EXISTS customers (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  company_id UUID,
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255),
+  phone VARCHAR(20),
+  total_spent DECIMAL(10,2) DEFAULT 0,
+  job_count INTEGER DEFAULT 0,
+  days_since_last_contact INTEGER DEFAULT 0,
+  notes TEXT,
+  customer_tier VARCHAR(50) DEFAULT 'regular',
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_customers_company ON customers(company_id);
+CREATE INDEX IF NOT EXISTS idx_customers_user ON customers(user_id);
+
+-- CUSTOMER INTERACTIONS
+CREATE TABLE IF NOT EXISTS customer_interactions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  customer_id UUID NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+  interaction_type VARCHAR(50) NOT NULL,
+  notes TEXT,
+  interaction_date TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_interactions_customer ON customer_interactions(customer_id);
+
+-- RECURRING BOOKINGS
+CREATE TABLE IF NOT EXISTS recurring_bookings (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  customer_id UUID REFERENCES customers(id) ON DELETE SET NULL,
+  company_id UUID,
+  user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+  service_type VARCHAR(255) NOT NULL,
+  interval_value INTEGER NOT NULL DEFAULT 1,
+  interval_unit VARCHAR(20) NOT NULL DEFAULT 'months',
+  next_booking_date DATE,
+  notes TEXT,
+  active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_recurring_customer ON recurring_bookings(customer_id);
+CREATE INDEX IF NOT EXISTS idx_recurring_company ON recurring_bookings(company_id);
+
 -- End of schema

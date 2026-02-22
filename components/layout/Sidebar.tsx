@@ -32,7 +32,7 @@ const navItems = [
     icon: Receipt,
   },
   {
-    href: '/dashboard/invoices/customers',
+    href: '/dashboard/customers',
     label: 'Customers',
     icon: Users,
   },
