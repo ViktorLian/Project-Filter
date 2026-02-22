@@ -9,6 +9,8 @@ const transporter = nodemailer.createTransport({
   auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
 })
 
+export const dynamic = 'force-dynamic'
+
 export async function POST() {
   try {
     const cutoff = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString()
