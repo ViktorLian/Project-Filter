@@ -4,6 +4,20 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
+function generateKID(prefix: string, invoiceNum: number): string {
+  const base = `${prefix}${String(invoiceNum).padStart(5, '0')}`;
+  let sum = 0;
+  let alt = false;
+  for (let i = base.length - 1; i >= 0; i--) {
+    let n = parseInt(base[i]);
+    if (alt) { n *= 2; if (n > 9) n -= 9; }
+    sum += n;
+    alt = !alt;
+  }
+  const check = (10 - (sum % 10)) % 10;
+  return base + check;
+}
+
 export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -31,21 +45,6 @@ export async function GET(
       .select('name, bank_account, kid_prefix, address, org_number, invoice_email')
       .eq('id', companyId)
       .single();
-
-    // Generate KID number: kid_prefix + invoice_number + control digit
-    function generateKID(prefix: string, invoiceNum: number): string {
-      const base = `${prefix}${String(invoiceNum).padStart(5, '0')}`;
-      let sum = 0;
-      let alt = false;
-      for (let i = base.length - 1; i >= 0; i--) {
-        let n = parseInt(base[i]);
-        if (alt) { n *= 2; if (n > 9) n -= 9; }
-        sum += n;
-        alt = !alt;
-      }
-      const check = (10 - (sum % 10)) % 10;
-      return base + check;
-    }
 
     const kidPrefix = company?.kid_prefix || String(new Date().getFullYear());
     const kid = generateKID(kidPrefix, inv.invoice_number || 1);
