@@ -18,7 +18,7 @@ export default function BillingPage() {
       const response = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ planId: key })
+        body: JSON.stringify({ planId: plan })
       })
 
       if (!response.ok) {
