@@ -51,35 +51,35 @@ function LoginForm() {
         
         <Card className="shadow-xl">
           <CardHeader>
-            <CardTitle>Welcome back</CardTitle>
+            <CardTitle>Logg inn på FlowPilot</CardTitle>
             <CardDescription>
-              Sign in to access your FlowPilot dashboard
+              Tilgang til ditt dashboard og alle verktøy
             </CardDescription>
           </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {params.get('registered') && (
               <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm p-3 rounded-md">
-                Account created successfully. You can now sign in.
+                ✅ Konto opprettet! Du kan nå logge inn.
               </div>
             )}
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-800 text-sm p-3 rounded-md">
-                {error}
+                Feil e-post eller passord. Prøv igjen.
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">E-postadresse</Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
                 required
-                placeholder="john@acme.com"
+                placeholder="ola@bedrift.no"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Passord</Label>
               <Input
                 id="password"
                 name="password"
@@ -88,13 +88,13 @@ function LoginForm() {
                 placeholder="••••••••"
               />
             </div>
-            <Button type="submit" disabled={loading} className="w-full">
-              {loading ? 'Signing in...' : 'Sign in'}
+            <Button type="submit" disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700">
+              {loading ? 'Logger inn...' : 'Logg inn'}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
-              Don&apos;t have an account?{' '}
+              Har du ikke konto?{' '}
               <Link href="/register" className="underline hover:text-primary">
-                Sign up
+                Registrer deg gratis
               </Link>
             </p>
           </form>

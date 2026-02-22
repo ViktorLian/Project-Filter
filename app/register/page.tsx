@@ -55,9 +55,9 @@ export default function RegisterPage() {
         
         <Card className="shadow-xl">
           <CardHeader>
-            <CardTitle>Start your free trial</CardTitle>
+            <CardTitle>Start gratis prøveperiode</CardTitle>
             <CardDescription>
-              14 days free. No credit card required.
+              14 dager gratis. Ingen bindingstid. Ingen kredittkort nødvendig.
             </CardDescription>
           </CardHeader>
         <CardContent>
@@ -68,35 +68,35 @@ export default function RegisterPage() {
               </div>
             )}
             <div className="space-y-2">
-              <Label htmlFor="companyName">Company name</Label>
+              <Label htmlFor="companyName">Bedriftsnavn</Label>
               <Input
                 id="companyName"
                 name="companyName"
                 required
-                placeholder="Acme Construction"
+                placeholder="Nordmann Rørlegger AS"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="name">Your name</Label>
+              <Label htmlFor="name">Ditt navn</Label>
               <Input
                 id="name"
                 name="name"
                 required
-                placeholder="John Doe"
+                placeholder="Ola Nordmann"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">E-postadresse</Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
                 required
-                placeholder="john@acme.com"
+                placeholder="ola@bedrift.no"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Passord</Label>
               <Input
                 id="password"
                 name="password"
@@ -106,13 +106,13 @@ export default function RegisterPage() {
                 placeholder="••••••••"
               />
             </div>
-            <Button type="submit" disabled={loading} className="w-full">
-              {loading ? 'Creating account...' : 'Sign up'}
+            <Button type="submit" disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700">
+              {loading ? 'Oppretter konto...' : 'Opprett gratis konto'}
             </Button>
             <p className="text-center text-sm text-muted-foreground">
-              Already have an account?{' '}
+              Har du allerede en konto?{' '}
               <Link href="/login" className="underline hover:text-primary">
-                Sign in
+                Logg inn her
               </Link>
             </p>
           </form>
