@@ -1,5 +1,7 @@
 import PDFDocument from 'pdfkit';
 import { supabaseAdmin } from '@/lib/supabase';
+import { NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
@@ -7,7 +9,7 @@ export async function POST(request: Request) {
     const { leadId } = body;
 
     if (!leadId) {
-      return Response.json({ error: 'leadId required' }, { status: 400 });
+      return NextResponse.json({ error: 'leadId required' }, { status: 400 });
     }
 
     // Fetch lead data
@@ -18,7 +20,7 @@ export async function POST(request: Request) {
       .single();
 
     if (error || !lead) {
-      return Response.json({ error: 'Lead not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
     }
 
     // Create PDF in memory
@@ -47,7 +49,7 @@ export async function POST(request: Request) {
     });
 
     const uint8 = new Uint8Array(pdfBuffer);
-    return new Response(uint8, {
+    return new NextResponse(uint8, {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="lead-${leadId}.pdf"`,
@@ -55,6 +57,6 @@ export async function POST(request: Request) {
     });
   } catch (error) {
     console.error('[PDF ERROR]', error);
-    return Response.json({ error: 'Failed to generate PDF' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to generate PDF' }, { status: 500 });
   }
 }
