@@ -7,6 +7,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { checkLimit } from '@/lib/subscription';
 import { assignLeadToSalesman } from '@/lib/lead-assignment';
 import { publicLeadSubmissionSchema } from '@/lib/validation';
+import { notifyHighQualityLead, notifyNewLead } from '@/lib/notifications';
 
 export async function POST(req: NextRequest) {
 	try {
@@ -69,6 +70,28 @@ export async function POST(req: NextRequest) {
 				});
 			}
 		} catch (e) { console.error('[ZAPIER WEBHOOK ERROR]', e); }
+
+		// Email notification to company owner via Resend
+		try {
+			const { data: owner } = await supabase
+				.from('users')
+				.select('email')
+				.eq('id', form.user_id)
+				.single();
+			if (owner?.email) {
+				const { data: company } = await supabase
+					.from('leads_companies')
+					.select('name')
+					.eq('id', form.company_id)
+					.single();
+				const companyName = company?.name ?? 'din bedrift';
+				if (score >= 75) {
+					await notifyHighQualityLead(owner.email, lead.id, companyName, score, customerName, customerEmail, customerPhone);
+				} else {
+					await notifyNewLead(owner.email, lead.id, companyName);
+				}
+			}
+		} catch (e) { console.error('[RESEND NOTIFICATION ERROR]', e); }
 
 		return NextResponse.json({ lead }, { status: 201 });
 	} catch (e) {

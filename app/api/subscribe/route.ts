@@ -93,6 +93,27 @@ export async function POST(request: Request) {
       allow_promotion_codes: true,
     });
 
+    // Send trial started email via Resend
+    try {
+      const { SUBSCRIPTION_PLANS: SPLANS } = await import('@/lib/stripe');
+      const planInfo = (SPLANS as any)[planId];
+      const trialEnd = new Date();
+      trialEnd.setDate(trialEnd.getDate() + TRIAL_DAYS);
+      await sendResendEmail({
+        to: userData.email,
+        subject: `Velkommen til FlowPilot – ${TRIAL_DAYS} dagers gratis prøveperiode startet!`,
+        html: `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+          <h2 style="color:#1e40af">🎉 Prøveperiode startet!</h2>
+          <p>Hei ${userData.business_name || userData.email},</p>
+          <p>Du har startet en <strong>${TRIAL_DAYS} dagers gratis prøveperiode</strong> på <strong>${planInfo?.name ?? planId}</strong>-planen.</p>
+          <p><strong>Prøveperioden avsluttes:</strong> ${trialEnd.toLocaleDateString('no-NO')}</p>
+          <p>Etter prøveperioden belastes kortet ditt <strong>${planInfo?.price ?? ''},-/mnd</strong>.</p>
+          <p><a href="${process.env.NEXTAUTH_URL}/dashboard" style="background:#1e40af;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;display:inline-block;margin-top:12px">Gå til dashboardet</a></p>
+          <p style="margin-top:24px;color:#64748b;font-size:12px">Spørsmål? Kontakt oss på Flowpilot@hotmail.com</p>
+        </div>`,
+      });
+    } catch (e) { console.error('[TRIAL EMAIL ERROR]', e); }
+
     return NextResponse.json({ url: checkoutSession.url, success: true });
   } catch (error) {
     console.error('[SUBSCRIBE ERROR]', error);
@@ -103,52 +124,12 @@ export async function POST(request: Request) {
   }
 }
 
-async function sendTrialStartedEmail(
-  email: string,
-  businessName: string,
-  planId: string
-) {
-  const plan = PRICING_PLANS[planId as PlanId];
-  const trialEnd = new Date();
-  trialEnd.setDate(trialEnd.getDate() + TRIAL_DAYS);
-
-  const emailHtml = `
-    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-      <h2>Trial Started! 🎉</h2>
-      <p>Hei ${businessName},</p>
-      <p>Du har startet en <strong>${TRIAL_DAYS} dagers gratis trial</strong> på <strong>${plan.name}</strong> planen!</p>
-      
-      <h3>Din trial ender: ${trialEnd.toLocaleDateString('no-NO')}</h3>
-      
-      <p>Etter trialen vil kortet ditt bli belastet <strong>${plan.price},-/måned</strong>.</p>
-      
-      <h3>Du kan:</h3>
-      <ul>
-        <li><a href="https://app.flowpilot.io/dashboard/billing">Endre plan eller avbryte her</a></li>
-        <li><a href="https://app.flowpilot.io/dashboard/settings">Se dine innstillinger</a></li>
-        <li>Kontakt oss på support@flowpilot.io hvis du har spørsmål</li>
-      </ul>
-      
-      <p>Vi gleder oss til å hjelpe deg!</p>
-      <p>FlowPilot Team</p>
-    </div>
-  `;
-
-  try {
-    await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: 'noreply@flowpilot.io',
-        to: email,
-        subject: `Trial startet på ${plan.name} plan - 14 dager gratis`,
-        html: emailHtml,
-      }),
-    });
-  } catch (error) {
-    console.error('Error sending trial email:', error);
-  }
+async function sendResendEmail({ to, subject, html }: { to: string; subject: string; html: string }) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) { console.warn('[RESEND] No API key'); return; }
+  await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ from: 'FlowPilot <noreply@flowpilot.io>', to, subject, html }),
+  });
 }
