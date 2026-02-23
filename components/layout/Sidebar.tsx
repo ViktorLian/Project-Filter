@@ -61,6 +61,8 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/business-memory', label: 'Bedriftshukommelse', icon: Brain },
       { href: '/dashboard/decision-assistant', label: 'Beslutningsassistent', icon: HelpCircle },
       { href: '/dashboard/opportunity-radar', label: 'Mulighetssensor', icon: BarChart3 },
+      { href: '/dashboard/business-coach', label: 'Bedriftscoach', icon: Sparkles },
+      { href: '/dashboard/norsk-bi', label: 'Norsk Markedsdata', icon: Activity },
     ],
   },
   {

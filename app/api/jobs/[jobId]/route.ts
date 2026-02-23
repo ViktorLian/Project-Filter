@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { sendReviewRequest } from '@/lib/notifications';
 
 export async function GET(_req: NextRequest, { params }: { params: { jobId: string } }) {
   const session = await getServerSession(authOptions as any);
@@ -44,6 +45,9 @@ export async function PATCH(request: NextRequest, { params }: { params: { jobId:
   const supabase = createAdminClient();
   const body = await request.json();
 
+  // Fetch the current job before updating so we can detect status change
+  const { data: prevJob } = await supabase.from('jobs').select('status, customer_email, customer_name, customer_phone').eq('id', params.jobId).single();
+
   const { data, error } = await supabase
     .from('jobs')
     .update({ ...body, updated_at: new Date().toISOString() })
@@ -52,6 +56,28 @@ export async function PATCH(request: NextRequest, { params }: { params: { jobId:
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  // Auto-send review request when job is marked completed for the first time
+  if (body.status === 'completed' && prevJob?.status !== 'completed') {
+    const customerEmail = body.customer_email ?? prevJob?.customer_email;
+    const customerName = body.customer_name ?? prevJob?.customer_name;
+    if (customerEmail) {
+      try {
+        const { data: company } = await supabase
+          .from('leads_companies')
+          .select('name, google_review_url')
+          .eq('user_id', (session as any)?.user?.id ?? '')
+          .single();
+        await sendReviewRequest(
+          customerEmail,
+          customerName ?? 'kunde',
+          company?.name ?? 'bedriften',
+          company?.google_review_url ?? null,
+        );
+      } catch (e) { console.error('[REVIEW REQUEST ERROR]', e); }
+    }
+  }
+
   return NextResponse.json({ job: data });
 }
 

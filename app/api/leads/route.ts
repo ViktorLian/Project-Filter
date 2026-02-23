@@ -7,7 +7,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { checkLimit } from '@/lib/subscription';
 import { assignLeadToSalesman } from '@/lib/lead-assignment';
 import { publicLeadSubmissionSchema } from '@/lib/validation';
-import { notifyHighQualityLead, notifyNewLead } from '@/lib/notifications';
+import { notifyHighQualityLead, notifyNewLead, sendLeadConfirmation } from '@/lib/notifications';
 
 export async function POST(req: NextRequest) {
 	try {
@@ -93,9 +93,21 @@ export async function POST(req: NextRequest) {
 			}
 		} catch (e) { console.error('[RESEND NOTIFICATION ERROR]', e); }
 
+		// Send confirmation email to the customer (non-blocking)
+		if (customerEmail) {
+			try {
+				const { data: company } = await supabase
+					.from('leads_companies')
+					.select('name')
+					.eq('id', form.company_id)
+					.single();
+				const companyName = company?.name ?? 'bedriften';
+				await sendLeadConfirmation(customerEmail, customerName ?? '', companyName);
+			} catch (e) { console.error('[CUSTOMER CONFIRMATION EMAIL ERROR]', e); }
+		}
+
 		return NextResponse.json({ lead }, { status: 201 });
 	} catch (e) {
-		console.error('[LEADS POST ERROR]', e);
 		return NextResponse.json({ error: 'Server error' }, { status: 500 });
 	}
 }

@@ -135,36 +135,5 @@ export function Hero() {
         </div>
       </section>
 
-      {/* Detaljerte funksjoner */}
-      <section className="bg-slate-50 py-24">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-slate-900">Kraftige funksjoner som leverer resultater</h2>
-            <p className="mt-4 text-lg text-slate-600">Bygget for bedrifter som vil vokse uten å ansette mer</p>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              { icon: Bot, color: 'bg-violet-600', title: 'AI Kundeservice-bot', desc: 'Din 24/7 digitale selger. Svarer på spørsmål, samler kontaktinfo og sender leads rett inn i systemet.' },
-              { icon: Mail, color: 'bg-blue-600', title: 'Automatiske e-postkampanjer', desc: 'Personaliserte sekvenser til hele lead-listen. Velkomst og oppfølging dag 1, 3, 7 og 14 – automatisk.' },
-              { icon: MessageSquare, color: 'bg-green-600', title: 'SMS-påminnelser', desc: 'Reduser no-shows med opptil 80 %. Automatiske SMS-varsler dagen før avtalen.' },
-              { icon: Calendar, color: 'bg-orange-500', title: 'Bookingsystem med Google Kalender', desc: 'La kunder booke tid direkte fra nettsiden. Synkronisert med Google Kalender og automatisk bekreftelse.' },
-              { icon: BarChart3, color: 'bg-pink-600', title: 'Lead ROI-sporing', desc: 'Se nøyaktig hvilke kanaler som gir mest inntekter. Konverteringsrate og inntekt per lead på ett sted.' },
-              { icon: FileText, color: 'bg-cyan-600', title: 'Profesjonell fakturering', desc: 'Generer og send fakturaer på sekunder. Automatiske betalingspåminnelser og kontantstrømoversikt.' },
-              { icon: CreditCard, color: 'bg-emerald-600', title: 'Betalingslenke-generator', desc: 'Send kunden en betalingslenke via e-post eller chat. Stripe-drevet, sikkert og lynraskt.' },
-              { icon: Star, color: 'bg-yellow-500', title: 'AI lead-scoring', desc: 'Hvert lead scores 0–100 basert på svar og atferd. Prioriter de varmeste leadsene.' },
-              { icon: Zap, color: 'bg-indigo-600', title: 'No-show-deteksjon', desc: 'Oppdager automatisk kunder som ikke møtte opp. Sender rebook-lenke og logger alt.' },
-            ].map(({ icon: Icon, color, title, desc }) => (
-              <div key={title} className="rounded-2xl bg-white border border-slate-200 p-6 hover:shadow-lg transition">
-                <div className={`h-12 w-12 rounded-xl ${color} flex items-center justify-center mb-4`}>
-                  <Icon className="h-6 w-6 text-white" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900">{title}</h3>
-                <p className="mt-2 text-slate-600 text-sm leading-relaxed">{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    </>
   )
 }

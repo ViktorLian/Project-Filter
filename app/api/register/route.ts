@@ -24,17 +24,7 @@ export async function POST(req: NextRequest) {
 
     const supabase = createAdminClient();
 
-    // Check if email already exists
-    const { data: authUser } = await supabase.auth.admin.listUsers();
-    const emailExists = authUser?.users?.some(u => u.email === email);
-    if (emailExists) {
-      return NextResponse.json(
-        { error: 'Email already in use' },
-        { status: 400 }
-      );
-    }
-
-    // Create user in Supabase Auth
+    // Create user in Supabase Auth first (avoid slow listUsers call)
     const { data: createdUser, error: createUserError } = await supabase.auth.admin.createUser({
       email,
       password,
@@ -45,9 +35,14 @@ export async function POST(req: NextRequest) {
     });
 
     if (createUserError || !createdUser?.user) {
+      // Handle "email already in use" specifically
+      const msg = createUserError?.message ?? '';
+      if (msg.toLowerCase().includes('already') || msg.toLowerCase().includes('duplicate')) {
+        return NextResponse.json({ error: 'E-postadressen er allerede i bruk.' }, { status: 400 });
+      }
       console.error('[AUTH CREATE ERROR]', createUserError);
       return NextResponse.json(
-        { error: 'Failed to create user: ' + (createUserError?.message || 'Unknown error') },
+        { error: 'Klarte ikke opprette konto: ' + (msg || 'Ukjent feil') },
         { status: 400 }
       );
     }
@@ -125,8 +120,12 @@ export async function POST(req: NextRequest) {
     });
   } catch (e) {
     console.error('[REGISTER ERROR]', e);
+    const msg = e instanceof Error ? e.message : 'Ukjent feil';
+    if (msg.includes('admin credentials') || msg.includes('Supabase')) {
+      return NextResponse.json({ error: 'Tjenesten er midlertidig utilgjengelig. Proev igjen om noen minutter eller kontakt Flowpilot@hotmail.com.' }, { status: 503 });
+    }
     return NextResponse.json(
-      { error: 'Server error: ' + (e instanceof Error ? e.message : 'Unknown') },
+      { error: 'Noe gikk galt: ' + msg },
       { status: 500 }
     );
   }
