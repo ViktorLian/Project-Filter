@@ -9,7 +9,8 @@ import {
   Users, Briefcase, ChevronLeft, ChevronRight, ChevronDown, ChevronUp,
   Bot, Brain, Calendar, Map, Zap, TrendingUp, Target, BookOpen,
   MessageSquare, Star, Bell, RefreshCw, Lightbulb, PieChart,
-  ClipboardList, Award, Shield, Rocket, Activity, Gift, Sparkles, GraduationCap
+  ClipboardList, Award, Shield, Rocket, Activity, Gift, Sparkles, GraduationCap,
+  HelpCircle, Mail
 } from 'lucide-react';
 
 interface NavItem { href: string; label: string; icon: React.ElementType }
@@ -57,6 +58,9 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/win-loss', label: 'Vinn/Tap Analyse', icon: PieChart },
       { href: '/dashboard/meeting-notes', label: 'Møtenotat AI', icon: MessageSquare },
       { href: '/dashboard/objection-handler', label: 'Innvending Analyse', icon: Shield },
+      { href: '/dashboard/business-memory', label: 'Bedriftshukommelse', icon: Brain },
+      { href: '/dashboard/decision-assistant', label: 'Beslutningsassistent', icon: HelpCircle },
+      { href: '/dashboard/opportunity-radar', label: 'Mulighetssensor', icon: BarChart3 },
     ],
   },
   {
@@ -69,6 +73,7 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/contract-reminders', label: 'Kontraktpåminnelser', icon: Bell },
       { href: '/dashboard/lost-leads', label: 'Tapte Leads', icon: RefreshCw },
       { href: '/dashboard/feedback', label: 'Tilbakemeldinger', icon: Star },
+      { href: '/dashboard/email-sequences', label: 'E-postsekvenser', icon: Mail },
     ],
   },
   {
@@ -82,6 +87,8 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/benchmarks', label: 'Bransje­sammenligning', icon: Activity },
       { href: '/dashboard/upsell-coach', label: 'Vekst-coach', icon: Sparkles },
       { href: '/dashboard/referral', label: 'Vervprogram', icon: Gift },
+      { href: '/dashboard/growth-planner', label: 'Vekstplaner', icon: TrendingUp },
+      { href: '/dashboard/negotiation-coach', label: 'Forhandlingscoach', icon: MessageSquare },
     ],
   },
   {
@@ -91,6 +98,7 @@ const navGroups: NavGroup[] = [
     items: [
       { href: '/dashboard/onboarding', label: 'Kom i gang', icon: GraduationCap },
       { href: '/dashboard/manual', label: 'Brukermanual', icon: BookOpen },
+      { href: '/dashboard/team', label: 'Team og roller', icon: Users },
       { href: '/dashboard/settings', label: 'Innstillinger', icon: Settings },
     ],
   },

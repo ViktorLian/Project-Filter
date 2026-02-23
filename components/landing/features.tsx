@@ -1,10 +1,13 @@
 'use client';
 import { useState } from 'react';
-import { X } from 'lucide-react';
+import {
+  X, Target, ClipboardList, Mail, Map, Receipt, BarChart3,
+  Bot, Calendar, Send, Star, Award, RefreshCw,
+} from 'lucide-react';
 
 const FEATURES = [
   {
-    icon: '🎯',
+    icon: Target,
     title: 'AI Lead-scoring',
     tag: 'Alle planer',
     tagColor: 'bg-emerald-100 text-emerald-700',
@@ -18,7 +21,7 @@ const FEATURES = [
 Med AI-scoring vet du alltid hvilke leads du skal ringe først – og slipper å kaste bort tid på kalde leads.`,
   },
   {
-    icon: '📋',
+    icon: ClipboardList,
     title: 'Tilpassede leadskjemaer',
     tag: 'Alle planer',
     tagColor: 'bg-emerald-100 text-emerald-700',
@@ -32,7 +35,7 @@ Med AI-scoring vet du alltid hvilke leads du skal ringe først – og slipper å
 Skjemaene kan embedes direkte på nettsiden din med én linje kode, eller deles som direktelenke.`,
   },
   {
-    icon: '📧',
+    icon: Mail,
     title: 'Automatiske e-postsvar',
     tag: 'Alle planer',
     tagColor: 'bg-emerald-100 text-emerald-700',
@@ -44,7 +47,7 @@ Skjemaene kan embedes direkte på nettsiden din med én linje kode, eller deles 
 Høykvalitetsleads (score ≥ 75) får en egen fremhevet varsel-e-post med full kontaktinfotabell, slik at du kan reagere innen 2 timer – noe som 3x øker sjansen for å vinne jobben.`,
   },
   {
-    icon: '🗺️',
+    icon: Map,
     title: 'Google Maps Leads',
     tag: 'Pro & Enterprise',
     tagColor: 'bg-blue-100 text-blue-700',
@@ -58,7 +61,7 @@ Høykvalitetsleads (score ≥ 75) får en egen fremhevet varsel-e-post med full 
 Perfekt for kalde prospekteringskampanjer – uten å forlate FlowPilot.`,
   },
   {
-    icon: '🧾',
+    icon: Receipt,
     title: 'Faktura-generator',
     tag: 'Alle planer',
     tagColor: 'bg-emerald-100 text-emerald-700',
@@ -72,7 +75,7 @@ Perfekt for kalde prospekteringskampanjer – uten å forlate FlowPilot.`,
 • Starter: 20 fakturaer/mnd · Pro/Enterprise: ubegrenset`,
   },
   {
-    icon: '📊',
+    icon: BarChart3,
     title: 'Kontantstrøm & Fortjeneste',
     tag: 'Alle planer',
     tagColor: 'bg-emerald-100 text-emerald-700',
@@ -85,7 +88,7 @@ Perfekt for kalde prospekteringskampanjer – uten å forlate FlowPilot.`,
 • Eksporter for regnskapsfører`,
   },
   {
-    icon: '🤖',
+    icon: Bot,
     title: 'AI Salgsassistent',
     tag: 'Alle planer',
     tagColor: 'bg-emerald-100 text-emerald-700',
@@ -97,10 +100,10 @@ Perfekt for kalde prospekteringskampanjer – uten å forlate FlowPilot.`,
 • Analyser salgsmuligheter
 • Forslag til prising og strategi
 
-Drevet av GPT-4o – du betaler kun din OpenAI-konto.`,
+Drevet av Google Gemini – rask, presis og gratis opp til 1 500 foresprrsler per dag.`,
   },
   {
-    icon: '📅',
+    icon: Calendar,
     title: 'Kalender & Bookingsystem',
     tag: 'Pro & Enterprise',
     tagColor: 'bg-blue-100 text-blue-700',
@@ -114,7 +117,7 @@ Drevet av GPT-4o – du betaler kun din OpenAI-konto.`,
 • Google Kalender-integrasjon (Pro)`,
   },
   {
-    icon: '📣',
+    icon: Send,
     title: 'E-postkampanjer',
     tag: 'Pro & Enterprise',
     tagColor: 'bg-blue-100 text-blue-700',
@@ -127,7 +130,7 @@ Drevet av GPT-4o – du betaler kun din OpenAI-konto.`,
 • Automatiske oppfølgingssekvenser`,
   },
   {
-    icon: '⭐',
+    icon: Star,
     title: 'Tilbakemeldinger & Attester',
     tag: 'Alle planer',
     tagColor: 'bg-emerald-100 text-emerald-700',
@@ -140,7 +143,7 @@ Drevet av GPT-4o – du betaler kun din OpenAI-konto.`,
 • Statistikk over gjennomsnittlig tilfredshet`,
   },
   {
-    icon: '🏆',
+    icon: Award,
     title: 'Vinn/Tap-analyse & ROI',
     tag: 'Pro & Enterprise',
     tagColor: 'bg-blue-100 text-blue-700',
@@ -153,7 +156,7 @@ Drevet av GPT-4o – du betaler kun din OpenAI-konto.`,
 • Sammenlign perioder og finn trender`,
   },
   {
-    icon: '🔄',
+    icon: RefreshCw,
     title: 'Gjentakende Bookinger & CRM',
     tag: 'Pro & Enterprise',
     tagColor: 'bg-blue-100 text-blue-700',
@@ -188,13 +191,17 @@ export function Features() {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {FEATURES.map((f, i) => (
+          {FEATURES.map((f, i) => {
+            const Icon = f.icon;
+            return (
             <button
               key={i}
               onClick={() => setActive(i)}
               className="group text-left rounded-2xl border bg-white p-5 shadow-sm hover:shadow-md hover:border-blue-300 hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
-              <div className="text-3xl mb-3">{f.icon}</div>
+              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50">
+                <Icon className="h-5 w-5 text-blue-600" />
+              </div>
               <div className="font-semibold text-slate-800 text-sm leading-snug mb-2 group-hover:text-blue-700 transition-colors">
                 {f.title}
               </div>
@@ -202,7 +209,8 @@ export function Features() {
                 {f.tag}
               </span>
             </button>
-          ))}
+            );
+          })}
         </div>
 
         {/* Modal */}
@@ -221,7 +229,9 @@ export function Features() {
               >
                 <X className="h-5 w-5 text-slate-500" />
               </button>
-              <div className="text-4xl mb-3">{feature.icon}</div>
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50">
+                {(() => { const FIcon = feature.icon; return <FIcon className="h-6 w-6 text-blue-600" />; })()}
+              </div>
               <div className="flex items-center gap-3 mb-1">
                 <h3 className="text-xl font-bold text-slate-900">{feature.title}</h3>
                 <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded-full ${feature.tagColor}`}>

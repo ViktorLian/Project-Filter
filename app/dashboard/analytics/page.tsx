@@ -53,7 +53,7 @@ export default async function AnalyticsPage() {
     { label: 'Totale leads', val: totalLeads, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', trend: '+12%' },
     { label: 'Akseptert rate', val: `${acceptanceRate}%`, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50', trend: `${accepted} av ${totalLeads}` },
     { label: 'Gj.snitt score', val: avgScore, icon: Star, color: 'text-amber-600', bg: 'bg-amber-50', trend: 'av 100 poeng' },
-    { label: 'Betalt inntekt', val: `${(totalRevenue / 1000).toFixed(0)}K kr`, icon: TrendingUp, color: 'text-purple-600', bg: 'bg-purple-50', trend: `${(outstanding / 1000).toFixed(0)}K utestaaende` },
+    { label: 'Betalt inntekt', val: `${(totalRevenue / 1000).toFixed(0)}K kr`, icon: TrendingUp, color: 'text-purple-600', bg: 'bg-purple-50', trend: `${(outstanding / 1000).toFixed(0)}K utestående` },
   ];
 
   const statuses = ['NEW', 'REVIEWED', 'ACCEPTED', 'REJECTED', 'IN_PROGRESS', 'ARCHIVED'];
@@ -112,7 +112,7 @@ export default async function AnalyticsPage() {
               { icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50', text: `${acceptanceRate}% aksepteringsrate` },
               { icon: XCircle, color: 'text-red-500', bg: 'bg-red-50', text: `${rejected} leads avvist` },
               { icon: Star, color: 'text-amber-600', bg: 'bg-amber-50', text: `Gjennomsnitts lead-score: ${avgScore} poeng av 100` },
-              { icon: TrendingUp, color: 'text-purple-600', bg: 'bg-purple-50', text: `${(outstanding / 1000).toFixed(0)} 000 kr utestaaende pa fakturaer` },
+              { icon: TrendingUp, color: 'text-purple-600', bg: 'bg-purple-50', text: `${(outstanding / 1000).toFixed(0)} 000 kr utestående på fakturaer` },
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-3 rounded-lg p-3 bg-slate-50">
                 <div className={`h-7 w-7 rounded-lg ${item.bg} flex items-center justify-center flex-shrink-0`}>
@@ -131,7 +131,7 @@ export default async function AnalyticsPage() {
           {[
             { label: 'Totale fakturaer', val: invoices.length },
             { label: 'Betalt', val: invoices.filter(i => i.status === 'paid').length },
-            { label: 'Utestaaende', val: invoices.filter(i => i.status === 'unpaid').length },
+            { label: 'Utestående', val: invoices.filter(i => i.status === 'unpaid').length },
             { label: 'Forfalt', val: invoices.filter(i => i.status === 'overdue').length },
           ].map((s, i) => (
             <div key={i} className="text-center p-3 rounded-lg bg-slate-50">
