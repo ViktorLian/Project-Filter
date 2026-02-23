@@ -2,10 +2,10 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import OpenAI from 'openai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-function getOpenAI() {
-  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+function getGemini() {
+  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 }
 
 const SYSTEM_PROMPT = `Du er en ekspert AI salgsassistent for FlowPilot CRM, et norsk SaaS-produkt for sma og mellomstore bedrifter.
@@ -28,34 +28,38 @@ export async function POST(req: NextRequest) {
     const { message, history = [] } = await req.json();
     if (!message) return NextResponse.json({ error: 'Missing message' }, { status: 400 });
 
-    if (!process.env.OPENAI_API_KEY) {
+    if (!process.env.GEMINI_API_KEY) {
       return NextResponse.json({
-        reply: 'AI-funksjonen krever en OpenAI API-nokkel. Legg til OPENAI_API_KEY i miljovariabler for a aktivere AI Salgsassistent.',
+        reply: 'AI-funksjonen krever en Gemini API-nokkel. Legg til GEMINI_API_KEY i miljovariabler for a aktivere AI Salgsassistent.',
       });
     }
 
-    const openai = getOpenAI();
-    const chatHistory = (history as { role: string; content: string }[])
-      .slice(-12)
-      .map((m) => ({ role: m.role as 'user' | 'assistant', content: m.content }));
-
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        ...chatHistory,
-        { role: 'user', content: message },
-      ],
-      max_tokens: 600,
-      temperature: 0.7,
+    const genAI = getGemini();
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-1.5-flash',
+      systemInstruction: SYSTEM_PROMPT,
     });
 
-    const reply = response.choices[0]?.message?.content || 'Beklager, fikk ikke svar fra AI.';
+    // Convert history to Gemini format
+    const chatHistory = (history as { role: string; content: string }[])
+      .slice(-12)
+      .map((m) => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }],
+      }));
+
+    const chat = model.startChat({
+      history: chatHistory,
+      generationConfig: { maxOutputTokens: 600, temperature: 0.7 },
+    });
+
+    const result = await chat.sendMessage(message);
+    const reply = result.response.text() || 'Beklager, fikk ikke svar fra AI.';
     return NextResponse.json({ reply });
   } catch (e: any) {
     console.error('[AI CHAT ERROR]', e);
     return NextResponse.json({
-      reply: `AI svarte ikke. Sjekk at OPENAI_API_KEY er konfigurert i Vercel-innstillinger.`,
+      reply: `AI svarte ikke. Sjekk at GEMINI_API_KEY er konfigurert i Vercel-innstillinger.`,
     });
   }
 }

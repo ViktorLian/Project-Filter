@@ -10,7 +10,7 @@ import {
   Bot, Brain, Calendar, Map, Zap, TrendingUp, Target, BookOpen,
   MessageSquare, Star, Bell, RefreshCw, Lightbulb, PieChart,
   ClipboardList, Award, Shield, Rocket, Activity, Gift, Sparkles, GraduationCap,
-  HelpCircle, Mail
+  HelpCircle, Mail, Calculator
 } from 'lucide-react';
 
 interface NavItem { href: string; label: string; icon: React.ElementType }
@@ -24,6 +24,7 @@ const navGroups: NavGroup[] = [
     items: [
       { href: '/dashboard', label: 'Oversikt', icon: LayoutDashboard },
       { href: '/dashboard/analytics', label: 'Analyse', icon: BarChart3 },
+      { href: '/dashboard/kpi-tracker', label: 'KPI-oversikt', icon: Target },
       { href: '/dashboard/calendar', label: 'Kalender', icon: Calendar },
     ],
   },
@@ -47,6 +48,7 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/invoices', label: 'Fakturaer', icon: Receipt },
       { href: '/dashboard/cashflow', label: 'Cash Flow', icon: TrendingUp },
       { href: '/dashboard/profit-tracker', label: 'Fortjenestesporing', icon: PieChart },
+      { href: '/dashboard/price-calculator', label: 'Prisskalkulator', icon: Calculator },
     ],
   },
   {
@@ -92,6 +94,7 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/referral', label: 'Vervprogram', icon: Gift },
       { href: '/dashboard/growth-planner', label: 'Vekstplaner', icon: TrendingUp },
       { href: '/dashboard/negotiation-coach', label: 'Forhandlingscoach', icon: MessageSquare },
+      { href: '/dashboard/marketing-calendar', label: 'Markedskalender', icon: Calendar },
     ],
   },
   {

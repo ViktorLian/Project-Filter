@@ -1,9 +1,9 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
-import OpenAI from 'openai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-function getOpenAI() {
-  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+function getGemini() {
+  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 }
 
 const SYSTEM_PROMPT = `Du er FlowPilot sin vennlige salgsassistent pa nettsiden. Du hjelper besoekende med aa forsta produktet og velge riktig abonnement.
@@ -63,26 +63,32 @@ export async function POST(req: NextRequest) {
     if (!message?.trim()) {
       return NextResponse.json({ reply: 'Skriv en melding for aa starte chatten.' });
     }
-    if (!process.env.OPENAI_API_KEY) {
+    if (!process.env.GEMINI_API_KEY) {
       return NextResponse.json({
         reply: 'Hei! Jeg er FlowPilot-assistenten. AI-chatten er ikke konfigurert enda, men du kan kontakte oss paa Flowpilot@hotmail.com.',
       });
     }
-    const openai = getOpenAI();
+
+    const genAI = getGemini();
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-1.5-flash',
+      systemInstruction: SYSTEM_PROMPT,
+    });
+
     const chatHistory = (history as { role: string; content: string }[])
       .slice(-10)
-      .map((m) => ({ role: m.role as 'user' | 'assistant', content: m.content }));
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: SYSTEM_PROMPT },
-        ...chatHistory,
-        { role: 'user', content: message },
-      ],
-      max_tokens: 300,
-      temperature: 0.6,
+      .map((m) => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: m.content }],
+      }));
+
+    const chat = model.startChat({
+      history: chatHistory,
+      generationConfig: { maxOutputTokens: 300, temperature: 0.6 },
     });
-    const reply = response.choices[0]?.message?.content || 'Beklager, proev igjen.';
+
+    const result = await chat.sendMessage(message);
+    const reply = result.response.text() || 'Beklager, proev igjen.';
     return NextResponse.json({ reply });
   } catch (e: any) {
     console.error('[WIDGET CHAT ERROR]', e);

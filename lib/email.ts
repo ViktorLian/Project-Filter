@@ -227,31 +227,6 @@ export async function sendTrialWelcomeEmail(to: string, name: string, businessNa
 </html>
   `)
 }
-    <div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e2e8f0">
-      <div style="background:linear-gradient(135deg,#2563eb,#1d4ed8);padding:40px 32px;text-align:center">
-        <h1 style="color:#fff;margin:0;font-size:28px;font-weight:800">Velkommen til FlowPilot!</h1>
-        <p style="color:#bfdbfe;margin:8px 0 0">14-dagers gratis prøveperiode aktivert</p>
-      </div>
-      <div style="padding:32px">
-        <p style="color:#1e293b;font-size:16px">Hei ${name}! 👋</p>
-        <p style="color:#475569">Du og ${businessName} er nå i gang med FlowPilot. Her er hva du kan gjøre med en gang:</p>
-        <div style="background:#f8fafc;border-radius:8px;padding:20px;margin:20px 0">
-          <p style="margin:0 0 12px;font-weight:700;color:#1e293b">✅ Inkludert i prøveperioden:</p>
-          <ul style="margin:0;padding-left:20px;color:#475569;line-height:2">
-            <li>Opprett og publiser lead-skjemaer</li>
-            <li>AI-scoret lead-behandling</li>
-            <li>Automatiske e-postsvar til kunder</li>
-            <li>Faktura og kontantstrøm-oversikt</li>
-            <li>Booking-system og kalender</li>
-            <li>SMS-påminnelser og no-show-deteksjon</li>
-          </ul>
-        </div>
-        <a href="${appUrl}/dashboard" style="display:inline-block;background:#2563eb;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:700;font-size:16px">Gå til dashbordet →</a>
-        <p style="color:#94a3b8;font-size:13px;margin-top:24px">Prøveperioden din utløper om 14 dager. Du vil bli fakturert automatisk via Stripe hvis du ikke kansellerer. Ingen bindingstid.</p>
-      </div>
-    </div>
-  `)
-}
 
 export async function sendTrialExpiryWarningEmail(to: string, name: string, daysLeft: number) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://flowpilot.no'
