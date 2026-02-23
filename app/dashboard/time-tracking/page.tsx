@@ -79,7 +79,7 @@ export default function TimeTrackingPage() {
   const totalHours = filtered.reduce((s, e) => s + (e.hours || 0), 0);
   const billableHours = filtered.filter(e => e.billable).reduce((s, e) => s + (e.hours || 0), 0);
   const totalValue = filtered.filter(e => e.billable).reduce((s, e) => s + (e.hours * e.hourly_rate), 0);
-  const employees = [...new Set(entries.map(e => e.employee))];
+  const employees = Array.from(new Set(entries.map(e => e.employee)));
 
   // Group by employee for this period
   const byEmployee = employees.reduce((acc, emp) => {
