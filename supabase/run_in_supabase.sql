@@ -41,6 +41,21 @@ BEGIN
 END
 $$;
 
+-- Dropp FK-constraint på user_id hvis den finnes (id PK er allerede bruker-IDen,
+-- FK-en er redundant og feiler hvis leads_companies ble opprettet før users-raden)
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.table_constraints
+    WHERE table_name = 'leads_companies'
+      AND constraint_name = 'leads_companies_user_id_fkey'
+      AND constraint_type = 'FOREIGN KEY'
+  ) THEN
+    ALTER TABLE leads_companies DROP CONSTRAINT leads_companies_user_id_fkey;
+  END IF;
+END
+$$;
+
 -- Backfill: lag leads_companies rad for eksisterende brukere som mangler den
 INSERT INTO leads_companies (id, name)
 SELECT u.id, u.business_name
@@ -48,8 +63,11 @@ FROM users u
 WHERE NOT EXISTS (SELECT 1 FROM leads_companies lc WHERE lc.id = u.id)
 ON CONFLICT (id) DO NOTHING;
 
--- Fyll inn user_id for rader der det mangler
-UPDATE leads_companies SET user_id = id WHERE user_id IS NULL;
+-- Fyll inn user_id bare for rader der IDen faktisk finnes i users-tabellen
+UPDATE leads_companies
+SET user_id = id
+WHERE user_id IS NULL
+  AND EXISTS (SELECT 1 FROM users WHERE id = leads_companies.id);
 
 -- ──────────────────────────────────────────
 -- 2. FORMS (skjemaer i dashbordet)

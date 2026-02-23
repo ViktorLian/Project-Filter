@@ -76,7 +76,7 @@ Norsk bokmål. Konkret, engasjerende og klar for bruk uten endringer.`,
       });
       const data = await res.json();
       const text: string = data.reply || '';
-      const matches = text.matchAll(/VARIANT\s*(\d+):\s*([\s\S]+?)(?=VARIANT\s*\d+:|$)/gi);
+      const matches = Array.from(text.matchAll(/VARIANT\s*(\d+):\s*([\s\S]+?)(?=VARIANT\s*\d+:|$)/gi));
       const items: GeneratedItem[] = [];
       for (const m of matches) {
         items.push({ label: `Variant ${m[1]}`, content: m[2].trim() });
