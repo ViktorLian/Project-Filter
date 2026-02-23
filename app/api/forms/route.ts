@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     // }
 
-    const companyId = session ? (session.user as any).companyId : 'demo';
+    const companyId = session ? ((session.user as any).companyId || (session.user as any).id) : 'demo';
     const supabase = createAdminClient();
 
     const { data: forms } = await supabase
@@ -44,17 +44,21 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const companyId = (session.user as any).companyId;
+    const companyId = (session.user as any).companyId || (session.user as any).id;
     
-    // Check form limit
-    const { checkLimit } = await import('@/lib/subscription');
-    const limitCheck = await checkLimit(companyId, 'forms');
-    
-    if (!limitCheck.canCreate) {
-      return NextResponse.json(
-        { error: `Form limit reached (${limitCheck.limit}). Upgrade your plan to create more forms.` },
-        { status: 403 }
-      );
+    // Check form limit (gracefully skip if subscription tables don't exist yet)
+    try {
+      const { checkLimit } = await import('@/lib/subscription');
+      const limitCheck = await checkLimit(companyId, 'forms');
+      if (!limitCheck.canCreate) {
+        return NextResponse.json(
+          { error: `Skjemagrense nådd (${limitCheck.limit}). Oppgrader planen din for å opprette flere skjemaer.` },
+          { status: 403 }
+        );
+      }
+    } catch (_limitErr) {
+      // Subscription check failed (table might not exist yet) – allow creation
+      console.warn('[FORMS LIMIT CHECK SKIPPED]', _limitErr);
     }
     
     const body = await req.json();

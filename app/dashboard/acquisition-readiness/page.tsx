@@ -163,7 +163,7 @@ Lag en prioritert 90-dagers handlingsplan med konkrete steg. Fokus på de viktig
               </span>
               <h2 className="text-lg font-bold text-slate-800">Samlet selskapsberedskap</h2>
               <p className="text-slate-500 text-sm">
-                {totalScore} av {totalMax} poeng oppnaatt. {categories.flatMap(c => c.items.filter(i => !i.done && i.critical)).length} kritiske mangler gjenstaar.
+                {totalScore} av {totalMax} poeng oppnådd. {categories.flatMap(c => c.items.filter(i => !i.done && i.critical)).length} kritiske mangler gjenstår.
               </p>
             </div>
           </div>

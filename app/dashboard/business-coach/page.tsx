@@ -53,7 +53,7 @@ const WEEKLY: WeeklyCoach = {
 
 const KPI_CARDS = [
   { label: 'Leads denne uka', value: '7', change: '+2', good: true, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
-  { label: 'Ubesvarte leads', value: '3', change: 'Maa fikses', good: false, icon: AlertTriangle, color: 'text-amber-600', bg: 'bg-amber-50' },
+  { label: 'Ubesvarte leads', value: '3', change: 'Må fikses', good: false, icon: AlertTriangle, color: 'text-amber-600', bg: 'bg-amber-50' },
   { label: 'Inntekt denne uka', value: '42 500 kr', change: '+8%', good: true, icon: DollarSign, color: 'text-emerald-600', bg: 'bg-emerald-50' },
   { label: 'Bookinger neste uke', value: '4', change: 'Bra pace', good: true, icon: Calendar, color: 'text-purple-600', bg: 'bg-purple-50' },
 ];

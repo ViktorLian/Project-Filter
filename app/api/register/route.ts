@@ -87,11 +87,13 @@ export async function POST(req: NextRequest) {
       // Continue anyway - settings can be created later
     }
 
-    // Create company with 14-day free trial
+    // Create company with 14-day free trial using SAME id as user profile
+    // so that companyId = user.id works throughout the app
     const trialEndsAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
     const { data: company, error: companyError } = await supabase
       .from('leads_companies')
       .insert({
+        id: newUser.id,          // ← same as user profile id – this is the companyId
         user_id: newUser.id,
         name: companyName,
         subscription_status: 'trialing',

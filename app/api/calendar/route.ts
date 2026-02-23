@@ -8,7 +8,7 @@ export async function GET() {
   try {
     const session = await getServerSession(authOptions);
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    const companyId = (session.user as any).companyId;
+    const companyId = (session.user as any).companyId || (session.user as any).id;
     const supabase = createAdminClient();
     const { data } = await supabase
       .from('calendar_events')
@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    const companyId = (session.user as any).companyId;
+    const companyId = (session.user as any).companyId || (session.user as any).id;
     const body = await req.json();
     const supabase = createAdminClient();
     const { data, error } = await supabase

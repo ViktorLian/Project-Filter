@@ -10,7 +10,7 @@ import {
   Bot, Brain, Calendar, Map, Zap, TrendingUp, Target, BookOpen,
   MessageSquare, Star, Bell, RefreshCw, Lightbulb, PieChart,
   ClipboardList, Award, Shield, Rocket, Activity, Gift, Sparkles, GraduationCap,
-  HelpCircle, Mail, Calculator
+  HelpCircle, Mail, Calculator, Wand2, Clock, Megaphone, Layout
 } from 'lucide-react';
 
 interface NavItem { href: string; label: string; icon: React.ElementType }
@@ -49,6 +49,7 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/cashflow', label: 'Cash Flow', icon: TrendingUp },
       { href: '/dashboard/profit-tracker', label: 'Fortjenestesporing', icon: PieChart },
       { href: '/dashboard/price-calculator', label: 'Prisskalkulator', icon: Calculator },
+      { href: '/dashboard/time-tracking', label: 'Timeregistrering', icon: Clock },
     ],
   },
   {
@@ -75,6 +76,8 @@ const navGroups: NavGroup[] = [
     items: [
       { href: '/dashboard/forms', label: 'Skjemaer', icon: FileText },
       { href: '/dashboard/campaigns', label: 'Kampanjer', icon: Rocket },
+      { href: '/dashboard/campaign-builder', label: 'Kampanjebygger', icon: Megaphone },
+      { href: '/dashboard/creative-generator', label: 'Kreativ Generator', icon: Wand2 },
       { href: '/dashboard/contract-reminders', label: 'Kontraktpåminnelser', icon: Bell },
       { href: '/dashboard/lost-leads', label: 'Tapte Leads', icon: RefreshCw },
       { href: '/dashboard/feedback', label: 'Tilbakemeldinger', icon: Star },
@@ -108,6 +111,7 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/process-vault', label: 'Prosessbibliotek', icon: ClipboardList },
       { href: '/dashboard/risk-monitor', label: 'Risikomonitor', icon: Shield },
       { href: '/dashboard/acquisition-readiness', label: 'Selskapsberedskap', icon: Award },
+      { href: '/dashboard/operations-hub', label: 'Driftssentral', icon: Layout },
       { href: '/dashboard/settings', label: 'Innstillinger', icon: Settings },
     ],
   },

@@ -47,6 +47,7 @@ export const authOptions: NextAuthOptions = {
             id: userData.id,
             email: userData.email,
             name: userData.business_name,
+            companyId: userData.id,  // for FlowPilot, user id = company id
           };
         } catch (error) {
           console.error('Auth error:', error);
@@ -61,12 +62,14 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
+        token.companyId = (user as any).companyId || user.id;
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
         (session.user as any).id = token.id as string;
+        (session.user as any).companyId = (token.companyId || token.id) as string;
       }
       return session;
     },

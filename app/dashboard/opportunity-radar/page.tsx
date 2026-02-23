@@ -58,9 +58,9 @@ const DEMO_OPPS: Opportunity[] = [
   {
     id: '5', type: 'expansion', done: false,
     title: 'Nabolaget til siste to prosjekter er uutnyttet',
-    description: 'Jordal-omradet: du har gjennomfort 3 synlige jobber de siste 6 mnd. Lokal synlighet gir typisk 15-20% organisk vekst nar man aktivt promoterer i naromiljoet.',
+    description: 'Jordal-området: du har gjennomført 3 synlige jobber de siste 6 mnd. Lokal synlighet gir typisk 15-20% organisk vekst når man aktivt promoterer i nærmiljøet.',
     potentialValue: 90000, confidence: 55, effort: 'middels', relatedTo: 'Jordal, Oslo',
-    action: 'Distribuer flyers i naromiljoet og be eksisterende kunder om omtale',
+    action: 'Distribuer flyers i nærmiljøet og be eksisterende kunder om omtale',
   },
 ];
 

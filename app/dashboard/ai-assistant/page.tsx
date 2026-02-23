@@ -10,26 +10,26 @@ interface Message {
 }
 
 const SUGGESTIONS = [
-  'Skriv en oppfolgingsepost til en lead som ikke har svart pa 5 dager',
-  'Hva er de beste argumentene for a velge vart Pro-abonnement?',
-  'Analyser hva jeg bor fokusere pa for a oke salget denne maneden',
-  'Lag et script for a ta kontakt med en ny lead via telefon',
-  'Hjelp meg med a forberede meg til et salgsmote i morgen',
-  'Hvilke signaler viser at en lead er klar til a kjope?',
+  'Skriv en oppfølgingse-post til en lead som ikke har svart på 5 dager',
+  'Hva er de beste argumentene for å velge vårt Pro-abonnement?',
+  'Analyser hva jeg bør fokusere på for å øke salget denne måneden',
+  'Lag et script for å ta kontakt med en ny lead via telefon',
+  'Hjelp meg med å forberede meg til et salgsmøte i morgen',
+  'Hvilke signaler viser at en lead er klar til å kjøpe?',
 ];
 
 const QUICK_PROMPTS = [
-  { icon: BookOpen, label: 'Oppfolgingsepost', prompt: 'Skriv en profesjonell oppfolgingsepost pa norsk til en lead som viste interesse men ikke svarte siste uke. Gjor den varm og personlig.' },
-  { icon: Target, label: 'Salgsargumenter', prompt: 'List opp de 5 sterkeste salgsargumentene for FlowPilot CRM til en rorllegger-bedrift med 3-10 ansatte.' },
-  { icon: TrendingUp, label: 'Vekststrategi', prompt: 'Gi meg en konkret 3-stegs strategi for a oke antall leads denne maneden.' },
-  { icon: Lightbulb, label: 'Moteplan', prompt: 'Hjelp meg forberede et salgsmote. Hva er de 5 viktigste sporsmolene jeg bor stille kunden?' },
+  { icon: BookOpen, label: 'Oppfølgingse-post', prompt: 'Skriv en profesjonell oppfølgingepost på norsk til en lead som viste interesse men ikke svarte siste uke. Gjør den varm og personlig.' },
+  { icon: Target, label: 'Salgsargumenter', prompt: 'List opp de 5 sterkeste salgsargumentene for FlowPilot CRM til en rørlegger-bedrift med 3-10 ansatte.' },
+  { icon: TrendingUp, label: 'Vekststrategi', prompt: 'Gi meg en konkret 3-stegs strategi for å øke antall leads denne måneden.' },
+  { icon: Lightbulb, label: 'Møteplan', prompt: 'Hjelp meg forberede et salgsmøte. Hva er de 5 viktigste spørsmålene jeg bør stille kunden?' },
 ];
 
 export default function AIAssistantPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: 'Hei! Jeg er din personlige AI salgsassistent. Jeg kan hjelpe deg med oppfolgingsepost, salgsargumenter, moteplaner, analyser og mye mer. Hva kan jeg hjelpe deg med i dag?',
+      content: 'Hei! Jeg er din personlige AI salgsassistent. Jeg kan hjelpe deg med oppfølgingse-post, salgsargumenter, møteplaner, analyser og mye mer. Hva kan jeg hjelpe deg med i dag?',
       ts: Date.now(),
     },
   ]);

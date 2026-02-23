@@ -182,21 +182,21 @@ export default function ProposalsPage() {
                 <div>
                   <label className="text-xs font-semibold text-slate-600 uppercase tracking-wide block mb-1">Tittel</label>
                   <input value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
-                    placeholder="Tilbud pa baderomsrenovering"
+                    placeholder="Tilbud på baderomrenovering"
                     className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
                   <label className="text-xs font-semibold text-slate-600 uppercase tracking-wide block mb-1">Kunde</label>
                   <input value={form.customer_name} onChange={e => setForm(f => ({ ...f, customer_name: e.target.value }))}
-                    placeholder="Navn pa kunde"
+                    placeholder="Navn på kunde"
                     className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
               </div>
               <div>
-                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wide block mb-1">Beskriv jobben (for AI-generering)</label>
+                <label className="text-xs font-semibold text-slate-600 uppercase tracking-wide block mb-1">Beskriv jobben detaljert — jo mer info, jo bedre AI-tilbud</label>
                 <div className="flex gap-2">
                   <textarea value={form.description} onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-                    rows={2} placeholder="f.eks. Bytte baderomsfliser, ny dusj, nytt toalett, maling..."
+                    rows={3} placeholder="Eks: Bytte baderomsfliser i 2 bad (ca 12 kvm). Riv eksisterende fliser. Ny dusj med glassdør. Nytt toalett (Ifø). Male tak og vegger. Kunden bor i Lillestrøm, enebolig fra 1985. Budsjettforventning ca 80 000 kr inkl. mva."
                     className="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
                   <button onClick={aiGenerate} disabled={generating || !form.description}
                     className="flex-shrink-0 flex flex-col items-center gap-1 bg-purple-600 text-white px-3 py-2 rounded-lg hover:bg-purple-700 disabled:opacity-50 text-xs font-medium">
@@ -204,6 +204,7 @@ export default function ProposalsPage() {
                     {generating ? 'AI...' : 'AI fyll'}
                   </button>
                 </div>
+                <p className="text-xs text-slate-400 mt-1">💡 Beskriv arbeidsomfang, kvm, materialer, sted og budsjettforventning for best mulig AI-generert tilbud</p>
               </div>
 
               {/* Items */}

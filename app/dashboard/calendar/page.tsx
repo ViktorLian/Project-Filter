@@ -21,9 +21,9 @@ type CalendarEvent = {
 
 const TYPE_CFG = {
   job:       { label: 'Jobb',        color: 'bg-blue-500',    light: 'bg-blue-50 border-blue-200 text-blue-700' },
-  meeting:   { label: 'Mote',        color: 'bg-purple-500',  light: 'bg-purple-50 border-purple-200 text-purple-700' },
-  'follow-up': { label: 'Oppfolging', color: 'bg-yellow-500', light: 'bg-yellow-50 border-yellow-200 text-yellow-700' },
-  reminder:  { label: 'Paminnelse',  color: 'bg-red-500',     light: 'bg-red-50 border-red-200 text-red-700' },
+  meeting:   { label: 'Møte',        color: 'bg-purple-500',  light: 'bg-purple-50 border-purple-200 text-purple-700' },
+  'follow-up': { label: 'Oppfølging', color: 'bg-yellow-500', light: 'bg-yellow-50 border-yellow-200 text-yellow-700' },
+  reminder:  { label: 'Påminnelse',  color: 'bg-red-500',     light: 'bg-red-50 border-red-200 text-red-700' },
 };
 
 const DAYS = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lor', 'Son'];
@@ -103,7 +103,7 @@ export default function CalendarPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Kalender</h1>
-          <p className="text-slate-500 text-sm mt-0.5">Planlegg jobber, mote og oppfolginger</p>
+          <p className="text-slate-500 text-sm mt-0.5">Planlegg jobber, møter og oppfølginger</p>
         </div>
         <button onClick={() => { setShowNew(true); setNewEvent(EMPTY_EVENT); }}
           className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition shadow-sm">
