@@ -69,8 +69,8 @@ Svar pÃ¥ norsk bokmÃ¥l. VÃ¦r konkret og naturlig.`,
       const reframe = text.match(/Reframe:\s*(.+)/i)?.[1]?.trim() ?? '';
       const question = text.match(/SpÃ¸rsmÃ¥l:\s*(.+)/i)?.[1]?.trim() ?? '';
       const closer = text.match(/Avslutter:\s*(.+)/i)?.[1]?.trim() ?? '';
-      const svar1 = text.match(/Svar1:\s*(.+)/is)?.[1]?.split('\n')[0]?.trim() ?? '';
-      const svar2 = text.match(/Svar2:\s*(.+)/is)?.[1]?.split('\n')[0]?.trim() ?? '';
+      const svar1 = text.match(/Svar1:\s*(.+)/i)?.[1]?.split('\n')[0]?.trim() ?? '';
+      const svar2 = text.match(/Svar2:\s*(.+)/i)?.[1]?.split('\n')[0]?.trim() ?? '';
       const replies = [svar1, svar2].filter(Boolean);
       const r: Response = { reframe, question, closer, replies };
       setResult(r);
