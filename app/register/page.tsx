@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -9,7 +8,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import Link from 'next/link';
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,7 +17,9 @@ export default function RegisterPage() {
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    const res = await fetch('/api/register', {
+
+    // Create Stripe Checkout session — card required, 14-day free trial
+    const res = await fetch('/api/stripe/register-checkout', {
       method: 'POST',
       body: JSON.stringify({
         companyName: formData.get('companyName'),
@@ -30,15 +30,16 @@ export default function RegisterPage() {
       headers: { 'Content-Type': 'application/json' },
     });
 
+    const data = await res.json();
     setLoading(false);
 
-    if (!res.ok) {
-      const data = await res.json();
-      setError(data.error ?? 'Registration failed');
+    if (!res.ok || !data.url) {
+      setError(data.error ?? 'Klarte ikke starte registrering. Prøv igjen.');
       return;
     }
 
-    router.push('/login?registered=1');
+    // Redirect to Stripe Checkout — card collected, account created after verification
+    window.location.href = data.url;
   }
 
   return (
@@ -57,7 +58,7 @@ export default function RegisterPage() {
           <CardHeader>
             <CardTitle>Start gratis prøveperiode</CardTitle>
             <CardDescription>
-              14 dager gratis. Ingen bindingstid. Ingen kredittkort nødvendig.
+              14 dager gratis — kortdetaljer lagres, men du belastes ikke de første 14 dagene. Avslutt naar som helst.
             </CardDescription>
           </CardHeader>
         <CardContent>
@@ -107,8 +108,11 @@ export default function RegisterPage() {
               />
             </div>
             <Button type="submit" disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700">
-              {loading ? 'Oppretter konto...' : 'Opprett gratis konto'}
+              {loading ? 'Sender til betaling...' : 'Start prøveperiode — legg inn kort'}
             </Button>
+            <p className="text-xs text-center text-slate-500">
+              Du blir ikke belastet de første 14 dagene. Etter prøveperioden er prisen 1 290 kr/mnd og du kan avslutte naar som helst.
+            </p>
             <p className="text-center text-sm text-muted-foreground">
               Har du allerede en konto?{' '}
               <Link href="/login" className="underline hover:text-primary">

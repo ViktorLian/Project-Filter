@@ -1,6 +1,7 @@
 import { Hero } from '@/components/landing/hero'
 import { Problems } from '@/components/landing/problems'
 import { Features } from '@/components/landing/features'
+import { DemoVideo } from '@/components/landing/DemoVideo'
 import { Pricing } from '@/components/landing/pricing'
 import { FAQ } from '@/components/landing/faq'
 import { Contact } from '@/components/landing/contact'
@@ -13,6 +14,7 @@ export default function HomePage() {
       <Hero />
       <Problems />
       <Features />
+      <DemoVideo />
       <Pricing />
       <FAQ />
       <Contact />

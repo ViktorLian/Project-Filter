@@ -46,6 +46,7 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/jobs', label: 'Jobber', icon: Briefcase },
       { href: '/dashboard/invoices', label: 'Fakturaer', icon: Receipt },
       { href: '/dashboard/cashflow', label: 'Cash Flow', icon: TrendingUp },
+      { href: '/dashboard/profit-tracker', label: 'Fortjenestesporing', icon: PieChart },
     ],
   },
   {
@@ -101,6 +102,9 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/onboarding', label: 'Kom i gang', icon: GraduationCap },
       { href: '/dashboard/manual', label: 'Brukermanual', icon: BookOpen },
       { href: '/dashboard/team', label: 'Team og roller', icon: Users },
+      { href: '/dashboard/process-vault', label: 'Prosessbibliotek', icon: ClipboardList },
+      { href: '/dashboard/risk-monitor', label: 'Risikomonitor', icon: Shield },
+      { href: '/dashboard/acquisition-readiness', label: 'Selskapsberedskap', icon: Award },
       { href: '/dashboard/settings', label: 'Innstillinger', icon: Settings },
     ],
   },
