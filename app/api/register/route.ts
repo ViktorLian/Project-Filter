@@ -6,11 +6,11 @@ import { sendTrialWelcomeEmail } from '@/lib/email';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { companyName, name, email, password } = body;
+    const { companyName, name, email, password, inviteToken } = body;
 
-    if (!companyName || !name || !email || !password) {
+    if (!name || !email || !password || (!companyName && !inviteToken)) {
       return NextResponse.json(
-        { error: 'All fields are required' },
+        { error: 'Manglende felter' },
         { status: 400 }
       );
     }
@@ -85,6 +85,21 @@ export async function POST(req: NextRequest) {
     if (settingsError) {
       console.error('[SETTINGS CREATE ERROR]', settingsError);
       // Continue anyway - settings can be created later
+    }
+
+    // If joining via invite, skip company creation — link to existing company
+    if (inviteToken) {
+      const joinRes = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/team/join`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: inviteToken, userId: newUser.id, email }),
+      });
+      const joinData = await joinRes.json();
+      if (!joinRes.ok) {
+        console.error('[INVITE JOIN ERROR]', joinData);
+        // Don't fail — user is created, they just may need to link manually
+      }
+      return NextResponse.json({ success: true, message: 'Konto opprettet og koblet til teamet' });
     }
 
     // Create company with 14-day free trial using SAME id as user profile

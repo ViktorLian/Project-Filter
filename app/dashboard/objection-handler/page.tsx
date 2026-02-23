@@ -197,19 +197,6 @@ Svar på norsk bokmål. Vær konkret og naturlig.`,
   );
 }
 
-
-const COMMON_OBJECTIONS = [
-  'Det er for dyrt',
-  'Vi har allerede en leverandor',
-  'Vi trenger tid til a tenke',
-  'Hva om det ikke fungerer?',
-  'Vi har ikke budsjett na',
-  'Jeg ma diskutere med ledelsen',
-];
-
-type Response = { reframe: string; question: string; closer: string };
-
-export default function ObjectionHandlerPage() {
   const [objection, setObjection] = useState('');
   const [context, setContext] = useState('');
   const [result, setResult] = useState<Response | null>(null);

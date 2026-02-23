@@ -21,12 +21,18 @@ CREATE TABLE IF NOT EXISTS leads_companies (
   updated_at           TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Legg til user_id kolonne hvis den ikke finnes (tabellen kan allerede eksistere)
+ALTER TABLE leads_companies ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES users(id) ON DELETE CASCADE;
+
 -- Backfill: lag leads_companies rad for eksisterende brukere som mangler den
-INSERT INTO leads_companies (id, user_id, name, subscription_status, subscription_plan, trial_ends_at)
-SELECT u.id, u.id, u.business_name, 'trialing', 'starter', NOW() + INTERVAL '14 days'
+INSERT INTO leads_companies (id, name, subscription_status, subscription_plan, trial_ends_at)
+SELECT u.id, u.business_name, 'trialing', 'starter', NOW() + INTERVAL '14 days'
 FROM users u
 WHERE NOT EXISTS (SELECT 1 FROM leads_companies lc WHERE lc.id = u.id)
 ON CONFLICT (id) DO NOTHING;
+
+-- Fyll inn user_id for rader der det mangler
+UPDATE leads_companies SET user_id = id WHERE user_id IS NULL;
 
 -- ──────────────────────────────────────────
 -- 2. FORMS (skjemaer i dashbordet)
@@ -291,6 +297,23 @@ CREATE TABLE IF NOT EXISTS lead_analysis (
   category    TEXT,
   created_at  TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- ──────────────────────────────────────────
+-- 16. TEAM MEMBERS (ansatte som deler bedriften)
+-- ──────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS team_members (
+  id            UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+  company_id    UUID        NOT NULL,
+  user_id       UUID,
+  email         TEXT        NOT NULL,
+  role          TEXT        NOT NULL DEFAULT 'member',
+  status        TEXT        NOT NULL DEFAULT 'pending',
+  invite_token  TEXT        UNIQUE NOT NULL,
+  accepted_at   TIMESTAMPTZ,
+  created_at    TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS team_members_company_email_idx ON team_members(company_id, email);
 
 -- ──────────────────────────────────────────
 -- RLS: aktiver row-level security

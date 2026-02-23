@@ -49,6 +49,7 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/cashflow', label: 'Cash Flow', icon: TrendingUp },
       { href: '/dashboard/profit-tracker', label: 'Fortjenestesporing', icon: PieChart },
       { href: '/dashboard/price-calculator', label: 'Prisskalkulator', icon: Calculator },
+      { href: '/dashboard/regnskap', label: 'Regnskap', icon: Receipt },
       { href: '/dashboard/time-tracking', label: 'Timeregistrering', icon: Clock },
     ],
   },
