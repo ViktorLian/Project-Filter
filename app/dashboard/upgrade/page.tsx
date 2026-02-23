@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 import { Lock, CheckCircle, ArrowRight, Zap, Star, Crown } from 'lucide-react';
 
 const PLANS = [
@@ -70,7 +71,7 @@ const PLANS = [
 
 const planOrder = ['starter', 'pro', 'enterprise'];
 
-export default function UpgradePage() {
+function UpgradeContent() {
   const params = useSearchParams();
   const requiredPlan = params.get('required') ?? 'pro';
   const feature = params.get('feature') ?? 'denne funksjonen';
@@ -144,5 +145,13 @@ export default function UpgradePage() {
         Sporsmal? <a href="mailto:flowpilot@hotmail.com" className="text-blue-600 hover:underline">Kontakt oss</a>
       </p>
     </div>
+  );
+}
+
+export default function UpgradePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><p className="text-slate-500">Laster...</p></div>}>
+      <UpgradeContent />
+    </Suspense>
   );
 }
