@@ -29,6 +29,18 @@ ALTER TABLE leads_companies ADD COLUMN IF NOT EXISTS trial_ends_at TIMESTAMPTZ D
 ALTER TABLE leads_companies ADD COLUMN IF NOT EXISTS stripe_customer_id TEXT;
 ALTER TABLE leads_companies ADD COLUMN IF NOT EXISTS stripe_subscription_id TEXT;
 
+-- Dropp NOT NULL på slug hvis kolonnen finnes fra eldre skjema (forhindrer INSERT-feil)
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'leads_companies' AND column_name = 'slug'
+  ) THEN
+    ALTER TABLE leads_companies ALTER COLUMN slug DROP NOT NULL;
+  END IF;
+END
+$$;
+
 -- Backfill: lag leads_companies rad for eksisterende brukere som mangler den
 INSERT INTO leads_companies (id, name)
 SELECT u.id, u.business_name
