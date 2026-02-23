@@ -21,12 +21,17 @@ CREATE TABLE IF NOT EXISTS leads_companies (
   updated_at           TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Legg til user_id kolonne hvis den ikke finnes (tabellen kan allerede eksistere)
+-- Legg til kolonner som kan mangle (trygt å kjøre selv om de finnes)
 ALTER TABLE leads_companies ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES users(id) ON DELETE CASCADE;
+ALTER TABLE leads_companies ADD COLUMN IF NOT EXISTS subscription_status TEXT DEFAULT 'trialing';
+ALTER TABLE leads_companies ADD COLUMN IF NOT EXISTS subscription_plan TEXT DEFAULT 'starter';
+ALTER TABLE leads_companies ADD COLUMN IF NOT EXISTS trial_ends_at TIMESTAMPTZ DEFAULT (NOW() + INTERVAL '14 days');
+ALTER TABLE leads_companies ADD COLUMN IF NOT EXISTS stripe_customer_id TEXT;
+ALTER TABLE leads_companies ADD COLUMN IF NOT EXISTS stripe_subscription_id TEXT;
 
 -- Backfill: lag leads_companies rad for eksisterende brukere som mangler den
-INSERT INTO leads_companies (id, name, subscription_status, subscription_plan, trial_ends_at)
-SELECT u.id, u.business_name, 'trialing', 'starter', NOW() + INTERVAL '14 days'
+INSERT INTO leads_companies (id, name)
+SELECT u.id, u.business_name
 FROM users u
 WHERE NOT EXISTS (SELECT 1 FROM leads_companies lc WHERE lc.id = u.id)
 ON CONFLICT (id) DO NOTHING;
