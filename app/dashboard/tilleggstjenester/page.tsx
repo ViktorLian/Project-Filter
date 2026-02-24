@@ -25,8 +25,8 @@ const SERVICES: {
     bg: 'bg-indigo-50',
     border: 'border-indigo-400',
     title: 'Proff Digital Pakke',
-    price: 'Fra 10 000 kr/mnd',
-    priceNote: 'Annonsebudsjett kommer i tillegg – mva ekskludert',
+    price: '12 500 kr/mnd',
+    priceNote: 'Sparer ~3 800 kr vs. enkeltvis · annonsebudsjett i tillegg · mva ekskl.',
     description: 'Alt-i-ett digital vekstpakke for bedrifter som vil seriøst opp. Google Ads, SEO, sosiale medier og Google Maps – satt opp og driftet av oss hver eneste måned.',
     features: [
       'Google Ads – løpende forvaltning og optimalisering',

@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "ProjectFilter - Pre-qualify your project leads",
-  description: "Construction project intake and qualification platform",
+  title: "FlowPilot – Smart CRM og Lead-håndtering",
+  description: "FlowPilot hjelper håndverksbedrifter å fange, kvalifisere og følge opp leads automatisk.",
 };
 
 export default function RootLayout({

@@ -3,7 +3,7 @@ export function DetailedFeatures() {
     <section className="bg-slate-50 py-20">
       <div className="mx-auto max-w-6xl px-6 space-y-20">
         <Block
-          title="Project Filter – Smarter Lead Management"
+          title="FlowPilot – Smart Lead-håndtering"
           items={[
             'Form builder with conditional logic',
             'Automatic lead scoring',
