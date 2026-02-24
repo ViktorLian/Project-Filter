@@ -16,17 +16,17 @@ type Note = {
 const DEMO_NOTES: Note[] = [
   {
     id: '1', customer: 'Byggmester Hansen AS', date: '2025-01-20',
-    rawText: 'Diskuterte nytt terrasseprosjekt. Kunden vil ha compositt dekke, ca 40 kvm. Budsjett rundt 80 000 kr. Ã˜nsker oppstart i mars.',
+    rawText: 'Diskuterte nytt terrasseprosjekt. Kunden vil ha compositt dekke, ca 40 kvm. Budsjett rundt 80 000 kr. Ønsker oppstart i mars.',
     summary: 'Terrasseprosjekt 40 kvm compositt dekke. Budsjett: 80 000 kr. Oppstart mars.',
-    todos: ['Send tilbud innen fredag', 'Sjekk lager pÃ¥ compositt', 'Avtal befaring 27. jan'],
+    todos: ['Send tilbud innen fredag', 'Sjekk lager på compositt', 'Avtal befaring 27. jan'],
     nextStep: 'Sende tilbud innen fredag 24. januar',
   },
   {
     id: '2', customer: 'Nilsen Eiendom', date: '2025-01-18',
-    rawText: 'TelefonmÃ¸te om flislegging i 3 bad. Kunden er usikker pÃ¥ flisstÃ¸rrelse. Viste frem katalog. Avventer tilbakemelding.',
-    summary: '3 bad med flislegging. Kunden velger flisstÃ¸rrelse. Avventer svar.',
-    todos: ['FÃ¸lge opp onsdag', 'Forbered to prisalternativer (stor/liten flis)'],
-    nextStep: 'Ringe pÃ¥ onsdag 22. januar',
+    rawText: 'Telefonmøte om flislegging i 3 bad. Kunden er usikker på flisstørrelse. Viste frem katalog. Avventer tilbakemelding.',
+    summary: '3 bad med flislegging. Kunden velger flisstørrelse. Avventer svar.',
+    todos: ['Følge opp onsdag', 'Forbered to prisalternativer (stor/liten flis)'],
+    nextStep: 'Ringe på onsdag 22. januar',
   },
 ];
 
@@ -41,7 +41,7 @@ export default function MeetingNotesPage() {
   const [micError, setMicError] = useState('');
   const recognitionRef = useRef<any>(null);
 
-  // Speech-to-text via Web Speech API (built into Chrome/Edge â€“ no API key needed)
+  // Speech-to-text via Web Speech API (built into Chrome/Edge – no API key needed)
   function toggleRecording() {
     if (recording) {
       recognitionRef.current?.stop();
@@ -53,7 +53,7 @@ export default function MeetingNotesPage() {
       (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      setMicError('Mikrofon-transkribering stÃ¸ttes kun i Chrome og Edge. Skriv inn tekst manuelt.');
+      setMicError('Mikrofon-transkribering støttes kun i Chrome og Edge. Skriv inn tekst manuelt.');
       return;
     }
 
@@ -76,8 +76,8 @@ export default function MeetingNotesPage() {
         }
       }
       setInput(prev => {
-        const base = prev.replace(/\s*\[â€¦\]$/, '').trimEnd();
-        return (base + ' ' + finalTranscript + (interim ? `[â€¦]` : '')).trim();
+        const base = prev.replace(/\s*\[…\]$/, '').trimEnd();
+        return (base + ' ' + finalTranscript + (interim ? `[…]` : '')).trim();
       });
     };
 
@@ -89,7 +89,7 @@ export default function MeetingNotesPage() {
     recognition.onend = () => {
       setRecording(false);
       // Remove interim placeholder
-      setInput(prev => prev.replace(/\s*\[â€¦\]$/, '').trim());
+      setInput(prev => prev.replace(/\s*\[…\]$/, '').trim());
     };
 
     recognitionRef.current = recognition;
@@ -106,14 +106,14 @@ export default function MeetingNotesPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: `Analyser dette mÃ¸tereferatet og gi meg tilbake:
+          message: `Analyser dette møtereferatet og gi meg tilbake:
 1. Et kort sammendrag (maks 2 setninger)
 2. En nummerert liste med konkrete to-do oppgaver
 3. Neste steg
 
-MÃ¸tereferat: ${input}
+Møtereferat: ${input}
 
-Svar pÃ¥ norsk, vÃ¦r konkret og handlingsorientert.`,
+Svar på norsk, vær konkret og handlingsorientert.`,
           history: [],
         }),
       });
@@ -125,7 +125,7 @@ Svar pÃ¥ norsk, vÃ¦r konkret og handlingsorientert.`,
         nextStep: text.match(/neste steg[:\s]+(.+)/i)?.[1] ?? 'Se gjennom analyse',
       });
     } catch {
-      setResult({ summary: 'Klarte ikke analysere. Sjekk at Gemini API-nÃ¸kkel er konfigurert.', todos: [], nextStep: '' });
+      setResult({ summary: 'Klarte ikke analysere. Sjekk at OpenAI API-nøkkel er konfigurert.', todos: [], nextStep: '' });
     }
     setAnalyzing(false);
   }
@@ -148,15 +148,15 @@ Svar pÃ¥ norsk, vÃ¦r konkret og handlingsorientert.`,
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">MÃ¸tereferater</h1>
-        <p className="text-slate-500 text-sm mt-0.5">Skriv inn eller dikter hva som ble diskutert â€” AI lager sammendrag og oppgaveliste</p>
+        <h1 className="text-2xl font-bold text-slate-900">Møtereferater</h1>
+        <p className="text-slate-500 text-sm mt-0.5">Skriv inn eller dikter hva som ble diskutert – AI lager sammendrag og oppgaveliste</p>
       </div>
 
       {/* New note */}
       <div className="rounded-xl border border-slate-200 bg-white p-5 space-y-4">
         <div className="flex items-center gap-2">
           <FileText className="h-5 w-5 text-purple-600" />
-          <h2 className="font-semibold text-slate-800">Nytt mÃ¸tereferat</h2>
+          <h2 className="font-semibold text-slate-800">Nytt møtereferat</h2>
         </div>
 
         <div>
@@ -194,17 +194,17 @@ Svar pÃ¥ norsk, vÃ¦r konkret og handlingsorientert.`,
           {recording && (
             <div className="flex items-center gap-2 text-xs text-red-600 mb-1 font-medium">
               <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse" />
-              Tar opp â€“ snakk nÃ¥, FlowPilot lytter...
+              Tar opp – snakk nå, FlowPilot lytter...
             </div>
           )}
           <textarea
             value={input}
             onChange={e => setInput(e.target.value)}
             rows={5}
-            placeholder="Eks: Vi snakket om nytt kjÃ¸kken. Kunden vil ha hvite fronter, komfyrtopp fra Miele, og benkeplate i granitt. Budsjett 120 000 kr inkl. montering. Ã˜nsker oppstart i april..."
+            placeholder="Eks: Vi snakket om nytt kjøkken. Kunden vil ha hvite fronter, komfyrtopp fra Miele, og benkeplate i granitt. Budsjett 120 000 kr inkl. montering. Ønsker oppstart i april..."
             className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <p className="text-xs text-slate-400 mt-1">ðŸ’¡ Jo mer detaljert du skriver/sier, jo bedre blir AI-analysen</p>
+          <p className="text-xs text-slate-400 mt-1">💡 Jo mer detaljert du skriver/sier, jo bedre blir AI-analysen</p>
         </div>
 
         <div className="flex gap-3">
@@ -280,7 +280,7 @@ Svar pÃ¥ norsk, vÃ¦r konkret og handlingsorientert.`,
               {expanded === note.id && (
                 <div className="border-t border-slate-100 px-5 py-4 space-y-3">
                   <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">RÃ¥data</p>
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-1">Rådata</p>
                     <p className="text-sm text-slate-600 italic">{note.rawText}</p>
                   </div>
                   {note.summary && (
@@ -298,7 +298,7 @@ Svar pÃ¥ norsk, vÃ¦r konkret og handlingsorientert.`,
                         </ul>
                       )}
                       {note.nextStep && (
-                        <p className="text-sm font-semibold text-blue-700 mt-1">â†’ Neste: {note.nextStep}</p>
+                        <p className="text-sm font-semibold text-blue-700 mt-1">→ Neste: {note.nextStep}</p>
                       )}
                     </div>
                   )}

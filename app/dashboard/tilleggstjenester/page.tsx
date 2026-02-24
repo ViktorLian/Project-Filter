@@ -1,8 +1,46 @@
 'use client';
 
-import { Globe, Code, Smartphone, BarChart3, Search, Star, ArrowRight, CheckCircle, Mail, MessageSquare } from 'lucide-react';
+import React from 'react';
+import { Globe, Smartphone, BarChart3, Search, Star, ArrowRight, CheckCircle, Mail, MessageSquare, Zap } from 'lucide-react';
 
-const SERVICES = [
+const SERVICES: {
+  id: string;
+  icon: React.ElementType;
+  color: string;
+  bg: string;
+  border: string;
+  title: string;
+  price: string;
+  priceNote: string;
+  description: string;
+  features: string[];
+  cta: string;
+  popular: boolean;
+  badge?: string;
+}[] = [
+  {
+    id: 'proff-pakke',
+    icon: Zap,
+    color: 'text-indigo-600',
+    bg: 'bg-indigo-50',
+    border: 'border-indigo-400',
+    title: 'Proff Digital Pakke',
+    price: 'Fra 10 000 kr/mnd',
+    priceNote: 'Annonsebudsjett kommer i tillegg – mva ekskludert',
+    description: 'Alt-i-ett digital vekstpakke for bedrifter som vil seriøst opp. Google Ads, SEO, sosiale medier og Google Maps – satt opp og driftet av oss hver eneste måned.',
+    features: [
+      'Google Ads – løpende forvaltning og optimalisering',
+      'SEO – månedlig innhold og teknisk vedlikehold',
+      'Sosiale medier – Facebook og Instagram (8–12 innlegg/mnd)',
+      'Google Maps / Lokal SEO – full optimalisering',
+      'Månedlig strategimøte (30 min)',
+      'Prioritert support med 4-timers respons',
+      'Alt integrert direkte mot FlowPilot',
+    ],
+    cta: 'Få tilbud',
+    popular: true,
+    badge: 'Beste verdi',
+  },
   {
     id: 'website',
     icon: Globe,
@@ -137,7 +175,7 @@ export default function TilleggstjenesterPage() {
             >
               {service.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-blue-600 px-4 py-1 text-xs font-bold text-white shadow">
-                  Mest populær
+                  {service.badge ?? 'Mest populær'}
                 </div>
               )}
               <div className={`h-11 w-11 rounded-xl ${service.bg} flex items-center justify-center mb-4`}>

@@ -76,6 +76,7 @@ const navGroups: NavGroup[] = [
     color: 'text-orange-400',
     items: [
       { href: '/dashboard/forms', label: 'Skjemaer', icon: FileText },
+      { href: '/dashboard/chatbot-embed', label: 'Chatbot på nettside', icon: Bot },
       { href: '/dashboard/campaigns', label: 'Kampanjer', icon: Rocket },
       { href: '/dashboard/campaign-builder', label: 'Kampanjebygger', icon: Megaphone },
       { href: '/dashboard/creative-generator', label: 'Kreativ Generator', icon: Wand2 },

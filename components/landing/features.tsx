@@ -100,7 +100,7 @@ Perfekt for kalde prospekteringskampanjer – uten å forlate FlowPilot.`,
 • Analyser salgsmuligheter
 • Forslag til prising og strategi
 
-Drevet av Google Gemini – rask, presis og gratis opp til 1 500 foresprrsler per dag.`,
+Drevet av OpenAI GPT-4o – rask, presis og alltid tilgjengelig.`,
   },
   {
     icon: Calendar,

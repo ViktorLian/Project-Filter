@@ -5,13 +5,13 @@ import { Shield, Sparkles, ChevronRight, Lightbulb, MessageSquare, Copy, Check }
 
 const COMMON_OBJECTIONS = [
   'Det er for dyrt',
-  'Vi har allerede en leverandÃ¸r',
-  'Vi trenger tid til Ã¥ tenke',
+  'Vi har allerede en leverandør',
+  'Vi trenger tid til å tenke',
   'Hva om det ikke fungerer?',
-  'Vi har ikke budsjett nÃ¥',
-  'Jeg mÃ¥ diskutere med ledelsen',
+  'Vi har ikke budsjett nå',
+  'Jeg må diskutere med ledelsen',
   'Dere er ukjente for oss',
-  'Vi gjÃ¸r det selv',
+  'Vi gjør det selv',
 ];
 
 type Response = {
@@ -51,23 +51,23 @@ export default function ObjectionHandlerPage() {
       const res = await fetch('/api/ai/chat', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          message: `Du er en erfaren salgstrener for norske hÃ¥ndverks- og servicebedrifter. Kunden sier: "${objection}". ${context ? `Kontekst: ${context}.` : ''}
+          message: `Du er en erfaren salgstrener for norske håndverks- og servicebedrifter. Kunden sier: "${objection}". ${context ? `Kontekst: ${context}.` : ''}
 
-Gi meg NÃ˜YAKTIG dette formatet (bruk disse overskriftene):
+Gi meg NØYAKTIG dette formatet (bruk disse overskriftene):
 Reframe: [omformuler innvendingen positivt i 1 setning]
-SpÃ¸rsmÃ¥l: [ett spÃ¸rsmÃ¥l Ã¥ stille for Ã¥ forstÃ¥ dypere behov]
+Spørsmål: [ett spørsmål å stille for å forstå dypere behov]
 Avslutter: [en konkret avsluttingssetning]
-Svar1: [et konkret eksempel pÃ¥ hva du kan si, 2-3 setninger, naturlig samtaletone]
-Svar2: [et alternativt eksempel pÃ¥ hva du kan si, litt annerledes vinkling]
+Svar1: [et konkret eksempel på hva du kan si, 2-3 setninger, naturlig samtaletone]
+Svar2: [et alternativt eksempel på hva du kan si, litt annerledes vinkling]
 
-Svar pÃ¥ norsk bokmÃ¥l. VÃ¦r konkret og naturlig.`,
+Svar på norsk bokmål. Vær konkret og naturlig.`,
           history: [],
         }),
       });
       const d = await res.json();
       const text: string = d.reply || '';
       const reframe = text.match(/Reframe:\s*(.+)/i)?.[1]?.trim() ?? '';
-      const question = text.match(/SpÃ¸rsmÃ¥l:\s*(.+)/i)?.[1]?.trim() ?? '';
+      const question = text.match(/Spørsmål:\s*(.+)/i)?.[1]?.trim() ?? '';
       const closer = text.match(/Avslutter:\s*(.+)/i)?.[1]?.trim() ?? '';
       const svar1 = text.match(/Svar1:\s*(.+)/i)?.[1]?.split('\n')[0]?.trim() ?? '';
       const svar2 = text.match(/Svar2:\s*(.+)/i)?.[1]?.split('\n')[0]?.trim() ?? '';
@@ -76,7 +76,7 @@ Svar pÃ¥ norsk bokmÃ¥l. VÃ¦r konkret og naturlig.`,
       setResult(r);
       setHistory(prev => [{ objection, result: r }, ...prev.slice(0, 4)]);
     } catch {
-      setResult({ reframe: 'Feil ved analyse â€“ sjekk Gemini API-nÃ¸kkel.', question: '', closer: '', replies: [] });
+      setResult({ reframe: 'Feil ved analyse – sjekk OpenAI API-nøkkel.', question: '', closer: '', replies: [] });
     }
     setLoading(false);
   }
@@ -85,7 +85,7 @@ Svar pÃ¥ norsk bokmÃ¥l. VÃ¦r konkret og naturlig.`,
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Innvendings-Analysator</h1>
-        <p className="text-slate-500 text-sm mt-0.5">FÃ¥ konkrete svar-forslag og strategi for Ã¥ hÃ¥ndtere kundens innvendinger</p>
+        <p className="text-slate-500 text-sm mt-0.5">Få konkrete svar-forslag og strategi for å håere kundens innvendinger</p>
       </div>
 
       {/* Input */}
@@ -105,14 +105,14 @@ Svar pÃ¥ norsk bokmÃ¥l. VÃ¦r konkret og naturlig.`,
           />
         </div>
         <div>
-          <label className="block text-xs font-medium text-slate-600 mb-1">Kontekst (anbefalt â€“ jo mer du legger inn, jo bedre svar)</label>
+          <label className="block text-xs font-medium text-slate-600 mb-1">Kontekst (anbefalt – jo mer du legger inn, jo bedre svar)</label>
           <input
             value={context}
             onChange={e => setContext(e.target.value)}
-            placeholder="Eks: Tilbud pÃ¥ 95 000 kr for flislegging i 4 bad. Konkurrent tilbyr 80 000 kr."
+            placeholder="Eks: Tilbud på 95 000 kr for flislegging i 4 bad. Konkurrent tilbyr 80 000 kr."
             className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <p className="text-xs text-slate-400 mt-1">ðŸ’¡ Beskriv gjerne bransjen din, kunden, prisen, og hva konkurrenten tilbyr â€“ da treffer AI-en mye bedre</p>
+          <p className="text-xs text-slate-400 mt-1">💡 Beskriv gjerne bransjen din, kunden, prisen, og hva konkurrenten tilbyr – da treffer AI-en mye bedre</p>
         </div>
 
         {/* Quick pick */}
@@ -131,7 +131,7 @@ Svar pÃ¥ norsk bokmÃ¥l. VÃ¦r konkret og naturlig.`,
         <button onClick={handle} disabled={loading || !objection.trim()}
           className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50 transition-colors">
           <Sparkles className="h-4 w-4" />
-          {loading ? 'Genererer strategi...' : 'FÃ¥ respons-strategi + eksempel-svar'}
+          {loading ? 'Genererer strategi...' : 'Fårespons-strategi + eksempel-svar'}
         </button>
       </div>
 
@@ -144,7 +144,7 @@ Svar pÃ¥ norsk bokmÃ¥l. VÃ¦r konkret og naturlig.`,
           <div className="grid gap-3">
             {[
               { label: 'Reframe innvendingen', icon: Lightbulb, val: result.reframe, color: 'text-amber-700 bg-amber-50 border-amber-200' },
-              { label: 'SpÃ¸rsmÃ¥l Ã¥ stille', icon: MessageSquare, val: result.question, color: 'text-purple-700 bg-purple-50 border-purple-200' },
+              { label: 'Spørsmål åille', icon: MessageSquare, val: result.question, color: 'text-purple-700 bg-purple-50 border-purple-200' },
               { label: 'Avsluttingssetning', icon: ChevronRight, val: result.closer, color: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
             ].map(item => item.val ? (
               <div key={item.label} className={`rounded-lg border p-4 ${item.color}`}>
@@ -172,7 +172,7 @@ Svar pÃ¥ norsk bokmÃ¥l. VÃ¦r konkret og naturlig.`,
                   </div>
                 </div>
               ))}
-              <p className="text-xs text-slate-400">Klikk "Kopier" for Ã¥ bruke svaret direkte i chat, SMS eller telefon</p>
+              <p className="text-xs text-slate-400">Klikk "Kopier" for åbruke svaret direkte i chat, SMS eller telefon</p>
             </div>
           )}
         </div>

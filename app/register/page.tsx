@@ -26,7 +26,7 @@ export default function RegisterPage() {
     setLoading(true);
     const formData = new FormData(e.currentTarget);
 
-    // If invited â†’ register directly (no Stripe)
+    // If invited → register directly (no Stripe)
     if (inviteToken) {
       const res = await fetch('/api/register', {
         method: 'POST',
@@ -60,7 +60,7 @@ export default function RegisterPage() {
     const data = await res.json();
     setLoading(false);
     if (!res.ok || !data.url) {
-      setError(data.error ?? 'Klarte ikke starte registrering. PrÃ¸v igjen.');
+      setError(data.error ?? 'Klarte ikke starte registrering. Prøv igjen.');
       return;
     }
     window.location.href = data.url;
@@ -84,16 +84,16 @@ export default function RegisterPage() {
               <>
                 <div className="bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-3 mb-2">
                   <p className="text-sm font-semibold text-emerald-800">Du er invitert til et team!</p>
-                  <p className="text-xs text-emerald-700 mt-0.5">Opprett en konto for Ã¥ fÃ¥ tilgang til bedriftens FlowPilot-data.</p>
+                  <p className="text-xs text-emerald-700 mt-0.5">Opprett en konto for å få tilgang til bedriftens FlowPilot-data.</p>
                 </div>
                 <CardTitle>Bli med i teamet</CardTitle>
-                <CardDescription>Gratis â€” du er inkludert i bedriftens abonnement.</CardDescription>
+                <CardDescription>Gratis – du er inkludert i bedriftens abonnement.</CardDescription>
               </>
             ) : (
               <>
-                <CardTitle>Start gratis prÃ¸veperiode</CardTitle>
+                <CardTitle>Start gratis prøveperiode</CardTitle>
                 <CardDescription>
-                  14 dager gratis â€” kortdetaljer lagres, men du belastes ikke de fÃ¸rste 14 dagene. Avslutt nÃ¥r som helst.
+                  14 dager gratis – kortdetaljer lagres, men du belastes ikke de første 14 dagene. Avslutt når som helst.
                 </CardDescription>
               </>
             )}
@@ -108,7 +108,7 @@ export default function RegisterPage() {
               {!inviteToken && (
                 <div className="space-y-2">
                   <Label htmlFor="companyName">Bedriftsnavn</Label>
-                  <Input id="companyName" name="companyName" required placeholder="Nordmann RÃ¸rlegger AS" />
+                  <Input id="companyName" name="companyName" required placeholder="Nordmann Rørlegger AS" />
                 </div>
               )}
               <div className="space-y-2">
@@ -121,16 +121,16 @@ export default function RegisterPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Passord</Label>
-                <Input id="password" name="password" type="password" required minLength={8} placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
+                <Input id="password" name="password" type="password" required minLength={8} placeholder="••••••••" />
               </div>
               <Button type="submit" disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700">
                 {loading
                   ? (inviteToken ? 'Oppretter konto...' : 'Sender til betaling...')
-                  : (inviteToken ? 'Bli med i teamet' : 'Start prÃ¸veperiode â€” legg inn kort')}
+                  : (inviteToken ? 'Bli med i teamet' : 'Start prøveperiode – legg inn kort')}
               </Button>
               {!inviteToken && (
                 <p className="text-xs text-center text-slate-500">
-                  Du blir ikke belastet de fÃ¸rste 14 dagene. Etter prÃ¸veperioden er prisen 1 290 kr/mnd.
+                  Du blir ikke belastet de første 14 dagene. Etter prøveperioden er prisen 1 290 kr/mnd.
                 </p>
               )}
               <p className="text-center text-sm text-muted-foreground">

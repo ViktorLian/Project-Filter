@@ -23,8 +23,8 @@ const PERMISSIONS = [
   { label: 'Kunder og kontakter', admin: true, member: true, viewer: true },
   { label: 'Kalender og bookinger', admin: true, member: true, viewer: true },
   { label: 'Jobber og prosjekter', admin: true, member: true, viewer: true },
-  { label: 'Fakturaer og Ã¸konomi', admin: true, member: false, viewer: false },
-  { label: 'AI-verktÃ¸y', admin: true, member: true, viewer: false },
+  { label: 'Fakturaer og økonomi', admin: true, member: false, viewer: false },
+  { label: 'AI-verktøy', admin: true, member: true, viewer: false },
   { label: 'Kampanjer og skjemaer', admin: true, member: false, viewer: false },
   { label: 'Teamadministrasjon', admin: true, member: false, viewer: false },
   { label: 'Innstillinger', admin: true, member: false, viewer: false },
@@ -114,7 +114,7 @@ export default function TeamPage() {
     <div className="p-6 max-w-3xl mx-auto space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Team og roller</h1>
-        <p className="text-slate-500 mt-1">Inviter ansatte â€” de ser nÃ¸yaktig samme data som deg</p>
+        <p className="text-slate-500 mt-1">Inviter ansatte – de ser nøyaktig samme data som deg</p>
       </div>
 
       {/* How it works */}
@@ -122,10 +122,10 @@ export default function TeamPage() {
         <h3 className="font-semibold text-blue-800 mb-2 flex items-center gap-2"><Link2 className="h-4 w-4" />Slik fungerer deling</h3>
         <ol className="text-sm text-blue-700 space-y-1 list-decimal list-inside">
           <li>Skriv inn e-posten til den ansatte og velg rolle nedenfor</li>
-          <li>Klikk "Generer invitasjonslenke" â€” du fÃ¥r en unik lenke</li>
+          <li>Klikk "Generer invitasjonslenke" – du får en unik lenke</li>
           <li>Send lenken til den ansatte (SMS, e-post, Teams osv.)</li>
           <li>Den ansatte klikker lenken og registrerer seg med den</li>
-          <li>De ser nÃ¸yaktig samme leads, kunder og jobber som deg automatisk</li>
+          <li>De ser nøyaktig samme leads, kunder og jobber som deg automatisk</li>
         </ol>
       </div>
 
@@ -145,7 +145,7 @@ export default function TeamPage() {
             <label className="text-xs font-medium text-slate-600 block mb-1">Rolle</label>
             <select value={role} onChange={e => setRole(e.target.value)}
               className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm bg-white">
-              {ROLES.map(r => <option key={r.value} value={r.value}>{r.label} â€” {r.desc}</option>)}
+              {ROLES.map(r => <option key={r.value} value={r.value}>{r.label} – {r.desc}</option>)}
             </select>
           </div>
         </div>
@@ -187,8 +187,8 @@ export default function TeamPage() {
         ) : members.length === 0 ? (
           <div className="px-5 py-12 text-center">
             <Users className="h-10 w-10 text-slate-200 mx-auto mb-3" />
-            <p className="text-slate-500 font-medium">Ingen teammedlemmer ennÃ¥</p>
-            <p className="text-slate-400 text-sm mt-1">Inviter din fÃ¸rste ansatte ovenfor</p>
+            <p className="text-slate-500 font-medium">Ingen teammedlemmer ennå</p>
+            <p className="text-slate-400 text-sm mt-1">Inviter din føste ansatte ovenfor</p>
           </div>
         ) : (
           <div className="divide-y divide-slate-100">
@@ -206,7 +206,7 @@ export default function TeamPage() {
                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
                         m.status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
                       }`}>
-                        {m.status === 'active' ? 'â— Aktiv' : 'â—‹ Venter pÃ¥ registrering'}
+                        {m.status === 'active' ? '● Aktiv' : '○ Venter på registrering'}
                       </span>
                       <span className="text-xs text-slate-400 flex items-center gap-1">
                         <RoleIcon className="h-3 w-3" />{roleInfo.label}
