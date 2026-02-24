@@ -1,10 +1,9 @@
 ﻿export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import OpenAI from 'openai';
 
-function getGemini() {
-  if (!process.env.GEMINI_API_KEY) throw new Error('Missing GEMINI_API_KEY');
-  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+function getOpenAI() {
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 }
 
 const SYSTEM_PROMPT = `Du er FlowPilot Assistant - en vennlig og hjelpsom chatbot.
@@ -33,22 +32,22 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid request' }, { status: 400 });
     }
 
-    const genAI = getGemini();
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
-      systemInstruction: SYSTEM_PROMPT,
+    const openai = getOpenAI();
+    const msgs = [
+      { role: 'system' as const, content: SYSTEM_PROMPT },
+      ...(messages as { role: string; content: string }[])
+        .slice(-15)
+        .map((m) => ({ role: (m.role === 'assistant' ? 'assistant' : 'user') as 'assistant' | 'user', content: m.content })),
+    ];
+
+    const result = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: msgs,
+      max_tokens: 400,
+      temperature: 0.7,
     });
 
-    const history = messages.slice(0, -1).map((m: any) => ({
-      role: m.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: m.content }],
-    }));
-    const lastMessage = messages[messages.length - 1]?.content || '';
-
-    const chat = model.startChat({ history, generationConfig: { maxOutputTokens: 300, temperature: 0.7 } });
-    const result = await chat.sendMessage(lastMessage);
-    const reply = result.response.text();
-
+    const reply = result.choices[0]?.message?.content || 'Beklager, fikk ikke svar.';
     return NextResponse.json({ reply });
   } catch (e: any) {
     console.error('[CHATBOT ERROR]', e);

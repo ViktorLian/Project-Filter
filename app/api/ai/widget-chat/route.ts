@@ -1,9 +1,9 @@
 ﻿export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import OpenAI from 'openai';
 
-function getGemini() {
-  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+function getOpenAI() {
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 }
 
 const SYSTEM_PROMPT = `Du er FlowPilot sin vennlige salgsassistent pa nettsiden. Du hjelper besoekende med aa forstå produktet og velge riktig abonnement.
@@ -63,32 +63,29 @@ export async function POST(req: NextRequest) {
     if (!message?.trim()) {
       return NextResponse.json({ reply: 'Skriv en melding for aa starte chatten.' });
     }
-    if (!process.env.GEMINI_API_KEY) {
+    if (!process.env.OPENAI_API_KEY) {
       return NextResponse.json({
         reply: 'Hei! Jeg er FlowPilot-assistenten. AI-chatten er ikke konfigurert enda, men du kan kontakte oss på Flowpilot@hotmail.com.',
       });
     }
 
-    const genAI = getGemini();
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
-      systemInstruction: SYSTEM_PROMPT,
+    const openai = getOpenAI();
+    const msgs = [
+      { role: 'system' as const, content: SYSTEM_PROMPT },
+      ...(history as { role: string; content: string }[])
+        .slice(-15)
+        .map((m) => ({ role: (m.role === 'assistant' ? 'assistant' : 'user') as 'assistant' | 'user', content: m.content })),
+      { role: 'user' as const, content: message },
+    ];
+
+    const result = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: msgs,
+      max_tokens: 400,
+      temperature: 0.6,
     });
 
-    const chatHistory = (history as { role: string; content: string }[])
-      .slice(-10)
-      .map((m) => ({
-        role: m.role === 'assistant' ? 'model' : 'user',
-        parts: [{ text: m.content }],
-      }));
-
-    const chat = model.startChat({
-      history: chatHistory,
-      generationConfig: { maxOutputTokens: 300, temperature: 0.6 },
-    });
-
-    const result = await chat.sendMessage(message);
-    const reply = result.response.text() || 'Beklager, proev igjen.';
+    const reply = result.choices[0]?.message?.content || 'Beklager, proev igjen.';
     return NextResponse.json({ reply });
   } catch (e: any) {
     console.error('[WIDGET CHAT ERROR]', e);

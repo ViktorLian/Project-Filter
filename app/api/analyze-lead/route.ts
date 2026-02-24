@@ -1,12 +1,11 @@
 ﻿export const dynamic = 'force-dynamic';
 
 import { NextResponse } from 'next/server'
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import OpenAI from 'openai'
 import { supabaseAdmin } from '@/lib/supabase'
 
-function getGemini() {
-  if (!process.env.GEMINI_API_KEY) throw new Error('Missing GEMINI_API_KEY')
-  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+function getOpenAI() {
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 }
 
 export async function POST(req: Request) {
@@ -16,10 +15,18 @@ export async function POST(req: Request) {
 
     const prompt = `Analyser denne lead-henvendelsen:\nNavn: ${leadName}\nE-post: ${leadEmail}\nMelding: ${leadMessage}\nTelefon: ${leadPhone}\n\nReturner JSON med nokler: summary, category (price_sensitive|urgent|high_value|standard), sentiment (positive|neutral|negative), action_items (array), response_template (string)`
 
-    const genAI = getGemini();
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    const result = await model.generateContent(prompt);
-    const text = result.response.text();
+    const openai = getOpenAI();
+    const result = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: 'Du er en norsk B2B salgsanalytiker. Svar kun med gyldig JSON.' },
+        { role: 'user', content: prompt },
+      ],
+      max_tokens: 600,
+      temperature: 0.3,
+      response_format: { type: 'json_object' },
+    });
+    const text = result.choices[0]?.message?.content || '{}';
 
     let analysis = {}
     try { analysis = JSON.parse(text.match(/\{[\s\S]*\}/)?.[0] || '{}') } catch (e) { analysis = { summary: text } }

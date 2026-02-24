@@ -102,15 +102,15 @@ export async function sendReviewRequest(
     subject: `Takk for at du valgte ${companyName} – legg igjen en anmeldelse`,
     html: `<div style="font-family:Arial,sans-serif;max-width:600px;color:#1e293b">
       <div style="background:#16a34a;padding:24px 32px;border-radius:8px 8px 0 0">
-        <h1 style="color:#fff;margin:0;font-size:20px;font-weight:700">Jobben er fullfort</h1>
+        <h1 style="color:#fff;margin:0;font-size:20px;font-weight:700">Jobben er fullført</h1>
         <p style="color:#bbf7d0;margin:4px 0 0;font-size:14px">${companyName}</p>
       </div>
       <div style="background:#fff;padding:24px 32px;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 8px 8px">
         <p style="margin:0 0 16px">Hei ${customerName || 'der'},</p>
-        <p style="margin:0 0 20px;color:#475569">Takk for at du valgte <strong>${companyName}</strong>. Vi haper du er fornyd med arbeidet.</p>
-        <p style="margin:0 0 20px;color:#475569">Kunne du ta deg 1 minutt til aa legge igjen en anmeldelse pa Google? Det hjelper oss enormt og betyr veldig mye.</p>
-        <a href="${reviewLink}" style="display:inline-block;background:#16a34a;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">Legg igjen anmeldelse pa Google</a>
-        <p style="margin:20px 0 0;font-size:12px;color:#94a3b8">Denne e-posten ble sendt automatisk via FlowPilot etter at jobben ble markert som fullfort.</p>
+        <p style="margin:0 0 20px;color:#475569">Takk for at du valgte <strong>${companyName}</strong>. Vi håper du er fornøyd med arbeidet.</p>
+        <p style="margin:0 0 20px;color:#475569">Kunne du ta deg 1 minutt til å legge igjen en anmeldelse på Google? Det hjelper oss enormt og betyr veldig mye.</p>
+        <a href="${reviewLink}" style="display:inline-block;background:#16a34a;color:#fff;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px">Legg igjen anmeldelse på Google</a>
+        <p style="margin:20px 0 0;font-size:12px;color:#94a3b8">Denne e-posten ble sendt automatisk via FlowPilot etter at jobben ble markert som fullført.</p>
       </div>
     </div>`,
   });

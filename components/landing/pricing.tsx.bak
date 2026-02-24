@@ -7,15 +7,15 @@ const PLANS = [
     key: "starter",
     title: "Starter",
     subtitle: "Perfekt for nystartede bedrifter",
-    limits: "100 leads / mnd  2 skjemaer",
+    limits: "100 leads / mnd Â· 2 skjemaer",
     badge: null,
     features: [
-      "Opptil 100 leads per måned",
+      "Opptil 100 leads per mÃ¥ned",
       "2 tilpassede lead-skjemaer",
-      "AI lead-scoring (0100)",
+      "AI lead-scoring (0â€“100)",
       "Automatiske e-postsvar",
       "Faktura-generator (20/mnd)",
-      "Kontantstrøm-oversikt",
+      "KontantstrÃ¸m-oversikt",
       "E-postsupport",
     ],
     highlight: false,
@@ -24,15 +24,18 @@ const PLANS = [
     key: "pro",
     title: "Pro",
     subtitle: "For voksende bedrifter",
-    limits: "500 leads / mnd  20 skjemaer",
-    badge: "MEST POPULÆR",
+    limits: "500 leads / mnd Â· 20 skjemaer",
+    badge: "MEST POPULÃ†R",
     features: [
-      "Opptil 500 leads per måned",
+      "Opptil 500 leads per mÃ¥ned",
       "20 tilpassede lead-skjemaer",
       "AI lead-scoring og kategorisering",
       "Automatiske e-postkampanjer",
+      "SMS-pÃ¥minnelser (Twilio)",
       "Bookingsystem med Google Kalender",
       "Lead ROI-tracking",
+      "No-show deteksjon",
+      "Betalingslink-generator",
       "Ubegrensede fakturaer",
       "Prioritert support",
     ],
@@ -41,13 +44,13 @@ const PLANS = [
   {
     key: "enterprise",
     title: "Enterprise",
-    subtitle: "For seriøse vekstbedrifter",
-    limits: "Ubegrenset  Alt inkludert",
+    subtitle: "For seriÃ¸se vekstbedrifter",
+    limits: "Ubegrenset Â· Alt inkludert",
     badge: null,
     features: [
       "Ubegrenset antall leads",
       "Ubegrenset antall skjemaer",
-      "AI kundeservice-bot på nettsiden",
+      "AI kundeservice-bot pÃ¥ nettsiden",
       "Avansert e-postkampanjestyring",
       "White-label muligheter",
       "Full API-tilgang",
@@ -60,17 +63,11 @@ const PLANS = [
   },
 ];
 
-// Hardcoded Stripe price IDs from lib/stripe.ts  fallback if env prices unavailable
-const HARDCODED_PRICE_IDS: Record<string, string> = {
-  starter:    "price_1SxRpVHTxh2T1zNz6jPfJtcD",
-  pro:        "price_1SxRqIHTxh2T1zNz00HrfAlQ",
-  enterprise: "price_1SxRqeHTxh2T1zNzRYKM4DUl",
-};
-
+// Fallback-priser vises hvis Stripe ikke er konfigurert
 const FALLBACK: Record<string, { display: string; amount: number; id: string | null }> = {
-  starter:    { display: "1 290", amount: 129000, id: HARDCODED_PRICE_IDS.starter },
-  pro:        { display: "2 590", amount: 259000, id: HARDCODED_PRICE_IDS.pro },
-  enterprise: { display: "3 990", amount: 399000, id: HARDCODED_PRICE_IDS.enterprise },
+  starter:    { display: '1 290', amount: 129000, id: null },
+  pro:        { display: '2 590', amount: 259000, id: null },
+  enterprise: { display: '3 990', amount: 399000, id: null },
 };
 
 export function Pricing() {
@@ -85,11 +82,7 @@ export function Pricing() {
       .finally(() => setLoading(false));
   }, []);
 
-  const getPrice = (key: string) => {
-    const live = prices?.[key];
-    if (live && live.id) return live;
-    return FALLBACK[key];
-  };
+  const getPrice = (key: string) => prices?.[key] ?? FALLBACK[key];
 
   return (
     <section id="pricing" className="bg-white py-24">
@@ -97,13 +90,13 @@ export function Pricing() {
         <div className="text-center mb-4">
           <h2 className="text-4xl font-bold text-slate-900">Enkel, transparent prising</h2>
           <p className="mt-4 text-lg text-slate-600 max-w-2xl mx-auto">
-            Start gratis i 14 dager. Oppgrader når du er klar  ingen binding.
+            Start gratis i 14 dager. Oppgrader nÃ¥r du er klar â€“ ingen binding.
           </p>
         </div>
         <div className="flex justify-center mb-12">
           <div className="inline-flex items-center gap-2 rounded-full bg-green-50 border border-green-200 px-4 py-2 text-sm font-semibold text-green-700">
             <Zap className="h-4 w-4" />
-            Spar 20% ved å betale for 6 måneder
+            Spar 20% ved Ã¥ betale for 6 mÃ¥neder
           </div>
         </div>
         <div className="grid gap-8 md:grid-cols-3">
@@ -132,7 +125,7 @@ export function Pricing() {
                     ) : (
                       <div>
                         <span className="text-5xl font-extrabold text-slate-900">
-                          {getPrice(plan.key)?.display ?? ""}
+                          {getPrice(plan.key)?.display ?? 'â€”'}
                         </span>
                         <span className="ml-1 text-slate-500 text-base"> kr/mnd</span>
                       </div>
@@ -151,21 +144,23 @@ export function Pricing() {
                   ))}
                 </ul>
                 <div className="mt-8 space-y-3">
-                  <StripeCheckoutButton
-                    plan={plan.key}
-                    priceId={price?.id ?? null}
-                    highlighted={plan.highlight}
-                    billingTerm="monthly"
-                    label="Start gratis (månedlig)"
-                  />
-                  <StripeCheckoutButton
-                    plan={plan.key}
-                    priceId={price?.id ?? null}
-                    highlighted={false}
-                    billingTerm="prepaid6"
-                    label="Betal 6 mnd  spar 20 %"
-                    green={true}
-                  />
+                  <div>
+                    <StripeCheckoutButton
+                      plan={plan.key}
+                      priceId={price?.id}
+                      highlighted={plan.highlight}
+                      billingTerm="monthly"
+                      label="Start gratis (mÃ¥nedlig)"
+                    />
+                    <StripeCheckoutButton
+                      plan={plan.key}
+                      priceId={price?.id}
+                      highlighted={false}
+                      billingTerm="prepaid6"
+                      label="Betal 6 mnd â€“ spar 20 %"
+                      green={true}
+                    />
+                  </div>
                 </div>
               </div>
             );
@@ -188,20 +183,14 @@ function StripeCheckoutButton({
   green = false,
 }: {
   plan: string;
-  priceId?: string | null;
+  priceId?: string;
   highlighted?: boolean;
   billingTerm?: string;
   label: string;
   green?: boolean;
 }) {
-  const [loading, setLoading] = useState(false);
-
   const handleCheckout = async () => {
-    if (!priceId) {
-      window.location.href = `/register?plan=${plan}`;
-      return;
-    }
-    setLoading(true);
+    if (!priceId) return alert("Pris ikke konfigurert ennÃ¥.");
     try {
       const res = await fetch("/api/stripe/create-checkout-session", {
         method: "POST",
@@ -209,31 +198,26 @@ function StripeCheckoutButton({
         body: JSON.stringify({ priceId, billingTerm, plan }),
       });
       const json = await res.json();
-      if (json.url) {
-        window.location.href = json.url;
-      } else {
-        window.location.href = `/register?plan=${plan}`;
-      }
+      if (json.url) window.location.href = json.url;
+      else alert("Kunne ikke opprette Stripe-Ã¸kt.");
     } catch {
-      window.location.href = `/register?plan=${plan}`;
-    } finally {
-      setLoading(false);
+      alert("Checkout-feil");
     }
   };
 
   return (
     <button
       onClick={handleCheckout}
-      disabled={loading}
-      className={`w-full rounded-xl px-6 py-3 text-sm font-bold transition ${
+      className={`w-full rounded-xl px-6 py-3 text-sm font-bold transition mt-3 ${
         green
-          ? "bg-green-600 text-white hover:bg-green-700 disabled:opacity-60"
+          ? "bg-green-600 text-white hover:bg-green-700"
           : highlighted
-          ? "bg-blue-600 text-white hover:bg-blue-700 shadow-md disabled:opacity-60"
-          : "bg-slate-100 text-slate-900 hover:bg-slate-200 disabled:opacity-60"
+          ? "bg-blue-600 text-white hover:bg-blue-700 shadow-md"
+          : "bg-slate-100 text-slate-900 hover:bg-slate-200"
       }`}
     >
-      {loading ? "Laster..." : label}
+      {label}
     </button>
   );
 }
+

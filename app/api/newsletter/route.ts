@@ -29,8 +29,9 @@ async function sendWelcomeEmail(to: string, name: string | null) {
             <li>📊 Bransjeinnsikt og salgsstrategier</li>
           </ul>
           <div style="margin:28px 0;padding:20px;background:#f0fdf4;border-radius:8px;border-left:4px solid #16a34a">
-            <p style="margin:0;font-weight:700;color:#15803d;font-size:15px">🎉 Velkommensgave</p>
-            <p style="margin:6px 0 0;color:#166534;font-size:14px">Som ny abonnent får du <strong>30% rabatt</strong> på alle tjenester de neste 3 månedene. Bruk koden <strong>FLOWSTART30</strong> ved bestilling.</p>
+            <p style="margin:0;font-weight:700;color:#15803d;font-size:15px">Velkommensgave – eksklusiv abonnentrabatt</p>
+            <p style="margin:6px 0 0;color:#166534;font-size:14px">Som ny abonnent får du <strong>10% ekstrarabatt</strong> som legges oppå vår allerede inkluderte 20% rabatt for 6-månedersplanen – totalt <strong>30% besparelse</strong>.</p>
+            <p style="margin:8px 0 0;color:#166534;font-size:14px">Bruk koden <strong>FLOWSTART10</strong> ved bestilling. Tilbudet er gyldig i <strong>10 dager</strong> fra i dag.</p>
           </div>
           <a href="${process.env.NEXTAUTH_URL ?? 'https://flowpilot.no'}" style="display:inline-block;background:#1e40af;color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px">Utforsk FlowPilot</a>
           <p style="margin:28px 0 0;font-size:12px;color:#94a3b8">Du kan melde deg av når som helst. Spørsmål? Svar på denne e-posten eller kontakt oss på flowpilot@hotmail.com</p>

@@ -1,10 +1,10 @@
 ﻿export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import OpenAI from 'openai';
 import { createAdminClient } from '@/lib/supabase/admin';
 
-function getGemini() {
-  return new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+function getOpenAI() {
+  return new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 }
 
 export async function POST(request: NextRequest) {
@@ -42,21 +42,23 @@ Instruksjoner:
 4. Hold svar kort (maks 3 setninger per melding)
 5. Bruk bedriftens tone og personlighet`;
 
-    const genAI = getGemini();
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
-      systemInstruction: systemPrompt,
+    const openai = getOpenAI();
+    const msgList = [
+      { role: 'system' as const, content: systemPrompt },
+      ...(conversationHistory || []).map((msg: any) => ({
+        role: (msg.sender === 'user' ? 'user' : 'assistant') as 'user' | 'assistant',
+        content: msg.text,
+      })),
+      { role: 'user' as const, content: message },
+    ];
+
+    const result = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: msgList,
+      max_tokens: 250,
+      temperature: 0.7,
     });
-
-    // Convert conversation history to Gemini format
-    const history = (conversationHistory || []).map((msg: any) => ({
-      role: msg.sender === 'user' ? 'user' : 'model',
-      parts: [{ text: msg.text }],
-    }));
-
-    const chat = model.startChat({ history, generationConfig: { maxOutputTokens: 200, temperature: 0.7 } });
-    const result = await chat.sendMessage(message);
-    const reply = result.response.text() || 'Beklager, jeg kunne ikke svare.';
+    const reply = result.choices[0]?.message?.content || 'Beklager, jeg kunne ikke svare.';
 
     // Simple regex to detect if customer provided contact info
     const emailMatch = message.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);

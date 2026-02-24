@@ -108,7 +108,7 @@ const SERVICES = [
 
 export default function TilleggstjenesterPage() {
   function handleCTA(serviceId: string) {
-    window.location.href = `mailto:flowpilot@hotmail.com?subject=Interesse for ${SERVICES.find(s => s.id === serviceId)?.title}&body=Hei! Jeg er interessert i tilleggstjenesten "${SERVICES.find(s => s.id === serviceId)?.title}". Kan dere kontakte meg?`;
+    window.location.href = `/bli-kunde?service=${serviceId}`;
   }
 
   return (
@@ -174,10 +174,10 @@ export default function TilleggstjenesterPage() {
         <p className="text-blue-100 mb-6">Vi tilbyr gratis 30-minutters konsultasjon for alle FlowPilot-kunder.</p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <a
-            href="mailto:flowpilot@hotmail.com?subject=Gratis konsultasjon"
+            href="/bli-kunde"
             className="flex items-center gap-2 px-6 py-3 bg-white text-blue-700 rounded-xl font-bold text-sm hover:bg-blue-50 transition"
           >
-            <Mail className="h-4 w-4" /> Send e-post
+            <Mail className="h-4 w-4" /> Book gratis rådgivning
           </a>
           <a
             href="https://calendly.com"

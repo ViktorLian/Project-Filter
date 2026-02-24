@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Globe, TrendingUp, Search, Share2, Star, ArrowRight } from 'lucide-react';
 
 const SERVICES = [
@@ -97,12 +98,12 @@ export function Services() {
                   <p className="text-2xl font-bold text-slate-900">{s.price}
                     <span className="text-sm font-normal text-slate-400 ml-1">{s.priceNote}</span>
                   </p>
-                  <a
-                    href={`mailto:flowpilot@hotmail.com?subject=Interesse for ${s.title}&body=Hei, jeg er interessert i ${s.title}-pakken fra FlowPilot.`}
+                  <Link
+                    href={`/bli-kunde?service=${s.title.toLowerCase().replace(/\s+/g, '-')}`}
                     className={`mt-3 flex items-center justify-center gap-2 w-full rounded-xl py-2.5 text-sm font-semibold transition-colors ${s.popular ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
                   >
                     Kom i gang <ArrowRight className="h-4 w-4" />
-                  </a>
+                  </Link>
                 </div>
               </div>
             );
@@ -113,12 +114,12 @@ export function Services() {
         <div className="mt-12 rounded-2xl bg-blue-600 px-8 py-8 text-center text-white">
           <p className="text-lg font-semibold">Usikker på hvilken pakke som passer deg?</p>
           <p className="mt-1 text-blue-100 text-sm">Vi tilbyr gratis rådgivning – send oss en e-post så tar vi en uforpliktende prat.</p>
-          <a
-            href="mailto:flowpilot@hotmail.com?subject=Gratis rådgivning"
+          <Link
+            href="/bli-kunde"
             className="mt-5 inline-flex items-center gap-2 rounded-xl bg-white px-6 py-2.5 text-sm font-bold text-blue-700 hover:bg-blue-50 transition-colors"
           >
             Book gratis rådgivning <ArrowRight className="h-4 w-4" />
-          </a>
+          </Link>
         </div>
       </div>
     </section>
