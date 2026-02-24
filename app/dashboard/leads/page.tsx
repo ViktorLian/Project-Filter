@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   Search, Filter, UserCheck, UserX, Clock, TrendingUp, Star,
-  ChevronRight, Mail, Phone, Calendar, ArrowUpRight, Plus, RefreshCw
+  ChevronRight, Mail, Phone, Calendar, ArrowUpRight, Plus, RefreshCw, Download
 } from 'lucide-react';
 
 type Lead = {
@@ -34,6 +34,27 @@ export default function LeadsPage() {
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('ALL');
   const [sortBy, setSortBy] = useState<'newest' | 'score' | 'name'>('newest');
+
+  function exportCSV() {
+    const rows = [
+      ['Navn', 'E-post', 'Telefon', 'Status', 'Score', 'Risiko', 'Skjema', 'Dato'],
+      ...leads.map(l => [
+        l.name || '',
+        l.email || '',
+        l.phone || '',
+        l.status || '',
+        l.score ?? '',
+        l.risk_level || '',
+        l.form?.name || '',
+        l.created_at ? new Date(l.created_at).toLocaleDateString('nb-NO') : '',
+      ]),
+    ];
+    const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = `leads_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  }
 
   const load = async () => {
     setLoading(true);
@@ -98,9 +119,14 @@ export default function LeadsPage() {
           <h1 className="text-2xl font-bold text-slate-900">Leads</h1>
           <p className="text-slate-500 text-sm mt-0.5">Administrer og kvalifiser innkommende leads</p>
         </div>
-        <button onClick={load} className="flex items-center gap-2 text-slate-500 hover:text-slate-700 text-sm">
-          <RefreshCw className="h-4 w-4" /> Oppdater
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={exportCSV} className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+            <Download className="h-4 w-4" /> Eksporter CSV
+          </button>
+          <button onClick={load} className="flex items-center gap-2 text-slate-500 hover:text-slate-700 text-sm">
+            <RefreshCw className="h-4 w-4" /> Oppdater
+          </button>
+        </div>
       </div>
 
       {/* Stats */}

@@ -108,6 +108,27 @@ export default function InvoicesPage() {
     overdue: invoices.filter(i => i.status === 'OVERDUE').length,
   };
 
+  function exportCSV() {
+    const rows = [
+      ['Fakturanr', 'Kunde', 'E-post', 'Status', 'Beløp', 'Forfallsdato', 'Utstedelsesdato', 'Beskrivelse'],
+      ...invoices.map(inv => [
+        inv.invoice_number,
+        inv.customer?.name || '',
+        inv.customer?.email || '',
+        STATUS_CFG[inv.status]?.label || inv.status,
+        inv.amount,
+        inv.due_date,
+        inv.issued_date || '',
+        inv.description || '',
+      ]),
+    ];
+    const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = `fakturaer_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -116,10 +137,16 @@ export default function InvoicesPage() {
           <h1 className="text-2xl font-bold text-slate-900">Fakturaer</h1>
           <p className="text-slate-500 text-sm mt-0.5">Administrer og send fakturaer til kundene dine</p>
         </div>
-        <button onClick={() => setShowNew(true)}
-          className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition shadow-sm">
-          <Plus className="h-4 w-4" /> Ny faktura
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={exportCSV}
+            className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 transition shadow-sm">
+            <Download className="h-4 w-4" /> Eksporter CSV
+          </button>
+          <button onClick={() => setShowNew(true)}
+            className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition shadow-sm">
+            <Plus className="h-4 w-4" /> Ny faktura
+          </button>
+        </div>
       </div>
 
       {/* Stats */}

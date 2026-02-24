@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Clock, Plus, Trash2, DollarSign, Users, Calendar, TrendingUp, Sparkles } from 'lucide-react';
+import { Clock, Plus, Trash2, DollarSign, Users, Calendar, TrendingUp, Sparkles, Download } from 'lucide-react';
 
 type TimeEntry = {
   id: string;
@@ -34,6 +34,26 @@ export default function TimeTrackingPage() {
   const [weekMode, setWeekMode] = useState(true);
   const [aiReport, setAiReport] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
+
+  function exportCSV() {
+    const rows = [
+      ['Ansatt', 'Beskrivelse', 'Dato', 'Timer', 'Timepris', 'Fakturerbar', 'Verdi'],
+      ...entries.map(e => [
+        e.employee,
+        e.description,
+        e.date,
+        e.hours,
+        e.hourly_rate,
+        e.billable ? 'Ja' : 'Nei',
+        (e.hours * e.hourly_rate).toFixed(2),
+      ]),
+    ];
+    const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a.download = `timeregistrering_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+  }
 
   async function load() {
     setLoading(true);
@@ -126,6 +146,10 @@ Gi 3-4 konkrete tips: Effektivitet, faktureringsrate, og om noe bør optimaliser
           <button onClick={() => setWeekMode(!weekMode)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${weekMode ? 'bg-blue-50 border-blue-300 text-blue-700' : 'bg-white border-slate-200 text-slate-600'}`}>
             {weekMode ? 'Denne uken' : 'Alle'}
+          </button>
+          <button onClick={exportCSV}
+            className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+            <Download className="h-4 w-4" /> Eksporter CSV
           </button>
           <button onClick={() => setShowAdd(true)}
             className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors">
