@@ -11,14 +11,16 @@ type Section = {
   title: string;
   icon: React.ElementType;
   color: string;
-  videoUrl?: string; // YouTube embed URL – add your video ID here
+  videoUrl?: string;
+  videoDisclaimer?: string;
   steps: { title: string; desc: string; tip?: string }[];
 };
 
 const SECTIONS: Section[] = [
   {
     id: 'start', title: 'Kom i gang', icon: CheckCircle, color: 'text-emerald-600',
-    videoUrl: '', // e.g. 'https://www.youtube.com/embed/YOUR_VIDEO_ID'
+    videoUrl: 'https://iktagder-my.sharepoint.com/personal/edu7644376_agderskolen_no/_layouts/15/embed.aspx?UniqueId=8e98793f-04fc-4ce8-a75d-59e944088364',
+    videoDisclaimer: 'Navn og e-post brukt i demoen er kun for demonstrasjonsformål.',
     steps: [
       { title: '1. Fyll inn firmainformasjon', desc: 'Gå til Innstillinger og fyll inn firmanavn, adresse, organisasjonsnummer og faktura-e-post. Dette brukes på PDF-fakturaer.' },
       { title: '2. Sett opp bank og KID', desc: 'I Innstillinger under "Faktura-innstillinger", legg inn kontonummer og KID-prefiks. KID genereres automatisk fra disse verdiene.', tip: 'KID-prefiks er vanligvis årstall, f.eks. 2026' },
@@ -162,14 +164,19 @@ export default function ManualPage() {
                 <div className="border-t border-slate-100 px-5 py-4 space-y-4">
                   {/* Video: real embed or placeholder */}
                   {section.videoUrl ? (
-                    <div className="rounded-xl overflow-hidden aspect-video w-full">
-                      <iframe
-                        src={section.videoUrl}
-                        className="w-full h-full"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                        title={`Video: ${section.title}`}
-                      />
+                    <div>
+                      <div className="rounded-xl overflow-hidden aspect-video w-full bg-black">
+                        <iframe
+                          src={section.videoUrl}
+                          className="w-full h-full"
+                          allow="autoplay; fullscreen; picture-in-picture"
+                          allowFullScreen
+                          title={`Video: ${section.title}`}
+                        />
+                      </div>
+                      {section.videoDisclaimer && (
+                        <p className="mt-1.5 text-xs text-slate-400 italic">{section.videoDisclaimer}</p>
+                      )}
                     </div>
                   ) : (
                     <div className="rounded-xl bg-slate-900 aspect-video flex flex-col items-center justify-center gap-2 select-none">
