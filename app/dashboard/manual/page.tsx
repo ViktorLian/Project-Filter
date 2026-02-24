@@ -1,8 +1,8 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import {
-  BookOpen, FileText, Users, DollarSign, Brain, Calendar, Map, Zap,
+  BookOpen, FileText, Users, DollarSign, Brain, Calendar, Globe,
   ChevronDown, ChevronRight, CheckCircle, AlertCircle, Receipt
 } from 'lucide-react';
 
@@ -18,68 +18,78 @@ const SECTIONS: Section[] = [
   {
     id: 'start', title: 'Kom i gang', icon: CheckCircle, color: 'text-emerald-600',
     steps: [
-      { title: '1. Fyll inn firmainformasjon', desc: 'Ga til Innstillinger og fyll inn firmanavn, adresse, organisasjonsnummer og faktura-e-post. Dette brukes pa PDF-fakturaer.' },
-      { title: '2. Sett opp bank og KID', desc: 'I Innstillinger under "Faktura-innstillinger", legg inn kontonummer og KID-prefiks. KID genereres automatisk fra disse verdiene.', tip: 'KID-prefiks er vanligvis arstal, f.eks. 2026' },
+      { title: '1. Fyll inn firmainformasjon', desc: 'Gå til Innstillinger og fyll inn firmanavn, adresse, organisasjonsnummer og faktura-e-post. Dette brukes  på PDF-fakturaer.' },
+      { title: '2. Sett opp bank og KID', desc: 'I Innstillinger under "Faktura-innstillinger", legg inn kontonummer og KID-prefiks. KID genereres automatisk fra disse verdiene.', tip: 'KID-prefiks er vanligvis årstall, f.eks. 2026' },
       { title: '3. Inviter teamet', desc: 'Du kan invitere kollegaer fra Innstillinger-siden. Hvert medlem far tilgang til dashboardet.' },
     ],
   },
   {
     id: 'leads', title: 'Leads og skjemaer', icon: FileText, color: 'text-blue-600',
     steps: [
-      { title: 'Opprett et innhentingsskjema', desc: 'Ga til Skjemaer og klikk "Nytt skjema". Legg til sporsmol som hjelper deg kvalifisere kunder. Du far en unik URL du kan legge pa nettsiden din.' },
-      { title: 'Del skjema-linken', desc: 'Del lenken pa nettside, e-post eller sosiale medier. Nar noen fyller ut, dukker de opp som leads i dashboardet automatisk.', tip: 'Lenkeformat: /forms/ditt-firma/skjema-navn' },
-      { title: 'Kvalifiser leads', desc: 'Ga til Leads. Hvert lead har en score basert pa svarene. Bla gjennom og sett status: Ny, Kontaktet, Akseptert eller Avvist.' },
-      { title: 'Automatisk oppfolging', desc: 'Aktiver Smart Oppfolging for automatiske e-poster nar en lead ikke har hort fra deg pa X dager.' },
+      { title: 'Opprett et innhentingsskjema', desc: 'Gå til Skjemaer og klikk "Nytt skjema". Legg til spørsmål som hjelper deg kvalifisere kunder. Du far en unik URL du kan legge på nettsiden din.' },
+      { title: 'Del skjema-linken', desc: 'Del lenken  på nettside, e-post eller sosiale medier. Nar noen fyller ut, dukker de opp som leads i dashboardet automatisk.', tip: 'Lenkeformat: /forms/ditt-firma/skjema-navn' },
+      { title: 'Kvalifiser leads', desc: 'Gå til Leads. Hvert lead har en score basert  på svarene. Bla gjennom og sett status: Ny, Kontaktet, Akseptert eller Avvist.' },
+      { title: 'Automatisk oppfølging', desc: 'Aktiver Smart Oppfølging for automatiske e-poster nar en lead ikke har hort fra deg  på X dager.' },
     ],
   },
   {
     id: 'invoices', title: 'Fakturaer og PDF', icon: Receipt, color: 'text-orange-600',
     steps: [
-      { title: 'Opprett faktura', desc: 'Ga til Fakturaer og klikk "Ny faktura". Fyll inn kundenavn, e-post, belop og forfallsdato. KID genereres automatisk.' },
-      { title: 'Generer PDF', desc: 'Klikk PDF-knappen ved siden av fakturaen. En utskriftsvennlig side apnes — velg "Skriv ut som PDF" i nettleseren.', tip: 'For a spare PDF: Ctrl+P → Velg "Lagre som PDF" (Chrome/Edge)' },
+      { title: 'Opprett faktura', desc: 'Gå til Fakturaer og klikk "Ny faktura". Fyll inn kundenavn, e-post, beløp og forfallsdato. KID genereres automatisk.' },
+      { title: 'Generer PDF', desc: 'Klikk PDF-knappen ved siden av fakturaen. En utskriftsvennlig side apnes — velg "Skriv ut som PDF" i nettleseren.', tip: 'For å spare PDF: Ctrl+P → Velg "Lagre som PDF" (Chrome/Edge)' },
       { title: 'KID-nummer', desc: 'KID konstrueres automatisk fra prefiks (fra innstillinger) + fakturanummer + kontrollsiffer. Eksempel: 2026 + 00001 + 3 = 20260000013.', tip: 'Sett KID-prefiks i Innstillinger for at det skal fungere korrekt' },
-      { title: 'Oppdater betalingsstatus', desc: 'Nar kunden betaler, endre status til "Betalt" i dropdown-menyen pa fakturalinjen.' },
+      { title: 'Oppdater betalingsstatus', desc: 'Nar kunden betaler, endre status til "Betalt" i dropdown-menyen  på fakturalinjen.' },
     ],
   },
   {
-    id: 'customers', title: 'Kundehaldning', icon: Users, color: 'text-purple-600',
+    id: 'customers', title: 'Kundehåndtering', icon: Users, color: 'text-purple-600',
     steps: [
-      { title: 'Legg til kunder', desc: 'Ga til Kunder og klikk "Ny kunde". Fyll inn kontaktinfo. Kunder knyttes til fakturaer og jobber automatisk.' },
-      { title: 'Tiernivaa', desc: 'Kunder far automatisk tier-niveau (Standard / VIP) basert pa total omsetning. VIP-kunder (over 10 000 kr) vises fremst.' },
-      { title: 'Oppfolgingshistorikk', desc: 'Inne pa en kunde kan du se alle interaksjoner, noter og historikk. AI kan analysere kundens profil for skreddersydd kommunikasjon.' },
+      { title: 'Legg til kunder', desc: 'Gå til Kunder og klikk "Ny kunde". Fyll inn kontaktinfo. Kunder knyttes til fakturaer og jobber automatisk.' },
+      { title: 'Tiernivå', desc: 'Kunder far automatisk tier-niveau (Standard / VIP) basert  på total omsetning. VIP-kunder (over 10 000 kr) vises fremst.' },
+      { title: 'Oppfølgingshistorikk', desc: 'Inne  på en kunde kan du se alle interaksjoner, noter og historikk. AI kan analysere kundens profil for skreddersydd kommunikasjon.' },
     ],
   },
   {
     id: 'jobs', title: 'Jobber og fortjeneste', icon: DollarSign, color: 'text-yellow-600',
     steps: [
-      { title: 'Opprett en jobb', desc: 'Ga til Jobber og klikk "Ny jobb". Sett inntekt og utgifter for jobben. FlowPilot beregner brutto margin automatisk.' },
-      { title: 'Legg til utgifter', desc: 'Inne pa en jobb kan du legge til spesifikke utgifter (materiell, underentreprenorer osv.). Margin oppdateres fortlopende.' },
-      { title: 'Send tilbakemeldingsundersokelse', desc: 'Etter fullfort jobb, send en 5-sporsmalsundersokelse til kunden via e-post fra jobboversikten.' },
+      { title: 'Opprett en jobb', desc: 'Gå til Jobber og klikk "Ny jobb". Sett inntekt og utgifter for jobben. FlowPilot beregner brutto margin automatisk.' },
+      { title: 'Legg til utgifter', desc: 'Inne  på en jobb kan du legge til spesifikke utgifter (materiell, underentreprenører osv.). Margin oppdateres fortløpende.' },
+      { title: 'Send tilbakemeldingsundersøkelse', desc: 'Etter fullført jobb, send en 5-spørsmålsundersøkelse til kunden via e-post fra jobboversikten.' },
     ],
   },
   {
-    id: 'ai', title: 'AI Verktoy', icon: Brain, color: 'text-purple-600',
+    id: 'ai', title: 'AI Verktøy', icon: Brain, color: 'text-purple-600',
     steps: [
-      { title: 'AI Salgsassistent', desc: 'Chat med AI assistenten for a fa hjelp med e-poster, salgsargumenter, moteplaner og mer. Krever OpenAI API-nokkel i innstillinger.' },
-      { title: 'AI CRM Autofill', desc: 'Gi AI besok- eller samtaleinformasjon, og den fyller ut CRM automatisk med notater, status og neste steg.' },
-      { title: 'Moteoppsummering', desc: 'Skriv inn hva som ble diskutert pa et mote. AI lager sammendrag, to-do liste og neste steg automatisk.' },
-      { title: 'Vinn/Tap Analyse', desc: 'Se monsteret i hvilke saker du vinner og taper, basert pa faktiske data fra dine leads og tilbud.' },
+      { title: 'AI Salgsassistent', desc: 'Chat med AI assistenten for å få hjelp med e-poster, salgsargumenter, møteplaner og mer. Krever OpenAI API-nøkkel i innstillinger.' },
+      { title: 'AI CRM Autofill', desc: 'Gi AI besøk- eller samtaleinformasjon, og den fyller ut CRM automatisk med notater, status og neste steg.' },
+      { title: 'Møteoppsummering', desc: 'Skriv inn hva som ble diskutert  på et mote. AI lager sammendrag, to-do liste og neste steg automatisk.' },
+      { title: 'Vinn/Tap Analyse', desc: 'Se mønsteret i hvilke saker du vinner og taper, basert  på faktiske data fra dine leads og tilbud.' },
     ],
   },
   {
     id: 'calendar', title: 'Kalender', icon: Calendar, color: 'text-blue-600',
     steps: [
-      { title: 'Legg til hendelse', desc: 'Klikk pa en dag i kalenderen eller bruk "Ny hendelse"-knappen. Velg type (Jobb, Mote, Oppfolging, Paminnelse).' },
-      { title: 'Varsler', desc: 'Aktiver e-post- og SMS-varsler pa hendelsen. Kunden og/eller ditt team varsles automatisk for jobben.' },
+      { title: 'Legg til hendelse', desc: 'Klikk  på en dag i kalenderen eller bruk "Ny hendelse"-knappen. Velg type (Jobb, Møte, Oppfølging, Påminnelse).' },
+      { title: 'Varsler', desc: 'Aktiver e-post- og SMS-varsler  på hendelsen. Kunden og/eller ditt team varsles automatisk for jobben.' },
       { title: 'Ansvarlig person', desc: 'Sett hvem som er ansvarlig for hver jobb. Nyttig for bedrifter med flere ansatte.' },
+    ],
+  },
+  {
+    id: 'forms-embed', title: 'Sett inn skjema på nettsiden din', icon: Globe, color: 'text-teal-600',
+    steps: [
+      { title: '1. Finn skjema-lenken', desc: 'Gå til Skjemaer i dashboardet og klikk på skjemaet ditt. Øverst på siden finner du den unike URL-en til skjemaet.', tip: 'Lenkeformat: flowpilot.no/forms/ditt-firma/skjema-navn' },
+      { title: '2. Del som direktelenke', desc: 'Kopier URL-en og del den direkte via e-post, SMS, Google My Business-profil, Facebook-side eller Instagram bio. Kundene dine kan fylle ut skjemaet rett i nettleseren sin.' },
+      { title: '3. Legg inn som iframe på nettside', desc: 'Lim inn denne koden der du vil at skjemaet skal vises på nettsiden din:\n\n<iframe\n  src="https://flowpilot.no/forms/ditt-firma/skjema-navn"\n  width="100%"\n  height="700"\n  frameborder="0"\n  style="border-radius:12px;"\n></iframe>', tip: 'Bytt ut ditt-firma og skjema-navn med dine egne verdier fra URL-en' },
+      { title: '4. Google My Business', desc: 'Gå til Google My Business → Rediger profil → Legg til lenke. Lim inn skjema-URL-en som "Bestill time" eller "Få tilbud". Kunder finner deg på Google og kan sende lead direkte.' },
+      { title: '5. Facebook og Instagram', desc: 'På Facebook-siden din: Rediger side → Legg til handlingsknapp → "Kontakt oss" → lim inn skjema-lenken. På Instagram: bruk lenken i bio eller i en story med sveip-opp-lenke.' },
     ],
   },
   {
     id: 'subscription', title: 'Abonnement', icon: Receipt, color: 'text-slate-600',
     steps: [
-      { title: 'Velg plan', desc: 'Ga til Innstillinger → Fakturering for a velge mellom Starter (1 290 kr), Pro (2 590 kr) eller Enterprise (3 990 kr) per maned.' },
-      { title: 'Proveperiode', desc: '14 dager gratis proveperiode inkludert pa alle planer. Ingen kredittkort kreves for a starte.' },
-      { title: 'Endre plan', desc: 'Du kan oppgradere eller nedgradere nar som helst fra Innstillinger-siden. Forandringen trer i kraft umiddelbart.' },
+      { title: 'Velg plan', desc: 'Gå til Innstillinger → Fakturering for å velge mellom Starter (1 290 kr), Pro (2 590 kr) eller Enterprise (3 990 kr) per måned.' },
+      { title: 'Prøveperiode', desc: '14 dager gratis prøveperiode inkludert  på alle planer. Ingen kredittkort kreves for å starte.' },
+      { title: 'Endre plan', desc: 'Du kan oppgradere eller nedgradere når som helst fra Innstillinger-siden. Forandringen trer i kraft umiddelbart.' },
     ],
   },
 ];
@@ -91,7 +101,7 @@ export default function ManualPage() {
     <div className="space-y-6 max-w-3xl">
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Brukermanual</h1>
-        <p className="text-slate-500 text-sm mt-0.5">Alt du trenger for a komme i gang med FlowPilot</p>
+        <p className="text-slate-500 text-sm mt-0.5">Alt du trenger for å komme i gang med FlowPilot</p>
       </div>
 
       {/* Quick tips */}
@@ -101,10 +111,10 @@ export default function ManualPage() {
           <div>
             <p className="font-semibold text-blue-800 text-sm">Hurtigtips</p>
             <ul className="mt-2 space-y-1 text-sm text-blue-700">
-              <li>For PDF-fakturaer: sett kontonummer og KID-prefiks i Innstillinger forst</li>
-              <li>For AI-funksjoner: legg til OPENAI_API_KEY i miljovariabler</li>
-              <li>Del skjema-linken pa nettsiden din for a fange leads automatisk</li>
-              <li>Bruk Smart Oppfolging for a holde kontakt uten manuelt arbeid</li>
+              <li>For PDF-fakturaer: sett kontonummer og KID-prefiks i Innstillinger først</li>
+              <li>For AI-funksjoner: legg til OPENAI_API_KEY i miljøvariabler</li>
+              <li>Del skjema-lenken på nettsiden din for å fange leads automatisk</li>
+              <li>Bruk Smart Oppfølging for å holde kontakt uten manuelt arbeid</li>
             </ul>
           </div>
         </div>
@@ -153,11 +163,11 @@ export default function ManualPage() {
       {/* Support */}
       <div className="rounded-xl bg-slate-900 p-6 text-white">
         <h3 className="font-bold text-lg mb-2">Trenger du mer hjelp?</h3>
-        <p className="text-slate-300 text-sm mb-4">Kontakt oss via kontaktskjemaet pa hovedsiden, eller e-post: Flowpilot@hotmail.com</p>
+        <p className="text-slate-300 text-sm mb-4">Kontakt oss via kontaktskjemaet  på hovedsiden, eller e-post: Flowpilot@hotmail.com</p>
         <div className="grid grid-cols-2 gap-3 text-xs">
           <div className="bg-white/10 rounded-lg p-3">
             <p className="font-semibold">Responstid</p>
-            <p className="text-slate-300 mt-1">Vanligvis innen 24 timer pa hverdager</p>
+            <p className="text-slate-300 mt-1">Vanligvis innen 24 timer  på hverdager</p>
           </div>
           <div className="bg-white/10 rounded-lg p-3">
             <p className="font-semibold">Oppdateringer</p>

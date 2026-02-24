@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import {
-  ChevronLeft, ChevronRight, Plus, X, Bell, User, Phone, Clock, Briefcase, Calendar
+  ChevronLeft, ChevronRight, Plus, X, Bell, User, Phone, Clock, Briefcase, Calendar, Download
 } from 'lucide-react';
 
 type CalendarEvent = {
@@ -78,6 +78,36 @@ export default function CalendarPage() {
     loadEvents();
   };
 
+  const exportICS = () => {
+    const lines = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//FlowPilot//Calendar//NO',
+      'CALSCALE:GREGORIAN',
+    ];
+    events.forEach(ev => {
+      const dt = ev.date.replace(/-/g, '');
+      const now = new Date().toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z';
+      lines.push('BEGIN:VEVENT');
+      lines.push(`UID:flowpilot-${ev.id}@flowpilot.no`);
+      lines.push(`DTSTAMP:${now}`);
+      lines.push(`DTSTART;VALUE=DATE:${dt}`);
+      lines.push(`DTEND;VALUE=DATE:${dt}`);
+      lines.push(`SUMMARY:${ev.title}`);
+      if (ev.notes) lines.push(`DESCRIPTION:${ev.notes.replace(/\n/g, '\\n')}`);
+      if (ev.customer_name) lines.push(`LOCATION:${ev.customer_name}`);
+      lines.push('END:VEVENT');
+    });
+    lines.push('END:VCALENDAR');
+    const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'flowpilot-kalender.ics';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   // Calendar grid
   const firstDay = new Date(currentYear, currentMonth, 1);
   const lastDay = new Date(currentYear, currentMonth + 1, 0);
@@ -105,10 +135,16 @@ export default function CalendarPage() {
           <h1 className="text-2xl font-bold text-slate-900">Kalender</h1>
           <p className="text-slate-500 text-sm mt-0.5">Planlegg jobber, møter og oppfølginger</p>
         </div>
-        <button onClick={() => { setShowNew(true); setNewEvent(EMPTY_EVENT); }}
-          className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition shadow-sm">
-          <Plus className="h-4 w-4" /> Ny hendelse
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={exportICS}
+            className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition shadow-sm">
+            <Download className="h-4 w-4" /> Eksporter .ics
+          </button>
+          <button onClick={() => { setShowNew(true); setNewEvent(EMPTY_EVENT); }}
+            className="flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition shadow-sm">
+            <Plus className="h-4 w-4" /> Ny hendelse
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">

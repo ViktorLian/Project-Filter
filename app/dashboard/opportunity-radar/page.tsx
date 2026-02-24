@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Radar, DollarSign, TrendingUp, ArrowRight, Users, RefreshCw, Zap, Star, Clock, BarChart3, CheckCircle, ChevronRight } from 'lucide-react';
@@ -37,14 +37,14 @@ const DEMO_OPPS: Opportunity[] = [
   {
     id: '2', type: 'reactivate', done: false,
     title: 'Kari Nordmann — inaktiv i 8 maneder',
-    description: 'Fullfort baderomsjobb i 2024, ingen kontakt siden. Standardsyklusen er at kunder trenger ny jobb innen 12-18 mnd. Riktig tidspunkt for utstrakt hand.',
+    description: 'Fullført baderomsjobb i 2024, ingen kontakt siden. Standardsyklusen er at kunder trenger ny jobb innen 12-18 mnd. Riktig tidspunkt for utstrakt hand.',
     potentialValue: 45000, confidence: 65, effort: 'lav', relatedTo: 'Kari Nordmann',
-    action: 'Send oppfolgings-SMS: "Hei, trenger du hjelp til noe i var?"',
+    action: 'Send oppfølgings-SMS: "Hei, trenger du hjelp til noe i var?"',
   },
   {
     id: '3', type: 'retention', done: false,
     title: 'Ingrid Hansen har ikke fatt tilbakemeldingsskjema',
-    description: 'Jobben ble fullfort for 3 uker siden uten oppfolgingsundersokelse. Manglende kontakt oker churn-risiko med 35%. Send undersokelse na.',
+    description: 'Jobben ble fullført for 3 uker siden uten oppfølgingsundersøkelse. Manglende kontakt oker churn-risiko med 35%. Send undersøkelse na.',
     potentialValue: 25000, confidence: 72, effort: 'lav', relatedTo: 'Ingrid Hansen',
     action: 'Send tilfredshetsskjema og be om Google-anmeldelse',
   },

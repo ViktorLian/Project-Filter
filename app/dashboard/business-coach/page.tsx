@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { Brain, CheckCircle, Circle, AlertTriangle, ArrowRight, Sparkles, TrendingUp, Users, DollarSign, Calendar, RefreshCw } from 'lucide-react';
@@ -29,21 +29,21 @@ const WEEKLY: WeeklyCoach = {
       priority: 1,
       title: 'Svar pa de 3 ubesvarte leadsene',
       why: 'Leads som besvares innen 24 timer konverterer 3x bedre enn de som venter.',
-      action: 'Ga til Leads → filtrer pa "Ny" → ring de med hoyest score forst.',
+      action: 'Gå til Leads → filtrer pa "Ny" → ring de med høyest score forst.',
       impact: 'hoy',
     },
     {
       priority: 2,
       title: 'Send purring pa 2 forfalte fakturaer',
       why: 'Total utestaaende: ca. 28 500 kr. Disse pengene er dine – fa dem inn.',
-      action: 'Ga til Fakturaer → "Forfalt" → send purring med ett klikk.',
+      action: 'Gå til Fakturaer → "Forfalt" → send purring med ett klikk.',
       impact: 'hoy',
     },
     {
       priority: 3,
       title: 'Sett opp en automatisk e-postsekvens',
-      why: 'Bedrifter med automatisk oppfolging far 40% fler gjentakende kunder.',
-      action: 'Ga til E-postsekvenser → velg malen "Etter fullfort jobb".',
+      why: 'Bedrifter med automatisk oppfølging far 40% fler gjentakende kunder.',
+      action: 'Gå til E-postsekvenser → velg malen "Etter fullført jobb".',
       impact: 'middels',
     },
   ],

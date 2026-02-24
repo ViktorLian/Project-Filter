@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Mail, Clock, Play, Eye, Copy, CheckCircle, Plus, Zap, BarChart3, Users, TrendingDown, ArrowRight, Star } from 'lucide-react';
@@ -28,7 +28,7 @@ const SEQUENCES: Sequence[] = [
   {
     id: 'trial',
     name: 'Trial til betalt',
-    description: 'Folger opp nye bruker gjennom 14-dager proveperioden og konverterer til betalt plan.',
+    description: 'Følger opp nye bruker gjennom 14-dager prøveperioden og konverterer til betalt plan.',
     trigger: 'Trigger: ny registrering',
     icon: Zap,
     color: 'text-blue-700',
@@ -45,24 +45,24 @@ Her er det viktigste du bor gjore i dag:
 2. Send det til en eksisterende kunde og se hva som skjer
 3. Se lead-scoren automatisk beregnes
 
-Har du sporsmal? Svar pa denne e-posten — vi leser alt.
+Har du spørsmål? Svar pa denne e-posten — vi leser alt.
 
 Med venlig hilsen,
 FlowPilot-teamet` },
       { day: 3, subject: 'Tips som oker salget ditt med 34%', preview: 'Ett enkelt grep de fleste glemmer...', body: `Hei [Fornavn],
 
-Visste du at bedrifter som aktiverer automatisk oppfolging far 34% flere bookinger?
+Visste du at bedrifter som aktiverer automatisk oppfølging far 34% flere bookinger?
 
 Det tar deg 5 minutter a sette opp:
 
-Ga til Dashboard → Salg → Smart Oppfolging
+Gå til Dashboard → Salg → Smart Oppfølging
 
 Systemet sender da automatisk SMS og e-post til leads som ikke har svart — uten at du need a gjore noe.
 
 Probis det i dag mens du har tid.
 
 FlowPilot-teamet` },
-      { day: 7, subject: 'Uke 1 fullfort — hva har du tjent?', preview: 'Se dine resultater hittil...', body: `Hei [Fornavn],
+      { day: 7, subject: 'Uke 1 fullført — hva har du tjent?', preview: 'Se dine resultater hittil...', body: `Hei [Fornavn],
 
 En uke er gatt. Tid for en liten evaluering.
 
@@ -75,9 +75,9 @@ Hvis du ikke er fornyd — send oss en e-post. Vi hjelper deg a fa ut mer av sys
 
 Med venlig hilsen,
 FlowPilot-teamet` },
-      { day: 12, subject: 'Kun 2 dager igjen av proveperioden', preview: 'Slik fortsetter du etter trial...', body: `Hei [Fornavn],
+      { day: 12, subject: 'Kun 2 dager igjen av prøveperioden', preview: 'Slik fortsetter du etter trial...', body: `Hei [Fornavn],
 
-Proveperioden din utloper om 2 dager.
+Prøveperioden din utloper om 2 dager.
 
 For a beholde tilgangen og ikke miste dataene dine, oppgrader til en betalt plan:
 
@@ -89,9 +89,9 @@ Om du vil snakke med noen forst — ring oss pa [telefon] eller svar pa denne e-
 Sett opp betaling her: [LENKE]
 
 FlowPilot-teamet` },
-      { day: 14, subject: 'Proveperioden er over — slik beholder du alt', preview: 'Siste sjanse...', body: `Hei [Fornavn],
+      { day: 14, subject: 'Prøveperioden er over — slik beholder du alt', preview: 'Siste sjanse...', body: `Hei [Fornavn],
 
-Proveperioden din utloper i dag.
+Prøveperioden din utloper i dag.
 
 For a beholde:
 - Alle leadene dine
@@ -133,7 +133,7 @@ Vi tilbyr alle inaktive kunder en gratis 15-minutters gjennomgang.
 
 Vi viser deg:
 - De 3 tingene som gir deg mest igjen for tida
-- Hvordan du setter opp automatisk oppfolging
+- Hvordan du setter opp automatisk oppfølging
 - Hva andre i din bransje gjor
 
 Book en tid her: [LENKE]
@@ -174,11 +174,11 @@ Har du behov for opplaring? Vi tilbyr gratis onboarding-samtale. Book her: [LENK
 FlowPilot-teamet` },
       { day: 3, subject: 'Den funksjonen de fleste glemmer', preview: 'Sett opp dette i dag', body: `Hei [Fornavn],
 
-Den funksjonen som gir mest igjen — og som de fleste glemmer a sette opp — er Smart Oppfolging.
+Den funksjonen som gir mest igjen — og som de fleste glemmer a sette opp — er Smart Oppfølging.
 
 Den sender automatisk SMS og e-post til leads som ikke svarer.
 
-Sett det opp under Salg → Smart Oppfolging. Det tar 5 minutter.
+Sett det opp under Salg → Smart Oppfølging. Det tar 5 minutter.
 
 FlowPilot-teamet` },
     ],
@@ -186,14 +186,14 @@ FlowPilot-teamet` },
   {
     id: 'upsell',
     name: 'Upsell til Pro',
-    description: 'Guider Starter-kunder til a oppgradere til Pro nar de naermer seg grenser.',
+    description: 'Guider Starter-kunder til a oppgradere til Pro nar de nærmer seg grenser.',
     trigger: 'Trigger: 80% av lead-grense brukt',
     icon: BarChart3,
     color: 'text-purple-700',
     bg: 'bg-purple-100',
     active: false,
     steps: [
-      { day: 0, subject: 'Du naermer deg grensen din', preview: 'Hva skjer nar du nar maks?', body: `Hei [Fornavn],
+      { day: 0, subject: 'Du nærmer deg grensen din', preview: 'Hva skjer nar du nar maks?', body: `Hei [Fornavn],
 
 Du har na brukt over 80% av lead-kvoten din denne maneden.
 
@@ -263,7 +263,7 @@ export default function EmailSequencesPage() {
           <Mail className="h-5 w-5 text-blue-500" />
           <h1 className="text-2xl font-bold text-slate-900">E-postsekvenser</h1>
         </div>
-        <p className="text-slate-500 text-sm">Automatiske e-postrekker som folger opp, selger og redder churn — uten at du trenger a lofte en finger.</p>
+        <p className="text-slate-500 text-sm">Automatiske e-postrekker som følger opp, selger og redder churn — uten at du trenger a lofte en finger.</p>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">

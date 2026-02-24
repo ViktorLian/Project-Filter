@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -31,7 +31,7 @@ const GOAL_OPTIONS = [
 const TOOLS = [
   { id: 'email', label: 'E-post', icon: Mail, desc: 'Send automatiske e-poster til leads' },
   { id: 'calendar', label: 'Kalender', icon: Calendar, desc: 'Synkroniser bookinger og pamiannelser' },
-  { id: 'leads', label: 'Leads', icon: Users, desc: 'Automatisk lead-scoring og oppfolging' },
+  { id: 'leads', label: 'Leads', icon: Users, desc: 'Automatisk lead-scoring og oppfølging' },
   { id: 'ads', label: 'Annonser', icon: BarChart3, desc: 'Koble Facebook/Google Ads (valgfritt)' },
 ];
 
@@ -313,7 +313,7 @@ export default function OnboardingPage() {
               <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 mb-5">
                 <Star className="h-8 w-8 text-emerald-600" />
               </div>
-              <h2 className="text-2xl font-extrabold text-slate-900 mb-3">Forste steg fullfort!</h2>
+              <h2 className="text-2xl font-extrabold text-slate-900 mb-3">Forste steg fullført!</h2>
               <p className="text-slate-600 mb-8 leading-relaxed">
                 Vi jobber na med a skaffe deg ditt forste resultat. Systemet er konfigurert og klart.
               </p>
@@ -321,7 +321,7 @@ export default function OnboardingPage() {
               <div className="grid grid-cols-3 gap-3 mb-8">
                 {[
                   { label: 'AI-analyse', icon: Bot, color: 'text-blue-500', bg: 'bg-blue-100' },
-                  { label: 'Oppfolging', icon: Bell, color: 'text-emerald-500', bg: 'bg-emerald-100' },
+                  { label: 'Oppfølging', icon: Bell, color: 'text-emerald-500', bg: 'bg-emerald-100' },
                   { label: 'Leads klar', icon: Users, color: 'text-purple-500', bg: 'bg-purple-100' },
                 ].map(f => {
                   const Icon = f.icon;

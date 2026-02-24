@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, X, Send, Download, Eye, Sparkles, FileText, Clock, CheckCircle, XCircle } from 'lucide-react';
+import { Plus, X, Send, Download, Eye, Sparkles, FileText, Clock, CheckCircle, XCircle, Receipt } from 'lucide-react';
 
 type Proposal = {
   id: string;
@@ -34,6 +34,7 @@ export default function ProposalsPage() {
   const [loading, setLoading] = useState(true);
   const [showNew, setShowNew] = useState(false);
   const [generating, setGenerating] = useState(false);
+  const [creatingInvoice, setCreatingInvoice] = useState<string | null>(null);
   const [form, setForm] = useState({ title: '', customer_name: '', customer_email: '', description: '' });
   const [items, setItems] = useState<ProposalItem[]>([{ description: '', quantity: 1, unit_price: 0 }]);
 
@@ -74,6 +75,29 @@ export default function ProposalsPage() {
     });
     if (res.ok) { setShowNew(false); load(); }
   };
+
+  async function createInvoiceFromProposal(p: Proposal) {
+    setCreatingInvoice(p.id);
+    try {
+      const res = await fetch('/api/invoices', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customer_name: p.customer_name,
+          customer_email: p.customer_email || '',
+          amount: String(p.amount || 0),
+          due_date: new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10),
+          description: p.title,
+          status: 'SENT',
+        }),
+      });
+      if (res.ok) {
+        window.location.href = '/dashboard/invoices';
+      }
+    } finally {
+      setCreatingInvoice(null);
+    }
+  }
 
   const updateStatus = async (id: string, status: string) => {
     await fetch(`/api/proposals/${id}`, {
@@ -162,6 +186,17 @@ export default function ProposalsPage() {
                       <option key={k} value={k}>{v.label}</option>
                     ))}
                   </select>
+                  {p.status === 'ACCEPTED' && (
+                    <button
+                      onClick={() => createInvoiceFromProposal(p)}
+                      disabled={creatingInvoice === p.id}
+                      title="Lag faktura fra dette tilbudet"
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 transition disabled:opacity-60 whitespace-nowrap"
+                    >
+                      <Receipt className="h-3.5 w-3.5" />
+                      {creatingInvoice === p.id ? 'Oppretter...' : 'Lag faktura'}
+                    </button>
+                  )}
                 </div>
               );
             })

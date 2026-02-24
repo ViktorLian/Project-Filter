@@ -17,7 +17,7 @@ PRISING:
 - Pro: 2 590 kr/mnd (POPULAER) - 500 leads, 20 skjemaer, AI, kampanjer
 - Enterprise: 3 990 kr/mnd - Ubegrenset, full API, dedikert support
 
-GRATIS TRIAL: 14 dager med full tilgang. Kort kreves, belastes ikke i proveperioden.
+GRATIS TRIAL: 14 dager med full tilgang. Kort kreves, belastes ikke i prøveperioden.
 
 INSTRUKSJONER:
 - Svar kort og vennlig (maks 2-3 setninger)

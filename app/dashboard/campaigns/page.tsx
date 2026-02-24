@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Megaphone, Mail, MessageSquare, Plus, Play, Pause, BarChart2, Users, X } from 'lucide-react';
@@ -10,7 +10,7 @@ type Campaign = {
 
 const DEMO: Campaign[] = [
   { id: '1', name: 'Januar-tilbud 2025', type: 'email', status: 'aktiv', sent: 142, opened: 68, leads: 12, created: '2025-01-01' },
-  { id: '2', name: 'SMS oppfolging uke 3', type: 'sms', status: 'pause', sent: 48, opened: 41, leads: 5, created: '2025-01-15' },
+  { id: '2', name: 'SMS oppfølging uke 3', type: 'sms', status: 'pause', sent: 48, opened: 41, leads: 5, created: '2025-01-15' },
   { id: '3', name: 'Vintertilbud flislegging', type: 'email', status: 'utkast', sent: 0, opened: 0, leads: 0, created: '2025-01-19' },
 ];
 

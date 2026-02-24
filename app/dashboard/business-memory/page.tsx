@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Brain, Search, BookOpen, Plus, Clock, Tag, User, MessageSquare, ChevronRight, Star, Lightbulb } from 'lucide-react';
@@ -27,7 +27,7 @@ const DEMO: MemoryEntry[] = [
   {
     id: '1', type: 'customer', title: 'Kari Nordmann – baderom 2024',
     content: 'Krevende kunde. Viktig a sette tydelige forventninger om leveringstid fra start. Endte bra men vi ma ha skriftlig bekreftelse pa alle tillegg.',
-    tags: ['baderom', 'oppfolging', 'kontrakt'], date: '2025-09-12', related: 'Faktura #1082',
+    tags: ['baderom', 'oppfølging', 'kontrakt'], date: '2025-09-12', related: 'Faktura #1082',
   },
   {
     id: '2', type: 'decision', title: 'Beslutning: Sluttet a tilby «small jobs»',
@@ -40,9 +40,9 @@ const DEMO: MemoryEntry[] = [
     tags: ['kontrakt', 'risiko', 'takarbeid'], date: '2025-11-20',
   },
   {
-    id: '4', type: 'process', title: 'Oppfolgingsrutine etter ferdig jobb',
+    id: '4', type: 'process', title: 'Oppfølgingsrutine etter ferdig jobb',
     content: '1. Send sluttfaktura dag 0. 2. Ring kunde dag 3 for kvalitetskontroll. 3. Be om Google-anmeldelse dag 7. 4. Tilby neste sesong dag 30.',
-    tags: ['rutine', 'kunde', 'oppfolging'], date: '2025-05-15',
+    tags: ['rutine', 'kunde', 'oppfølging'], date: '2025-05-15',
   },
   {
     id: '5', type: 'customer', title: 'Erik Bakke AS – langtidskunde siden 2023',
@@ -126,7 +126,7 @@ export default function BusinessMemoryPage() {
             value={aiQuery}
             onChange={e => setAiQuery(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && askAI()}
-            placeholder="Still et sporsmal om bedriften din..."
+            placeholder="Still et spørsmål om bedriften din..."
             className="flex-1 rounded-xl bg-white/15 border border-white/25 px-4 py-2.5 text-sm text-white placeholder-purple-200 focus:outline-none focus:bg-white/20"
           />
           <button onClick={askAI} disabled={thinking}

@@ -109,7 +109,7 @@ export default async function SettingsPage() {
         <div className="flex items-center justify-between">
           <div>
             <p className="font-semibold text-slate-800">{planNames[company?.subscription_plan] ?? 'Ingen aktiv plan'}</p>
-            <p className="text-xs text-slate-500 mt-0.5">14 dagers gratis proveperiode inkludert</p>
+            <p className="text-xs text-slate-500 mt-0.5">14 dagers gratis prøveperiode inkludert</p>
           </div>
           <Link href="/dashboard/billing"
             className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors">

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -117,7 +117,7 @@ function UpgradeContent() {
               </div>
               <h2 className="text-xl font-bold text-slate-900 mb-1">{plan.name}</h2>
               <p className="text-3xl font-extrabold text-slate-900 mb-1">{plan.price} <span className="text-base font-normal text-slate-500">kr/mnd</span></p>
-              <p className="text-xs text-slate-400 mb-4">14 dager gratis proveperiode</p>
+              <p className="text-xs text-slate-400 mb-4">14 dager gratis prøveperiode</p>
               <ul className="space-y-2 mb-6 flex-1">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-sm text-slate-700">
@@ -142,7 +142,7 @@ function UpgradeContent() {
       </div>
 
       <p className="text-sm text-slate-400">
-        Sporsmal? <a href="mailto:flowpilot@hotmail.com" className="text-blue-600 hover:underline">Kontakt oss</a>
+        Spørsmål? <a href="mailto:flowpilot@hotmail.com" className="text-blue-600 hover:underline">Kontakt oss</a>
       </p>
     </div>
   );

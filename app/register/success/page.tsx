@@ -48,16 +48,16 @@ function SuccessContent() {
           </div>
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-left space-y-2">
-            <h3 className="font-semibold text-blue-900">Hva skjer naa?</h3>
+            <h3 className="font-semibold text-blue-900">Hva skjer nå?</h3>
             <ul className="text-sm text-blue-800 space-y-1">
               <li>1. Kontoen din opprettes automatisk</li>
               <li>2. Du mottar en velkomstepost</li>
-              <li>3. Logg inn og start proveperioden</li>
+              <li>3. Logg inn og start prøveperioden</li>
             </ul>
           </div>
 
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-sm text-amber-800">
-            <strong>Proveperiode:</strong> Du belastes ikke de forste 14 dagene. Etter proveperioden er prisen 1 290 kr/mnd. Du kan avslutte naar som helst fra Innstillinger.
+            <strong>Prøveperiode:</strong> Du belastes ikke de forste 14 dagene. Etter prøveperioden er prisen 1 290 kr/mnd. Du kan avslutte når som helst fra Innstillinger.
           </div>
 
           <div className="space-y-3">
@@ -66,7 +66,7 @@ function SuccessContent() {
               className="w-full bg-blue-600 hover:bg-blue-700"
             >
               <Link href="/login?registered=1">
-                Gaa til innlogging naa
+                Gå til innlogging naa
               </Link>
             </Button>
             <p className="text-sm text-slate-500">

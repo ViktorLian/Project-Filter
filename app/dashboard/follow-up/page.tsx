@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import { Bell, Send, Clock, User, CheckCircle, RefreshCw, Zap, Mail } from 'lucide-react';
@@ -67,8 +67,8 @@ export default function FollowUpPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Smart Oppfolging</h1>
-          <p className="text-slate-500 text-sm mt-0.5">AI-drevet system for optimal oppfolgingstiming</p>
+          <h1 className="text-2xl font-bold text-slate-900">Smart Oppfølging</h1>
+          <p className="text-slate-500 text-sm mt-0.5">AI-drevet system for optimal oppfølgingstiming</p>
         </div>
         <div className="flex items-center gap-2">
           {high > 0 && (
@@ -120,10 +120,10 @@ export default function FollowUpPage() {
           <div className="rounded-xl border border-slate-200 bg-white p-12 text-center">
             <CheckCircle className="h-12 w-12 text-emerald-200 mx-auto mb-3" />
             <p className="font-semibold text-slate-600">
-              {tab === 'pending' ? 'Ingen oppfolginger venter' : 'Ingen fullforte oppfolginger'}
+              {tab === 'pending' ? 'Ingen oppfølginger venter' : 'Ingen fullførte oppfølginger'}
             </p>
             <p className="text-slate-400 text-sm mt-1">
-              {tab === 'pending' ? 'Systemet analyserer leads automatisk' : 'Utforte oppfolginger vises her'}
+              {tab === 'pending' ? 'Systemet analyserer leads automatisk' : 'Utforte oppfølginger vises her'}
             </p>
           </div>
         ) : (

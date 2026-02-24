@@ -99,6 +99,7 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/growth-planner', label: 'Vekstplaner', icon: TrendingUp },
       { href: '/dashboard/negotiation-coach', label: 'Forhandlingscoach', icon: MessageSquare },
       { href: '/dashboard/marketing-calendar', label: 'Markedskalender', icon: Calendar },
+      { href: '/dashboard/tilleggstjenester', label: 'Tilleggstjenester', icon: Star },
     ],
   },
   {

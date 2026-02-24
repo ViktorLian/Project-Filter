@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import { Bot, Send, User, Sparkles, RefreshCw, BookOpen, Target, TrendingUp, Lightbulb } from 'lucide-react';
@@ -156,7 +156,7 @@ export default function AIAssistantPage() {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && !e.shiftKey && send()}
-          placeholder="Still et sporsmal eller be om hjelp..."
+          placeholder="Still et spørsmål eller be om hjelp..."
           className="flex-1 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
         />
         <button onClick={() => send()} disabled={loading || !input.trim()}

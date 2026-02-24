@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Rocket, Sparkles, ChevronRight, Check, ArrowRight, Target } from 'lucide-react';
@@ -11,7 +11,7 @@ const PLAYBOOKS: Play[] = [
     id: 'first-sale', title: 'Lukk ditt første salg raskere', tag: 'Salgsstrategi', color: 'blue',
     steps: [
       { title: 'Sett opp et innhentingsskjema', desc: 'Opprett et skjema med 3-5 sporsmål som kvalifiserer kunden.', done: true },
-      { title: 'Aktiver smart oppfolging', desc: 'Koble skjema til automatisk oppfolging etter 48 timer.', done: true },
+      { title: 'Aktiver smart oppfølging', desc: 'Koble skjema til automatisk oppfølging etter 48 timer.', done: true },
       { title: 'Lag ditt beste tilbud', desc: 'Bruk Tilbudsbygger for å lage et profesjonelt tilbud.', done: false },
       { title: 'Ring innen 2 timer', desc: 'Ring nye leads innen 2 timer for 3x høyere konvertering.', done: false },
     ],
@@ -89,7 +89,7 @@ export default function GrowthPlaybookPage() {
                 className={`w-full text-left rounded-xl border p-4 transition-all ${active === p.id ? 'border-blue-400 bg-blue-50' : 'border-slate-200 bg-white hover:border-slate-300'}`}>
                 <span className={`rounded-full border px-2 py-0.5 text-xs font-semibold ${colorMap[p.color] || 'bg-slate-100 text-slate-600 border-slate-200'}`}>{p.tag}</span>
                 <p className="font-semibold text-slate-800 text-sm mt-2">{p.title}</p>
-                <p className="text-xs text-slate-500 mt-1">{done}/{p.steps.length} steg fullfort</p>
+                <p className="text-xs text-slate-500 mt-1">{done}/{p.steps.length} steg fullført</p>
                 <div className="mt-2 h-1.5 rounded-full bg-slate-200">
                   <div className="h-1.5 rounded-full bg-blue-500 transition-all" style={{ width: `${Math.round(done / p.steps.length * 100)}%` }} />
                 </div>
@@ -114,7 +114,7 @@ export default function GrowthPlaybookPage() {
                 </div>
                 <div className="text-right">
                   <p className="text-2xl font-bold text-blue-600">{progress}%</p>
-                  <p className="text-xs text-slate-500">Fullfort</p>
+                  <p className="text-xs text-slate-500">Fullført</p>
                 </div>
               </div>
               <div className="h-2 rounded-full bg-slate-200">

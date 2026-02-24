@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Star, Send, CheckCircle, ThumbsUp, ExternalLink, Copy, Clock, TrendingUp } from 'lucide-react';
@@ -50,7 +50,7 @@ export default function FeedbackPage() {
     <div className="space-y-6 max-w-5xl">
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Tilbakemeldinger og Attester</h1>
-        <p className="text-slate-500 text-sm mt-0.5">Samle inn kundetilbakemeldinger automatisk etter fullfort jobb og bygg omdommeprofil</p>
+        <p className="text-slate-500 text-sm mt-0.5">Samle inn kundetilbakemeldinger automatisk etter fullført jobb og bygg omdommeprofil</p>
       </div>
 
       {/* Stats */}
@@ -81,7 +81,7 @@ export default function FeedbackPage() {
         {(['overview', 'testimonials', 'send'] as const).map(t => (
           <button key={t} onClick={() => setTab(t)}
             className={`px-4 py-2.5 text-sm font-medium transition border-b-2 -mb-px ${tab === t ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}>
-            {t === 'overview' ? 'Svar-oversikt' : t === 'testimonials' ? `Attester (${approved.length})` : 'Send undersokelse'}
+            {t === 'overview' ? 'Svar-oversikt' : t === 'testimonials' ? `Attester (${approved.length})` : 'Send undersøkelse'}
           </button>
         ))}
       </div>
@@ -165,18 +165,18 @@ export default function FeedbackPage() {
       {tab === 'send' && (
         <div className="space-y-4">
           <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-4 text-sm text-emerald-700">
-            <strong>Automatisk utsending:</strong> Undersokelser sendes automatisk til kunden 24 timer etter at en jobb markeres som fullfort. Du kan ogsa sende manuelt nedenfor.
+            <strong>Automatisk utsending:</strong> Undersøkelser sendes automatisk til kunden 24 timer etter at en jobb markeres som fullført. Du kan ogsa sende manuelt nedenfor.
           </div>
           <div className="rounded-xl bg-white border border-slate-200 p-5 space-y-4">
-            <h2 className="font-semibold">Send manuell undersokelse</h2>
+            <h2 className="font-semibold">Send manuell undersøkelse</h2>
             <div className="grid grid-cols-2 gap-3">
               <div><label className="text-xs text-slate-500">Kundenavn</label><input className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm" placeholder="Ola Nordmann" /></div>
               <div><label className="text-xs text-slate-500">E-post</label><input type="email" className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm" placeholder="ola@firma.no" /></div>
               <div><label className="text-xs text-slate-500">Jobbtype</label><input className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm" placeholder="f.eks. Baderom renovering" /></div>
-              <div><label className="text-xs text-slate-500">Fullfort dato</label><input type="date" className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm" /></div>
+              <div><label className="text-xs text-slate-500">Fullført dato</label><input type="date" className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm" /></div>
             </div>
             <button className="flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition">
-              <Send className="h-4 w-4" /> Send undersokelse
+              <Send className="h-4 w-4" /> Send undersøkelse
             </button>
           </div>
         </div>

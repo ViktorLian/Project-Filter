@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import {
@@ -81,7 +81,7 @@ export default function DecisionAssistantPage() {
           <HelpCircle className="h-5 w-5 text-blue-500" />
           <h1 className="text-2xl font-bold text-slate-900">Beslutningsassistent</h1>
         </div>
-        <p className="text-slate-500 text-sm">Stil et beslutningssporsmal — fa databaserte fordeler, ulemper og anbefaling.</p>
+        <p className="text-slate-500 text-sm">Stil et beslutningsspørsmål — fa databaserte fordeler, ulemper og anbefaling.</p>
       </div>
 
       {/* Input */}
@@ -111,7 +111,7 @@ export default function DecisionAssistantPage() {
 
       {/* Quick questions */}
       <div>
-        <p className="text-xs font-semibold text-slate-500 mb-2">Vanlige sporsmal</p>
+        <p className="text-xs font-semibold text-slate-500 mb-2">Vanlige spørsmål</p>
         <div className="flex flex-wrap gap-2">
           {QUICK_QUESTIONS.map(q => (
             <button key={q} onClick={() => analyze(q)}

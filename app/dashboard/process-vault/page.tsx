@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -55,12 +55,12 @@ const initialProcesses: Process[] = [
   {
     id: '3',
     category: 'Okonomi',
-    title: 'Fakturering og oppfolging',
+    title: 'Fakturering og oppfølging',
     description: 'Rutine for faktura og betaling',
     steps: [
       'Send faktura via system (30 dagers betalingsfrist)',
       'Automatisk purring etter 7 dager ubetalt',
-      'Manuell oppfolging etter 14 dager',
+      'Manuell oppfølging etter 14 dager',
       'Inkasso-varsel etter 30 dager',
     ],
     owner: 'Daglig leder',

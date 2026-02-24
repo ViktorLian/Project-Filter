@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -236,7 +236,7 @@ Lag en prioritert 90-dagers handlingsplan med konkrete steg. Fokus på de viktig
             <p className="text-sm text-slate-700 whitespace-pre-wrap">{aiPlan}</p>
           ) : (
             <p className="text-sm text-blue-700">
-              Basert paa dine kritiske mangler, lag AI en konkret 90-dagers handlingsplan for aa gjore bedriften salgsklar.
+              Basert på dine kritiske mangler, lag AI en konkret 90-dagers handlingsplan for aa gjore bedriften salgsklar.
             </p>
           )}
           <Button

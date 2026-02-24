@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { BarChart3, TrendingUp, AlertCircle, CheckCircle, Zap, DollarSign, ArrowUpRight, Users, Globe } from 'lucide-react';
@@ -18,7 +18,7 @@ const INSIGHTS: Insight[] = [
     id: '1',
     category: 'sesong',
     title: 'Vaar er nest beste periode for haandverk',
-    description: 'Historisk data viser at mars-mai er nest-hoyest volum for haandverkstjenester. Mange kunder planlegger vaarpussen. Start kampanje naa for a fange opp de som er i planleggingsfasen.',
+    description: 'Historisk data viser at mars-mai er nest-høyest volum for haandverkstjenester. Mange kunder planlegger vaarpussen. Start kampanje nå for a fange opp de som er i planleggingsfasen.',
     action: 'Lag en vaarkampanje til eksisterende kunder. Send e-post med "Bestill vaarens jobb naa" og tilby 10% tidligrabatt for bestillinger innen 1. april.',
     urgency: 'hoy',
     potential: '30-50 000 kr ekstra omsetning',
@@ -26,7 +26,7 @@ const INSIGHTS: Insight[] = [
   {
     id: '2',
     category: 'region',
-    title: 'Ostlandet har hoyest betalingsvilje',
+    title: 'Ostlandet har høyest betalingsvilje',
     description: 'Bedrifter pa Ostlandet (saerlig Oslo, Akershus, Vestfold) aksepterer 15-25% hoyere priser for de samme tjenestene. Hvis du opererer der, kan du justere prisene.',
     action: 'Analyser om du presser riktig pris i Oslo-området. Prisene dine bør ligge 15% over landsgjennomsnitt her.',
     urgency: 'middels',

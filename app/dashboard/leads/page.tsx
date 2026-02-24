@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -172,7 +172,7 @@ export default function LeadsPage() {
         <select value={sortBy} onChange={e => setSortBy(e.target.value as any)}
           className="py-2 px-3 border border-slate-200 rounded-xl text-sm bg-white text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
           <option value="newest">Nyeste forst</option>
-          <option value="score">Hoyeste score</option>
+          <option value="score">Høyeste score</option>
           <option value="name">Alfabetisk</option>
         </select>
       </div>

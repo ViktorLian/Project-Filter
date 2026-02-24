@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState, useMemo } from 'react';
 import {
@@ -43,7 +43,7 @@ const CAT_COLORS: Record<string, string> = {
 function fmt(n: number) { return n.toLocaleString('no-NO') + ' kr'; }
 
 function exportCSV(rows: Transaction[]) {
-  const csv = 'Dato,Retning,Kategori,Beskrivelse,Belop\n' +
+  const csv = 'Dato,Retning,Kategori,Beskrivelse,Beløp\n' +
     rows.map(t => `${t.occurred_at},${t.direction === 'IN' ? 'Inntekt' : 'Utgift'},${t.category},"${t.description}",${t.amount}`).join('\n');
   const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
@@ -223,7 +223,7 @@ export default function CashflowPage() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs text-slate-500">Belop (kr)</label>
+                  <label className="text-xs text-slate-500">Beløp (kr)</label>
                   <input type="number" value={tx.amount} onChange={e => setTx(p => ({ ...p, amount: e.target.value }))} className="mt-1 w-full rounded-lg border border-slate-200 px-3 py-2 text-sm" placeholder="0" required min="1" />
                 </div>
                 <div>

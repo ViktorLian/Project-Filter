@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import { TrendingUp, Target, Calendar, ChevronRight, CheckCircle, Circle, Sparkles, Plus, Flag } from 'lucide-react';
@@ -33,7 +33,7 @@ const DEFAULT_PLAN: Year[] = [
       ]},
       { id: 'y1q2', label: 'Q2', revenue: '750 000', focus: 'Skalere salg', milestones: [
         { id: 'm4', label: 'Ansette forste selger', done: false },
-        { id: 'm5', label: 'Automatisere oppfolging', done: false },
+        { id: 'm5', label: 'Automatisere oppfølging', done: false },
         { id: 'm6', label: 'Lansere lojalitetsprogram', done: false },
       ]},
       { id: 'y1q3', label: 'Q3', revenue: '1 000 000', focus: 'Konsolidering', milestones: [
@@ -150,7 +150,7 @@ export default function GrowthPlannerPage() {
         <div className="flex items-center justify-between mb-3">
           <div>
             <p className="text-sm font-semibold text-slate-700">Total framgang, 3 ar</p>
-            <p className="text-xs text-slate-500">{doneMilestones.length} av {totalMilestones.length} milestoner fullfort</p>
+            <p className="text-xs text-slate-500">{doneMilestones.length} av {totalMilestones.length} milestoner fullført</p>
           </div>
           <span className="text-2xl font-bold text-blue-600">{progress}%</span>
         </div>
@@ -198,8 +198,8 @@ export default function GrowthPlannerPage() {
                 ))}
               </div>
               <div className="mt-3 pt-3 border-t border-white/50 text-xs text-slate-500 flex justify-between">
-                <span>{doneCount}/{q.milestones.length} fullfort</span>
-                {doneCount === q.milestones.length && <span className="text-emerald-600 font-semibold">Fullfort!</span>}
+                <span>{doneCount}/{q.milestones.length} fullført</span>
+                {doneCount === q.milestones.length && <span className="text-emerald-600 font-semibold">Fullført!</span>}
               </div>
             </div>
           );
