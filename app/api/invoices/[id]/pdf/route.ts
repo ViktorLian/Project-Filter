@@ -139,13 +139,58 @@ export async function GET(
   </div>
 </div>
 
+${(() => {
+      const lineItems: Array<{ description: string; qty: number; unit: string; unit_price: number }> =
+        Array.isArray(inv.line_items) && inv.line_items.length > 0 ? inv.line_items : [];
+      const vatPct: number = typeof inv.vat_pct === 'number' ? inv.vat_pct : 25;
+
+      if (lineItems.length > 0) {
+        const subtotal = lineItems.reduce((s: number, l: { qty: number; unit_price: number }) => s + (Number(l.qty) * Number(l.unit_price)), 0);
+        const vatAmt   = subtotal * (vatPct / 100);
+        const total    = subtotal + vatAmt;
+
+        const rows = lineItems.map((l: { description: string; qty: number; unit: string; unit_price: number }) => `
+          <tr class="amount-row">
+            <td>${l.description}</td>
+            <td style="text-align:right">${Number(l.qty).toLocaleString('nb-NO')}</td>
+            <td style="text-align:center">${l.unit}</td>
+            <td style="text-align:right">${Number(l.unit_price).toLocaleString('nb-NO')} kr</td>
+            <td style="text-align:right">${(Number(l.qty) * Number(l.unit_price)).toLocaleString('nb-NO')} kr</td>
+          </tr>`).join('');
+
+        return `
 <table>
   <thead>
     <tr>
       <th>Beskrivelse</th>
-      <th style="text-align:right">Beløp</th>
+      <th style="text-align:right;width:70px">Antall</th>
+      <th style="text-align:center;width:60px">Enhet</th>
+      <th style="text-align:right;width:100px">Enhetspris</th>
+      <th style="text-align:right;width:110px">Sum</th>
     </tr>
   </thead>
+  <tbody>${rows}</tbody>
+  <tfoot>
+    <tr>
+      <td colspan="4" class="total-label" style="font-size:13px;font-weight:500;color:#64748b">Subtotal eks. MVA</td>
+      <td style="text-align:right;font-size:13px;font-weight:600;color:#0f172a">${subtotal.toLocaleString('nb-NO')} kr</td>
+    </tr>
+    <tr>
+      <td colspan="4" class="total-label" style="font-size:13px;font-weight:500;color:#64748b">MVA ${vatPct}%</td>
+      <td style="text-align:right;font-size:13px;font-weight:600;color:#0f172a">${vatAmt.toLocaleString('nb-NO')} kr</td>
+    </tr>
+    <tr>
+      <td colspan="4" class="total-label" style="font-size:16px;font-weight:700;color:#0f172a">Totalt inkl. MVA</td>
+      <td class="total-value" style="text-align:right">${total.toLocaleString('nb-NO')} kr</td>
+    </tr>
+  </tfoot>
+</table>`;
+      }
+
+      // Fallback: single description + amount (old invoices)
+      return `
+<table>
+  <thead><tr><th>Beskrivelse</th><th style="text-align:right">Beløp inkl. MVA</th></tr></thead>
   <tbody>
     <tr class="amount-row">
       <td>${inv.description || 'Tjenester'}</td>
@@ -158,7 +203,8 @@ export async function GET(
       <td class="total-value" style="text-align:right">${(inv.amount || 0).toLocaleString('nb-NO')} kr</td>
     </tr>
   </tfoot>
-</table>
+</table>`;
+    })()}
 
 <div class="payment">
   <h3>Betalingsinformasjon</h3>
