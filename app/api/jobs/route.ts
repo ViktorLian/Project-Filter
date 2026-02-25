@@ -10,6 +10,7 @@ export async function GET(request: NextRequest) {
   const supabase = createAdminClient();
   const sessAny = session as any;
   const userId = sessAny?.user?.id;
+  const companyId = sessAny?.user?.companyId || userId;
 
   const { searchParams } = new URL(request.url);
   const customerId = searchParams.get('customerId');
@@ -17,7 +18,7 @@ export async function GET(request: NextRequest) {
   let query = supabase
     .from('jobs')
     .select('*, customer:customers(name, email), expenses:job_expenses(amount)')
-    .eq('user_id', userId)
+    .or(`user_id.eq.${userId},company_id.eq.${companyId}`)
     .order('job_date', { ascending: false });
 
   if (customerId) query = query.eq('customer_id', customerId);
@@ -43,6 +44,7 @@ export async function POST(request: NextRequest) {
   const supabase = createAdminClient();
   const sessAny = session as any;
   const userId = sessAny?.user?.id;
+  const companyId = sessAny?.user?.companyId || userId;
 
   const body = await request.json();
   const { customerId, jobTitle, jobDate, revenue, notes } = body;
@@ -53,6 +55,7 @@ export async function POST(request: NextRequest) {
     .from('jobs')
     .insert({
       user_id: userId,
+      company_id: companyId,
       customer_id: customerId || null,
       job_title: jobTitle,
       job_date: jobDate || new Date().toISOString().split('T')[0],
@@ -63,6 +66,9 @@ export async function POST(request: NextRequest) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) {
+    console.error('[JOBS POST ERROR]', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
   return NextResponse.json({ job: data });
 }

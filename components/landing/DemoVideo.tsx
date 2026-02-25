@@ -5,8 +5,8 @@ import { useState } from 'react';
 export function DemoVideo() {
   const [playing, setPlaying] = useState(false);
 
-  // Replace this URL with your actual YouTube/Loom video ID
-  const YOUTUBE_VIDEO_ID = 'dQw4w9WgXcQ'; // placeholder — replace with your real demo video ID
+  // SharePoint embed URL for the FlowPilot demo video
+  const VIDEO_EMBED_URL = 'https://iktagder-my.sharepoint.com/personal/edu7644376_agderskolen_no/_layouts/15/embed.aspx?UniqueId=8e98793f-04fc-4ce8-a75d-59e944088364&nav={"playbackOptions":{"startTimeInSeconds":0}}';
 
   return (
     <section className="py-20 bg-gradient-to-b from-white to-blue-50">
@@ -69,9 +69,9 @@ export function DemoVideo() {
           ) : (
             <iframe
               className="absolute inset-0 w-full h-full"
-              src={`https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&rel=0`}
+              src={VIDEO_EMBED_URL}
               title="FlowPilot Demo"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allow="autoplay; fullscreen; picture-in-picture"
               allowFullScreen
             />
           )}
