@@ -17,11 +17,11 @@ export function DemoVideo() {
             Se det i aksjon
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-            FlowPilot på 2 minutter
+            Se FlowPilot i aksjon
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Se hvordan norske håndverkere og servicebedrifter bruker FlowPilot til å få flere kunder,
-            holde orden på jobber og slippe papirarbeid.
+            En full gjennomgang av dashboardet – du trenger ikke se hele på én gang.
+            Hopp til den delen som er relevant for deg.
           </p>
         </div>
 
@@ -46,8 +46,8 @@ export function DemoVideo() {
                     </svg>
                   </div>
                   <div className="text-left">
-                    <p className="text-white font-bold text-lg">Se demo-video</p>
-                    <p className="text-white/70 text-sm">2 minutter — ingen registrering</p>
+                    <p className="text-white font-bold text-lg">Se full gjennomgang</p>
+                    <p className="text-white/70 text-sm">Dashboardoversikt – se det som passer deg</p>
                   </div>
                 </button>
 
@@ -63,7 +63,7 @@ export function DemoVideo() {
 
               {/* Duration badge */}
               <div className="absolute bottom-4 right-4 z-20 bg-black/60 text-white text-xs px-2 py-1 rounded">
-                2:14
+                Full oversikt
               </div>
             </>
           ) : (
