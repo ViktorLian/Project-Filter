@@ -32,7 +32,7 @@ const MONTHS = ['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'Au
 
 const EMPTY_EVENT: Omit<CalendarEvent, 'id'> = {
   title: '', date: new Date().toISOString().slice(0, 10), time: '08:00',
-  type: 'job', customer_name: '', phone: '', notes: '', notify_sms: true, notify_email: true, notify_before_minutes: 60, assigned_to: '',,
+  type: 'job', customer_name: '', phone: '', notes: '', notify_sms: true, notify_email: true, notify_before_minutes: 60, assigned_to: '',
 };
 
 export default function CalendarPage() {
