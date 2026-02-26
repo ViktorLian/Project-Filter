@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     }
     
     const body = await req.json();
-    const { name, description, questions } = body;
+    const { name, description, questions, score_threshold } = body;
 
     if (!name || !questions || questions.length === 0) {
       return NextResponse.json(
@@ -97,6 +97,7 @@ export async function POST(req: NextRequest) {
         description,
         slug,
         is_active: true,
+        score_threshold: score_threshold ?? 80,
       })
       .select()
       .single();
@@ -106,12 +107,14 @@ export async function POST(req: NextRequest) {
       throw new Error('Failed to create form');
     }
 
-    // Create questions
+    // Create questions — include points and option_points for real scoring
     const questionData = questions.map((q: any, index: number) => ({
       form_id: form.id,
       question_text: q.question_text,
       question_type: q.question_type,
-      options: q.options ? q.options : null,
+      options: q.options && q.options.length > 0 ? q.options : null,
+      option_points: q.option_points && Object.keys(q.option_points).length > 0 ? q.option_points : null,
+      points: q.points ?? 0,
       required: q.required || false,
       order_index: index,
     }));

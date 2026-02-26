@@ -21,9 +21,38 @@ export async function POST(req: NextRequest) {
 		const { data: form } = await supabase.from('leads_forms').select('user_id, company_id').eq('id', formId).single();
 		if (!form) return NextResponse.json({ error: 'Form not found' }, { status: 404 });
 
+		// Real per-question scoring
 		let score = 50;
-		if (customerEmail && customerPhone && (customerName || '').length > 3) score = 75;
-		if ((customerEmail || '').includes('business') || (customerEmail || '').includes('company')) score = 85;
+		let scoreThreshold = 80;
+		try {
+			const { data: formConfig } = await supabase
+				.from('forms')
+				.select('score_threshold, questions(id, points, option_points, question_type)')
+				.eq('company_id', form.company_id)
+				.eq('id', formId)
+				.single();
+
+			if (formConfig?.questions?.length > 0) {
+				let totalEarned = 0;
+				let totalPossible = 0;
+				for (const q of (formConfig.questions as any[])) {
+					const qPoints = q.points || 0;
+					totalPossible += qPoints;
+					const ans = (answers || []).find((a: any) => a.questionId === q.id);
+					if (!ans?.value) continue;
+					if (q.option_points && typeof q.option_points === 'object') {
+						totalEarned += q.option_points[ans.value] ?? 0;
+					} else {
+						totalEarned += qPoints;
+					}
+				}
+				if (totalPossible > 0) score = Math.round((totalEarned / totalPossible) * 100);
+			} else {
+				// Fallback heuristic if form has no scoring config
+				if (customerEmail && customerPhone && (customerName || '').length > 3) score = 70;
+			}
+			if (formConfig?.score_threshold) scoreThreshold = formConfig.score_threshold;
+		} catch (e) { console.error('[SCORING ERROR]', e); }
 
 		// Enforce subscription limit for leads
 		try {
@@ -85,7 +114,7 @@ export async function POST(req: NextRequest) {
 					.eq('id', form.company_id)
 					.single();
 				const companyName = company?.name ?? 'din bedrift';
-				if (score >= 75) {
+				if (score >= scoreThreshold) {
 					await notifyHighQualityLead(owner.email, lead.id, companyName, score, customerName, customerEmail, customerPhone);
 				} else {
 					await notifyNewLead(owner.email, lead.id, companyName);

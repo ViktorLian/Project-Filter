@@ -1,6 +1,8 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/lib/auth';
 
 // Webhook endpoint for Zapier integration
 // Sends new lead data to Zapier when a lead is created
@@ -73,23 +75,37 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET endpoint for Zapier to test connection
-export async function GET(req: NextRequest) {
+// GET endpoint: returns form detail (session auth) or Zapier test (Bearer auth)
+export async function GET(req: NextRequest, { params }: { params: { formId: string } }) {
   try {
+    // Try session auth first (dashboard embed/detail pages)
+    const session = await getServerSession(authOptions as any);
+    if (session) {
+      const companyId = (session.user as any).companyId;
+      const supabase = createAdminClient();
+      const { data: form, error } = await supabase
+        .from('forms')
+        .select('*, questions(*)')
+        .eq('id', params.formId)
+        .eq('company_id', companyId)
+        .single();
+      if (error || !form) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+      return NextResponse.json(form);
+    }
+
+    // Fall back to Zapier Bearer auth
     const authHeader = req.headers.get('authorization');
     const webhookSecret = process.env.ZAPIER_WEBHOOK_SECRET;
-
     if (!webhookSecret || authHeader !== `Bearer ${webhookSecret}`) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
-    return NextResponse.json({ 
+    return NextResponse.json({
       status: 'ok',
       message: 'Zapier webhook is configured correctly',
       timestamp: new Date().toISOString()
     });
   } catch (e) {
-    console.error('[ZAPIER TEST ERROR]', e);
+    console.error('[GET FORM ERROR]', e);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }
