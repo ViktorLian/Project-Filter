@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
+import bcrypt from 'bcryptjs'
 
 function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -44,18 +45,72 @@ export async function POST(request: Request) {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
-        const { companyId, plan } = session.metadata!
+        const meta = session.metadata || {}
 
-        await supabaseAdmin
-          .from('leads_companies')
-          .update({
-            subscription_status: 'active',
-            subscription_plan: plan,
-            stripe_customer_id: session.customer as string,
-            stripe_subscription_id: session.subscription as string,
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', companyId)
+        // ── New registration flow ──
+        if (meta.registration === 'true' && meta.email && meta.companyName) {
+          const { companyName, name, email, password } = meta
+
+          // Check if user already exists (idempotency)
+          const { data: existingUser } = await supabaseAdmin
+            .from('users')
+            .select('id')
+            .eq('email', email)
+            .single()
+
+          if (!existingUser) {
+            const hashedPassword = await bcrypt.hash(password, 10)
+
+            // Create company
+            const { data: company, error: companyErr } = await supabaseAdmin
+              .from('leads_companies')
+              .insert({
+                name: companyName,
+                subscription_status: 'trial',
+                subscription_plan: 'starter',
+                stripe_customer_id: session.customer as string,
+                stripe_subscription_id: session.subscription as string,
+              })
+              .select('id')
+              .single()
+
+            if (companyErr || !company) {
+              console.error('[WEBHOOK] Failed to create company:', companyErr)
+              break
+            }
+
+            // Create user
+            const { error: userErr } = await supabaseAdmin
+              .from('users')
+              .insert({
+                name,
+                email,
+                password: hashedPassword,
+                company_id: company.id,
+                role: 'admin',
+              })
+
+            if (userErr) {
+              console.error('[WEBHOOK] Failed to create user:', userErr)
+            }
+          }
+          break
+        }
+
+        // ── Existing company subscription update ──
+        const { companyId, plan } = meta
+        if (companyId) {
+          await supabaseAdmin
+            .from('leads_companies')
+            .update({
+              subscription_status: 'active',
+              subscription_plan: plan || 'starter',
+              stripe_customer_id: session.customer as string,
+              stripe_subscription_id: session.subscription as string,
+              updated_at: new Date().toISOString()
+            })
+            .eq('id', companyId)
+        }
 
         break
       }
