@@ -6,7 +6,7 @@ export function DemoVideo() {
   const [playing, setPlaying] = useState(false);
 
   // SharePoint embed URL for the FlowPilot demo video
-  const VIDEO_EMBED_URL = 'https://iktagder-my.sharepoint.com/personal/edu7644376_agderskolen_no/_layouts/15/embed.aspx?UniqueId=8e98793f-04fc-4ce8-a75d-59e944088364&nav={"playbackOptions":{"startTimeInSeconds":0}}';
+  const VIDEO_EMBED_URL = 'https://www.youtube.com/embed/pI7w8OllM-k?rel=0';
 
   return (
     <section className="py-20 bg-gradient-to-b from-white to-blue-50">
