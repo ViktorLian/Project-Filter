@@ -3,6 +3,7 @@ import { authOptions } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import Link from 'next/link';
 import { Settings, Building2, Receipt, CreditCard, Key, User } from 'lucide-react';
+import SettingsEditor from '@/components/settings/SettingsEditor';
 
 export const dynamic = 'force-dynamic';
 
@@ -99,6 +100,12 @@ export default async function SettingsPage() {
         </div>
         <p className="text-xs text-slate-400 mt-4">Kontakt support for a oppdatere bank- og KID-innstillinger.</p>
       </div>
+
+      {/* Google Review URL + SMS phone */}
+      <SettingsEditor
+        googleReviewUrl={company?.google_review_url || ''}
+        smsPhone={company?.sms_phone || ''}
+      />
 
       {/* Subscription */}
       <div className="rounded-xl border border-slate-200 bg-white p-5">

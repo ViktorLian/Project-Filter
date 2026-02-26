@@ -16,6 +16,7 @@ type CalendarEvent = {
   notes?: string;
   notify_sms?: boolean;
   notify_email?: boolean;
+  notify_before_minutes?: number;
   assigned_to?: string;
 };
 
@@ -31,7 +32,7 @@ const MONTHS = ['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'Au
 
 const EMPTY_EVENT: Omit<CalendarEvent, 'id'> = {
   title: '', date: new Date().toISOString().slice(0, 10), time: '08:00',
-  type: 'job', customer_name: '', phone: '', notes: '', notify_sms: true, notify_email: true, assigned_to: '',
+  type: 'job', customer_name: '', phone: '', notes: '', notify_sms: true, notify_email: true, notify_before_minutes: 60, assigned_to: '',,
 };
 
 export default function CalendarPage() {
@@ -362,7 +363,7 @@ export default function CalendarPage() {
                   rows={2} placeholder="Ekstra informasjon om hendelsen..."
                   className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
               </div>
-              <div className="flex gap-4">
+              <div className="flex gap-4 flex-wrap">
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input type="checkbox" checked={newEvent.notify_email} onChange={e => setNewEvent(n => ({ ...n, notify_email: e.target.checked }))}
                     className="rounded" />
@@ -374,6 +375,25 @@ export default function CalendarPage() {
                   <span className="text-sm text-slate-600">SMS-varsel</span>
                 </label>
               </div>
+              {(newEvent.notify_sms || newEvent.notify_email) && (
+                <div>
+                  <label className="text-xs font-semibold text-slate-600 uppercase tracking-wide block mb-1">Fa varsel</label>
+                  <select
+                    value={newEvent.notify_before_minutes ?? 60}
+                    onChange={e => setNewEvent(n => ({ ...n, notify_before_minutes: Number(e.target.value) }))}
+                    className="border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value={30}>30 min for</option>
+                    <option value={60}>1 time for</option>
+                    <option value={120}>2 timer for</option>
+                    <option value={360}>6 timer for</option>
+                    <option value={1440}>1 dag for</option>
+                  </select>
+                  {newEvent.notify_sms && (
+                    <p className="text-xs text-amber-600 mt-1">SMS-varsler krever telefonnummer i Innstillinger</p>
+                  )}
+                </div>
+              )}
             </div>
             <div className="flex gap-3 p-6 border-t border-slate-100">
               <button onClick={() => setShowNew(false)}

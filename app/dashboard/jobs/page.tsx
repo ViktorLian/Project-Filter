@@ -22,8 +22,25 @@ export default function JobsPage() {
   const [saveError, setSaveError] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [newJob, setNewJob] = useState({ jobTitle: '', revenue: '', jobDate: '', notes: '' });
+  const [completing, setCompleting] = useState<string | null>(null);
 
   useEffect(() => { fetchJobs(); }, []);
+
+  const markComplete = async (id: string) => {
+    setCompleting(id);
+    try {
+      await fetch(`/api/jobs/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: 'completed' }),
+      });
+      setJobs(prev => prev.map(j => j.id === id ? { ...j, status: 'completed' } : j));
+    } catch (e) {
+      console.error('markComplete error', e);
+    } finally {
+      setCompleting(null);
+    }
+  };
 
   const fetchJobs = async () => {
     setLoading(true);
@@ -183,6 +200,7 @@ export default function JobsPage() {
                 <th className="px-4 py-3 text-right font-semibold text-slate-600 hidden md:table-cell">Kostnader</th>
                 <th className="px-4 py-3 text-right font-semibold text-slate-600">Fortjeneste</th>
                 <th className="px-4 py-3 text-center font-semibold text-slate-600">Margin</th>
+                <th className="px-4 py-3 text-center font-semibold text-slate-600">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -209,6 +227,21 @@ export default function JobsPage() {
                       {job.marginPct > 30 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
                       {job.marginPct} %
                     </span>
+                  </td>
+                  <td className="px-4 py-3 text-center">
+                    {job.status === 'completed' ? (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                        <CheckCircle className="h-3 w-3" /> Fullfort
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => markComplete(job.id)}
+                        disabled={completing === job.id}
+                        className="rounded-lg border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-700 hover:bg-emerald-50 hover:border-emerald-300 hover:text-emerald-700 disabled:opacity-50 transition"
+                      >
+                        {completing === job.id ? <Loader2 className="h-3 w-3 animate-spin inline" /> : 'Merk fullfort'}
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
