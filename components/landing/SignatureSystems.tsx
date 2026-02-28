@@ -74,7 +74,7 @@ export function SignatureSystems() {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 rounded-full border border-rose-500/30 bg-rose-500/10 px-4 py-1.5 text-sm font-medium text-rose-300 mb-6">
             <Zap className="h-4 w-4" />
-            5 Signatur-systemer – dette er vår "Apple Moment"
+            5 Signatur-systemer som ingen konkurrent kan kopiere raskt
           </div>
           <h2 className="text-4xl sm:text-5xl font-extrabold text-white max-w-3xl mx-auto leading-tight">
             Ikke funksjoner.{' '}
@@ -83,8 +83,8 @@ export function SignatureSystems() {
             </span>
           </h2>
           <p className="mt-5 text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Disse 5 systemene gjør FlowPilot til mer enn en SaaS. Det er infrastruktur for
-            norske SMB-er som vil dominere – ikke bare overleve.
+            Bygget for norske SMB-er som ikke er fornøyd med å bare overleve – men som vil vokse,
+            dominere og bygge noe som varer. Dette er systemene som gjør forskjellen.
           </p>
         </div>
 
