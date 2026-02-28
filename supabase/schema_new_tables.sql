@@ -93,3 +93,142 @@ create policy "Company members can manage their follow-up tasks"
 -- select * from proposals limit 1;
 -- select * from follow_up_tasks limit 1;
 -- ──────────────────────────────────────────
+
+-- ==============================================================
+-- FlowPilot – Module tables: Tasks, Inventory, Compliance
+-- Run this block separately (or together) in Supabase SQL Editor
+-- ==============================================================
+
+-- ──────────────────────────────────────────
+-- 4. TASKS (Operations Hub)
+-- ──────────────────────────────────────────
+create table if not exists tasks (
+  id           uuid        default gen_random_uuid() primary key,
+  company_id   uuid        references leads_companies(id) on delete cascade not null,
+  title        text        not null,
+  description  text,
+  priority     text        default 'medium',  -- 'low' | 'medium' | 'high'
+  status       text        default 'todo',    -- 'todo' | 'in_progress' | 'done'
+  due_date     date,
+  assigned_to  text,
+  lead_id      uuid        references leads(id) on delete set null,
+  job_id       uuid,
+  created_by   text,
+  created_at   timestamptz default now(),
+  updated_at   timestamptz default now()
+);
+
+alter table tasks enable row level security;
+
+create policy "Company members can manage their tasks"
+  on tasks for all
+  using (
+    company_id in (
+      select company_id from users where id = auth.uid()
+    )
+  );
+
+-- ──────────────────────────────────────────
+-- 5. INVENTORY ITEMS
+-- ──────────────────────────────────────────
+create table if not exists inventory_items (
+  id            uuid        default gen_random_uuid() primary key,
+  company_id    uuid        references leads_companies(id) on delete cascade not null,
+  name          text        not null,
+  sku           text,
+  category      text,
+  quantity      numeric     default 0,
+  unit          text        default 'stk',
+  reorder_level numeric     default 5,
+  cost_price    numeric,
+  location      text,
+  supplier      text,
+  notes         text,
+  created_at    timestamptz default now(),
+  updated_at    timestamptz default now()
+);
+
+alter table inventory_items enable row level security;
+
+create policy "Company members can manage their inventory"
+  on inventory_items for all
+  using (
+    company_id in (
+      select company_id from users where id = auth.uid()
+    )
+  );
+
+-- ──────────────────────────────────────────
+-- 6. COMPLIANCE DOCUMENTS
+-- ──────────────────────────────────────────
+create table if not exists compliance_documents (
+  id          uuid        default gen_random_uuid() primary key,
+  company_id  uuid        references leads_companies(id) on delete cascade not null,
+  title       text        not null,
+  category    text,
+  status      text        default 'active',  -- 'active' | 'expiring' | 'expired'
+  expiry_date date,
+  file_url    text,
+  notes       text,
+  created_at  timestamptz default now()
+);
+
+alter table compliance_documents enable row level security;
+
+create policy "Company members can manage their compliance docs"
+  on compliance_documents for all
+  using (
+    company_id in (
+      select company_id from users where id = auth.uid()
+    )
+  );
+
+-- ──────────────────────────────────────────
+-- 7. COMPLIANCE DEVIATIONS (avvikslogg)
+-- ──────────────────────────────────────────
+create table if not exists compliance_deviations (
+  id           uuid        default gen_random_uuid() primary key,
+  company_id   uuid        references leads_companies(id) on delete cascade not null,
+  title        text        not null,
+  description  text,
+  severity     text        default 'medium',  -- 'low' | 'medium' | 'high' | 'critical'
+  status       text        default 'open',    -- 'open' | 'in_progress' | 'closed'
+  reported_by  text,
+  created_at   timestamptz default now()
+);
+
+alter table compliance_deviations enable row level security;
+
+create policy "Company members can manage their deviations"
+  on compliance_deviations for all
+  using (
+    company_id in (
+      select company_id from users where id = auth.uid()
+    )
+  );
+
+-- ──────────────────────────────────────────
+-- Existing form/scoring columns (add if missing)
+-- ──────────────────────────────────────────
+alter table forms add column if not exists score_threshold integer default 80;
+alter table questions add column if not exists points integer default 0;
+alter table questions add column if not exists option_points jsonb;
+
+-- Trial email tracking columns
+alter table leads_companies add column if not exists trial_email_day1  boolean default false;
+alter table leads_companies add column if not exists trial_email_day3  boolean default false;
+alter table leads_companies add column if not exists trial_email_day7  boolean default false;
+alter table leads_companies add column if not exists trial_email_day14 boolean default false;
+alter table leads_companies add column if not exists google_review_url text;
+alter table leads_companies add column if not exists sms_phone         text;
+
+-- Auth user link
+alter table users add column if not exists auth_user_id uuid;
+
+-- ──────────────────────────────────────────
+-- Verify:
+-- select * from tasks limit 1;
+-- select * from inventory_items limit 1;
+-- select * from compliance_documents limit 1;
+-- select * from compliance_deviations limit 1;
+-- ──────────────────────────────────────────

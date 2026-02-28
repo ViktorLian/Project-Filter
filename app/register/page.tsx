@@ -255,8 +255,6 @@ export default function RegisterPage() {
     </Suspense>
   );
 }
-
-export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [inviteToken, setInviteToken] = useState<string | null>(null);

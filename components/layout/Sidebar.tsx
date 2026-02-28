@@ -10,7 +10,8 @@ import {
   Bot, Brain, Calendar, Map, Zap, TrendingUp, Target, BookOpen,
   MessageSquare, Star, Bell, RefreshCw, Lightbulb, PieChart,
   ClipboardList, Award, Shield, Rocket, Activity, Gift, Sparkles, GraduationCap,
-  HelpCircle, Mail, Calculator, Wand2, Clock, Megaphone, Layout
+  HelpCircle, Mail, Calculator, Wand2, Clock, Megaphone, Layout,
+  Package, CheckSquare, FlaskConical
 } from 'lucide-react';
 
 interface NavItem { href: string; label: string; icon: React.ElementType }
@@ -115,6 +116,9 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/risk-monitor', label: 'Risikomonitor', icon: Shield },
       { href: '/dashboard/acquisition-readiness', label: 'Selskapsberedskap', icon: Award },
       { href: '/dashboard/operations-hub', label: 'Driftssentral', icon: Layout },
+      { href: '/dashboard/inventory', label: 'Lager & Ressurser', icon: Package },
+      { href: '/dashboard/compliance', label: 'Compliance & HMS', icon: Shield },
+      { href: '/dashboard/revenue-lab', label: 'Inntekt & Vekst', icon: FlaskConical },
       { href: '/dashboard/settings', label: 'Innstillinger', icon: Settings },
     ],
   },
