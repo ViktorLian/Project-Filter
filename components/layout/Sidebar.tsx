@@ -11,7 +11,8 @@ import {
   MessageSquare, Star, Bell, RefreshCw, Lightbulb, PieChart,
   ClipboardList, Award, Shield, Rocket, Activity, Gift, Sparkles, GraduationCap,
   HelpCircle, Mail, Calculator, Wand2, Clock, Megaphone, Layout,
-  Package, CheckSquare, FlaskConical, AlertTriangle, GitBranch, BookMarked
+  Package, CheckSquare, FlaskConical, AlertTriangle, GitBranch, BookMarked,
+  Gauge, Sliders
 } from 'lucide-react';
 
 interface NavItem { href: string; label: string; icon: React.ElementType }
@@ -60,6 +61,7 @@ const navGroups: NavGroup[] = [
     icon: Brain,
     color: 'text-purple-400',
     items: [
+      { href: '/dashboard/fp-score', label: 'FlowPilot Score™', icon: Gauge },
       { href: '/dashboard/ai-assistant', label: 'AI Salgsassistent', icon: Bot },
       { href: '/dashboard/ai-crm', label: 'AI CRM Autofill', icon: Brain },
       { href: '/dashboard/win-loss', label: 'Vinn/Tap Analyse', icon: PieChart },
@@ -93,6 +95,7 @@ const navGroups: NavGroup[] = [
     icon: TrendingUp,
     color: 'text-pink-400',
     items: [
+      { href: '/dashboard/digital-twin', label: 'Digital Tvilling', icon: Sliders },
       { href: '/dashboard/google-maps', label: 'Google Maps', icon: Map },
       { href: '/dashboard/growth-playbook', label: 'Vekstplan', icon: Lightbulb },
       { href: '/dashboard/roi-tracker', label: 'ROI Oversikt', icon: Award },

@@ -328,5 +328,33 @@ create policy "Company members can manage their risks"
 -- select * from pipeline_jobs limit 1;
 -- select * from procedures limit 1;
 -- select * from risks limit 1;
+-- select * from brain_entries limit 1;
 -- ──────────────────────────────────────────
+
+-- 11. BRAIN ENTRIES (Bedriftshukommelse / Second Brain)
+-- Run this in Supabase SQL Editor
+
+create table if not exists brain_entries (
+  id           uuid default gen_random_uuid() primary key,
+  company_id   uuid references leads_companies(id) on delete cascade not null,
+  type         text not null default 'note',          -- decision | win | failure | learning | note | customer
+  title        text not null,
+  content      text,
+  tags         text[] default '{}',
+  date         date default current_date,
+  related      text,
+  created_at   timestamptz default now()
+);
+
+alter table brain_entries enable row level security;
+
+drop policy if exists "Company members can manage their brain entries" on brain_entries;
+create policy "Company members can manage their brain entries"
+  on brain_entries for all
+  using (
+    company_id in (
+      select company_id from users where id = auth.uid()
+    )
+  );
+
 

@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 				.eq('id', formId)
 				.single();
 
-			if (formConfig?.questions?.length > 0) {
+			if ((formConfig?.questions?.length ?? 0) > 0) {
 				let totalEarned = 0;
 				let totalPossible = 0;
 				for (const q of (formConfig.questions as any[])) {
