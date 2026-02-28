@@ -226,9 +226,97 @@ alter table leads_companies add column if not exists sms_phone         text;
 alter table users add column if not exists auth_user_id uuid;
 
 -- ──────────────────────────────────────────
--- Verify:
+-- 8. PIPELINE JOBS (Jobbpipeline – full workflow)
+-- ──────────────────────────────────────────
+create table if not exists pipeline_jobs (
+  id              uuid        default gen_random_uuid() primary key,
+  company_id      uuid        references leads_companies(id) on delete cascade not null,
+  lead_id         uuid        references leads(id) on delete set null,
+  title           text        not null,
+  customer_name   text        default '',
+  customer_email  text        default '',
+  customer_phone  text        default '',
+  stage           text        default 'lead',  -- lead/contacted/proposal/contract/delivery/invoice/won/lost
+  value           numeric     default 0,
+  notes           text,
+  due_date        date,
+  assigned_to     text,
+  lost_reason     text,
+  created_at      timestamptz default now(),
+  updated_at      timestamptz default now()
+);
+
+alter table pipeline_jobs enable row level security;
+
+create policy "Company members can manage their pipeline"
+  on pipeline_jobs for all
+  using (
+    company_id in (
+      select company_id from users where id = auth.uid()
+    )
+  );
+
+-- ──────────────────────────────────────────
+-- 9. PROCEDURES (Prosedyre-bank)
+-- ──────────────────────────────────────────
+create table if not exists procedures (
+  id          uuid        default gen_random_uuid() primary key,
+  company_id  uuid        references leads_companies(id) on delete cascade not null,
+  title       text        not null,
+  category    text        default 'Generelt',
+  content     text,
+  tags        text[]      default '{}',
+  responsible text,
+  version     integer     default 1,
+  created_at  timestamptz default now(),
+  updated_at  timestamptz default now()
+);
+
+alter table procedures enable row level security;
+
+create policy "Company members can manage their procedures"
+  on procedures for all
+  using (
+    company_id in (
+      select company_id from users where id = auth.uid()
+    )
+  );
+
+-- ──────────────────────────────────────────
+-- 10. RISKS (Risiko-register)
+-- ──────────────────────────────────────────
+create table if not exists risks (
+  id          uuid        default gen_random_uuid() primary key,
+  company_id  uuid        references leads_companies(id) on delete cascade not null,
+  title       text        not null,
+  description text,
+  category    text        default 'Operasjonell',
+  probability integer     default 3,   -- 1–5
+  impact      integer     default 3,   -- 1–5
+  owner       text,
+  status      text        default 'open',  -- open/mitigated/accepted/closed
+  mitigation  text,
+  created_at  timestamptz default now()
+);
+
+alter table risks enable row level security;
+
+create policy "Company members can manage their risks"
+  on risks for all
+  using (
+    company_id in (
+      select company_id from users where id = auth.uid()
+    )
+  );
+
+-- ──────────────────────────────────────────
+-- Verify all tables:
 -- select * from tasks limit 1;
 -- select * from inventory_items limit 1;
 -- select * from compliance_documents limit 1;
 -- select * from compliance_deviations limit 1;
+-- select * from pipeline_jobs limit 1;
+-- select * from procedures limit 1;
+-- select * from risks limit 1;
 -- ──────────────────────────────────────────
+

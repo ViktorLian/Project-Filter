@@ -11,7 +11,7 @@ import {
   MessageSquare, Star, Bell, RefreshCw, Lightbulb, PieChart,
   ClipboardList, Award, Shield, Rocket, Activity, Gift, Sparkles, GraduationCap,
   HelpCircle, Mail, Calculator, Wand2, Clock, Megaphone, Layout,
-  Package, CheckSquare, FlaskConical
+  Package, CheckSquare, FlaskConical, AlertTriangle, GitBranch, BookMarked
 } from 'lucide-react';
 
 interface NavItem { href: string; label: string; icon: React.ElementType }
@@ -37,6 +37,7 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/leads', label: 'Leads', icon: FileText },
       { href: '/dashboard/customers', label: 'Kunder', icon: Users },
       { href: '/dashboard/proposals', label: 'Tilbud', icon: ClipboardList },
+      { href: '/dashboard/pipeline', label: 'Jobbpipeline', icon: GitBranch },
       { href: '/dashboard/follow-up', label: 'Smart Oppfølging', icon: Bell },
     ],
   },
@@ -113,6 +114,8 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/manual', label: 'Brukermanual', icon: BookOpen },
       { href: '/dashboard/team', label: 'Team og roller', icon: Users },
       { href: '/dashboard/process-vault', label: 'Prosessbibliotek', icon: ClipboardList },
+      { href: '/dashboard/procedures', label: 'Prosedyre-bank', icon: BookMarked },
+      { href: '/dashboard/risk', label: 'Risiko-register', icon: AlertTriangle },
       { href: '/dashboard/risk-monitor', label: 'Risikomonitor', icon: Shield },
       { href: '/dashboard/acquisition-readiness', label: 'Selskapsberedskap', icon: Award },
       { href: '/dashboard/operations-hub', label: 'Driftssentral', icon: Layout },
