@@ -12,7 +12,7 @@ import {
   ClipboardList, Award, Shield, Rocket, Activity, Gift, Sparkles, GraduationCap,
   HelpCircle, Mail, Calculator, Wand2, Clock, Megaphone, Layout,
   Package, CheckSquare, FlaskConical, AlertTriangle, GitBranch, BookMarked,
-  Gauge, Sliders
+  Gauge, Sliders, Dna, Landmark, Cpu, TrendingDown
 } from 'lucide-react';
 
 interface NavItem { href: string; label: string; icon: React.ElementType }
@@ -62,6 +62,7 @@ const navGroups: NavGroup[] = [
     color: 'text-purple-400',
     items: [
       { href: '/dashboard/fp-score', label: 'FlowPilot Score™', icon: Gauge },
+      { href: '/dashboard/business-genome', label: 'Business Genome', icon: Dna },
       { href: '/dashboard/ai-assistant', label: 'AI Salgsassistent', icon: Bot },
       { href: '/dashboard/ai-crm', label: 'AI CRM Autofill', icon: Brain },
       { href: '/dashboard/win-loss', label: 'Vinn/Tap Analyse', icon: PieChart },
@@ -80,6 +81,7 @@ const navGroups: NavGroup[] = [
     color: 'text-orange-400',
     items: [
       { href: '/dashboard/forms', label: 'Skjemaer', icon: FileText },
+      { href: '/dashboard/auto-backoffice', label: 'Autonom Backoffice', icon: Cpu },
       { href: '/dashboard/chatbot-embed', label: 'Chatbot på nettside', icon: Bot },
       { href: '/dashboard/campaigns', label: 'Kampanjer', icon: Rocket },
       { href: '/dashboard/campaign-builder', label: 'Kampanjebygger', icon: Megaphone },
@@ -96,6 +98,9 @@ const navGroups: NavGroup[] = [
     color: 'text-pink-400',
     items: [
       { href: '/dashboard/digital-twin', label: 'Digital Tvilling', icon: Sliders },
+      { href: '/dashboard/profit-accelerator', label: 'Profit Accelerator', icon: TrendingDown },
+      { href: '/dashboard/funding', label: 'Finansierings-hub', icon: Landmark },
+      { href: '/dashboard/reputation', label: 'Omdømme-sentral', icon: Star },
       { href: '/dashboard/google-maps', label: 'Google Maps', icon: Map },
       { href: '/dashboard/growth-playbook', label: 'Vekstplan', icon: Lightbulb },
       { href: '/dashboard/roi-tracker', label: 'ROI Oversikt', icon: Award },
