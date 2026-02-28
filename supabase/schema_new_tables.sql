@@ -24,6 +24,7 @@ create table if not exists calendar_events (
 
 alter table calendar_events enable row level security;
 
+drop policy if exists "Company members can manage their calendar events" on calendar_events;
 create policy "Company members can manage their calendar events"
   on calendar_events for all
   using (
@@ -51,6 +52,7 @@ create table if not exists proposals (
 
 alter table proposals enable row level security;
 
+drop policy if exists "Company members can manage their proposals" on proposals;
 create policy "Company members can manage their proposals"
   on proposals for all
   using (
@@ -79,6 +81,7 @@ create table if not exists follow_up_tasks (
 
 alter table follow_up_tasks enable row level security;
 
+drop policy if exists "Company members can manage their follow-up tasks" on follow_up_tasks;
 create policy "Company members can manage their follow-up tasks"
   on follow_up_tasks for all
   using (
@@ -120,6 +123,7 @@ create table if not exists tasks (
 
 alter table tasks enable row level security;
 
+drop policy if exists "Company members can manage their tasks" on tasks;
 create policy "Company members can manage their tasks"
   on tasks for all
   using (
@@ -150,6 +154,7 @@ create table if not exists inventory_items (
 
 alter table inventory_items enable row level security;
 
+drop policy if exists "Company members can manage their inventory" on inventory_items;
 create policy "Company members can manage their inventory"
   on inventory_items for all
   using (
@@ -175,6 +180,7 @@ create table if not exists compliance_documents (
 
 alter table compliance_documents enable row level security;
 
+drop policy if exists "Company members can manage their compliance docs" on compliance_documents;
 create policy "Company members can manage their compliance docs"
   on compliance_documents for all
   using (
@@ -199,6 +205,7 @@ create table if not exists compliance_deviations (
 
 alter table compliance_deviations enable row level security;
 
+drop policy if exists "Company members can manage their deviations" on compliance_deviations;
 create policy "Company members can manage their deviations"
   on compliance_deviations for all
   using (
@@ -248,6 +255,7 @@ create table if not exists pipeline_jobs (
 
 alter table pipeline_jobs enable row level security;
 
+drop policy if exists "Company members can manage their pipeline" on pipeline_jobs;
 create policy "Company members can manage their pipeline"
   on pipeline_jobs for all
   using (
@@ -274,6 +282,7 @@ create table if not exists procedures (
 
 alter table procedures enable row level security;
 
+drop policy if exists "Company members can manage their procedures" on procedures;
 create policy "Company members can manage their procedures"
   on procedures for all
   using (
@@ -301,6 +310,7 @@ create table if not exists risks (
 
 alter table risks enable row level security;
 
+drop policy if exists "Company members can manage their risks" on risks;
 create policy "Company members can manage their risks"
   on risks for all
   using (
