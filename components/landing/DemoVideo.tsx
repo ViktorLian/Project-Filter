@@ -20,9 +20,12 @@ export function DemoVideo() {
             Se FlowPilot i aksjon
           </h2>
           <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            En full gjennomgang av dashboardet – du trenger ikke se hele på én gang.
-            Hopp til den delen som er relevant for deg.
+            En gjennomgang av dashboardet – hopp til den delen som er relevant for deg.
           </p>
+          <div className="mt-3 inline-flex items-center gap-2 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold px-4 py-2 rounded-full">
+            <span>⚠</span>
+            Merk: Videoen viser en eldre versjon av FlowPilot. Vi har siden lagt til 30+ nye moduler og systemet er kraftig forbedret.
+          </div>
         </div>
 
         {/* Video container */}

@@ -12,13 +12,25 @@ import {
   ClipboardList, Award, Shield, Rocket, Activity, Gift, Sparkles, GraduationCap,
   HelpCircle, Mail, Calculator, Wand2, Clock, Megaphone, Layout,
   Package, CheckSquare, FlaskConical, AlertTriangle, GitBranch, BookMarked,
-  Gauge, Sliders, Dna, Landmark, Cpu, TrendingDown
+  Gauge, Sliders, Dna, Landmark, Cpu, TrendingDown, Globe, Flame
 } from 'lucide-react';
 
 interface NavItem { href: string; label: string; icon: React.ElementType }
 interface NavGroup { label: string; icon: React.ElementType; color: string; items: NavItem[] }
 
 const navGroups: NavGroup[] = [
+  {
+    label: '🔥 Signatur',
+    icon: Flame,
+    color: 'text-rose-400',
+    items: [
+      { href: '/dashboard/nervous-system', label: 'Business Nervesystem', icon: Activity },
+      { href: '/dashboard/profit-intelligence', label: 'Profit Intelligence', icon: TrendingUp },
+      { href: '/dashboard/market-engine', label: 'Market Domination', icon: Globe },
+      { href: '/dashboard/self-healing', label: 'Self-Healing Company', icon: RefreshCw },
+      { href: '/dashboard/crisis-proof', label: 'Crisis-Proof Arch.', icon: Shield },
+    ],
+  },
   {
     label: 'Hoved',
     icon: LayoutDashboard,
@@ -139,8 +151,8 @@ export default function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
-    Hoved: true, Salg: true, 'Økonomi': true,
-    'AI Verktøy': false, Automatisering: false, Vekst: false, System: true,
+    '🔥 Signatur': true, Hoved: true, Salg: true, 'Økonomi': true,
+    'AI Verktøy': false, Automatisering: false, Vekst: false, System: false,
   });
 
   const toggleGroup = (label: string) =>

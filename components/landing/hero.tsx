@@ -1,4 +1,4 @@
-import { ArrowRight, Zap, Bot, Mail, MessageSquare, Calendar, BarChart3, FileText, CreditCard, Star, CheckCircle } from 'lucide-react'
+import { ArrowRight, Zap, Bot, Mail, MessageSquare, Calendar, BarChart3, FileText, CreditCard, Star, CheckCircle, Activity, Shield, TrendingUp, Globe, RefreshCw, Brain } from 'lucide-react'
 import Link from 'next/link'
 
 export function Hero() {
@@ -36,17 +36,17 @@ export function Hero() {
           <div className="flex flex-col items-center text-center">
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-sm font-medium text-blue-300 mb-8">
               <Zap className="h-4 w-4" />
-              Alt-i-én plattform for norske bedrifter
+              Nordens mest avanserte SMB-plattform
             </div>
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-4xl leading-tight">
-              Automatiser veksten.{' '}
+              Ikke bare et verktøy.{' '}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
-                Selg smartere.
+                Infrastruktur.
               </span>
             </h1>
             <p className="mt-6 text-lg sm:text-xl text-slate-300 max-w-2xl leading-relaxed">
-              FlowPilot samler lead-håndtering, AI-kundeservice, bookingsystem, SMS-påminnelser,
-              fakturering og vekstautomatisering i én plattform. Fra første kontakt til betalt faktura – helt automatisk.
+              FlowPilot er et komplett operativsystem for din bedrift. Business Nervous System,
+              Profit Intelligence, Market Engine, Self-Healing og Crisis-Proof arkitektur – alt i én plattform.
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-4">
               <Link
@@ -71,10 +71,10 @@ export function Hero() {
           </div>
           <div className="mt-20 grid grid-cols-2 gap-4 sm:grid-cols-4 max-w-3xl mx-auto">
             {[
-              { value: '14d', label: 'Gratis prøveperiode' },
-              { value: 'Alt-i-én', label: 'Ikke mange separate verktøy' },
+              { value: '50+', label: 'Moduler og systemer' },
+              { value: 'Alt-i-én', label: 'Erstatter 10+ separate verktøy' },
               { value: 'Kr 0', label: 'Oppstartsgebyr' },
-              { value: '24/7', label: 'AI-bot som aldri sover' },
+              { value: '24/7', label: 'Selvkorrigerende AI' },
             ].map((s) => (
               <div key={s.label} className="rounded-2xl border border-white/10 bg-white/5 p-5 text-center backdrop-blur-sm">
                 <p className="text-3xl font-extrabold text-white">{s.value}</p>
@@ -88,21 +88,27 @@ export function Hero() {
       {/* Funksjonsstripe */}
       <section id="features" className="bg-slate-50 border-b border-slate-200 py-16">
         <div className="mx-auto max-w-7xl px-6">
-          <p className="text-center text-sm font-semibold uppercase tracking-widest text-slate-500 mb-10">Alt du trenger i én plattform</p>
+          <p className="text-center text-sm font-semibold uppercase tracking-widest text-slate-500 mb-10">Alt du trenger i én plattform – over 50 moduler</p>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
             {[
-              { icon: Bot, label: 'AI kundeservice-bot', color: 'bg-violet-100 text-violet-600' },
+              { icon: Activity, label: 'Business Nervesystem', color: 'bg-green-100 text-green-600' },
+              { icon: TrendingUp, label: 'Profit Intelligence', color: 'bg-orange-100 text-orange-600' },
+              { icon: Globe, label: 'Market Domination', color: 'bg-cyan-100 text-cyan-600' },
+              { icon: RefreshCw, label: 'Self-Healing Company', color: 'bg-teal-100 text-teal-600' },
+              { icon: Shield, label: 'Crisis-Proof Arkitektur', color: 'bg-red-100 text-red-600' },
+              { icon: Bot, label: 'AI Kundeservice', color: 'bg-violet-100 text-violet-600' },
               { icon: Mail, label: 'E-postkampanjer', color: 'bg-blue-100 text-blue-600' },
-              { icon: MessageSquare, label: 'SMS-påminnelser', color: 'bg-green-100 text-green-600' },
-              { icon: Calendar, label: 'Bookingsystem', color: 'bg-orange-100 text-orange-600' },
+              { icon: MessageSquare, label: 'SMS-påminnelser', color: 'bg-emerald-100 text-emerald-600' },
+              { icon: Calendar, label: 'Bookingsystem', color: 'bg-yellow-100 text-yellow-600' },
               { icon: BarChart3, label: 'ROI-sporing', color: 'bg-pink-100 text-pink-600' },
-              { icon: FileText, label: 'Fakturering', color: 'bg-cyan-100 text-cyan-600' },
+              { icon: FileText, label: 'Fakturering', color: 'bg-indigo-100 text-indigo-600' },
+              { icon: Brain, label: 'AI Analyse', color: 'bg-purple-100 text-purple-600' },
             ].map(({ icon: Icon, label, color }) => (
-              <div key={label} className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white p-5 text-center hover:shadow-md transition">
-                <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${color}`}>
-                  <Icon className="h-6 w-6" />
+              <div key={label} className="flex flex-col items-center gap-3 rounded-2xl border border-slate-200 bg-white p-4 text-center hover:shadow-md transition">
+                <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${color}`}>
+                  <Icon className="h-5 w-5" />
                 </div>
-                <span className="text-sm font-semibold text-slate-700">{label}</span>
+                <span className="text-xs font-semibold text-slate-700 leading-tight">{label}</span>
               </div>
             ))}
           </div>

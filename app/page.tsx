@@ -1,6 +1,7 @@
 import { Hero } from '@/components/landing/hero'
 import { Problems } from '@/components/landing/problems'
 import { Features } from '@/components/landing/features'
+import { SignatureSystems } from '@/components/landing/SignatureSystems'
 import { DemoVideo } from '@/components/landing/DemoVideo'
 import { Pricing } from '@/components/landing/pricing'
 import { Services } from '@/components/landing/Services'
@@ -15,6 +16,7 @@ export default function HomePage() {
     <main className="flex flex-col">
       <Hero />
       <Problems />
+      <SignatureSystems />
       <Features />
       <DemoVideo />
       <Pricing />
