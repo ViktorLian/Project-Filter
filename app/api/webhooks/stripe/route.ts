@@ -49,50 +49,79 @@ export async function POST(request: Request) {
 
         // ── New registration flow ──
         if (meta.registration === 'true' && meta.email && meta.companyName) {
-          const { companyName, name, email, password } = meta
+          const { companyName, name, email, password, plan } = meta
 
           // Check if user already exists (idempotency)
           const { data: existingUser } = await supabaseAdmin
             .from('users')
             .select('id')
             .eq('email', email)
-            .single()
+            .maybeSingle()
 
           if (!existingUser) {
-            const hashedPassword = await bcrypt.hash(password, 10)
+            // 1. Create Supabase Auth user (so signInWithPassword works)
+            const { data: authUser, error: authErr } = await supabaseAdmin.auth.admin.createUser({
+              email,
+              password,
+              email_confirm: true,
+              user_metadata: { name, business_name: companyName },
+            })
 
-            // Create company
+            if (authErr || !authUser?.user) {
+              console.error('[WEBHOOK] Failed to create Auth user:', authErr)
+              break
+            }
+
+            // 2. Create company with correct plan
+            const trialEndsAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString()
             const { data: company, error: companyErr } = await supabaseAdmin
               .from('leads_companies')
               .insert({
                 name: companyName,
-                subscription_status: 'trial',
-                subscription_plan: 'starter',
-                stripe_customer_id: session.customer as string,
-                stripe_subscription_id: session.subscription as string,
+                subscription_status: session.subscription ? 'active' : 'trialing',
+                subscription_plan: plan || 'starter',
+                trial_ends_at: trialEndsAt,
+                stripe_customer_id: session.customer as string || null,
+                stripe_subscription_id: session.subscription as string || null,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
               })
               .select('id')
               .single()
 
             if (companyErr || !company) {
               console.error('[WEBHOOK] Failed to create company:', companyErr)
+              await supabaseAdmin.auth.admin.deleteUser(authUser.user.id)
               break
             }
 
-            // Create user
+            // 3. Create public.users record linked to the Auth user
             const { error: userErr } = await supabaseAdmin
               .from('users')
               .insert({
+                id: company.id,          // user.id == company.id (FlowPilot convention)
+                auth_user_id: authUser.user.id,
                 name,
                 email,
-                password: hashedPassword,
+                business_name: companyName,
                 company_id: company.id,
                 role: 'admin',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
               })
 
             if (userErr) {
-              console.error('[WEBHOOK] Failed to create user:', userErr)
+              console.error('[WEBHOOK] Failed to create user record:', userErr)
+            } else {
+              // Also insert leads_companies user_id link
+              await supabaseAdmin
+                .from('leads_companies')
+                .update({ user_id: company.id })
+                .eq('id', company.id)
+              console.log('[WEBHOOK] Account created for', email, 'plan:', plan || 'starter')
             }
+          } else {
+            console.log('[WEBHOOK] Account already exists for', email)
           }
           break
         }

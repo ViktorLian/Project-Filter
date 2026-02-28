@@ -1,7 +1,6 @@
 ﻿"use client";
 import { useEffect, useState } from "react";
 import { CheckCircle, Zap } from "lucide-react";
-
 const PLANS = [
   {
     key: "starter",
@@ -196,46 +195,23 @@ function StripeCheckoutButton({
   label: string;
   green?: boolean;
 }) {
-  const [loading, setLoading] = useState(false);
-
-  const handleCheckout = async () => {
-    if (!priceId) {
-      window.location.href = `/register?plan=${plan}`;
-      return;
-    }
-    setLoading(true);
-    try {
-      const res = await fetch("/api/stripe/create-checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceId, billingTerm, plan }),
-      });
-      const json = await res.json();
-      if (json.url) {
-        window.location.href = json.url;
-      } else {
-        window.location.href = `/register?plan=${plan}`;
-      }
-    } catch {
-      window.location.href = `/register?plan=${plan}`;
-    } finally {
-      setLoading(false);
-    }
+  // Always send new users through the registration flow first (plan select → form → stripe)
+  const handleCheckout = () => {
+    window.location.href = `/register?plan=${plan}&billing=${billingTerm}`;
   };
 
   return (
     <button
       onClick={handleCheckout}
-      disabled={loading}
       className={`w-full rounded-xl px-6 py-3 text-sm font-bold transition ${
         green
-          ? "bg-green-600 text-white hover:bg-green-700 disabled:opacity-60"
+          ? "bg-green-600 text-white hover:bg-green-700"
           : highlighted
-          ? "bg-blue-600 text-white hover:bg-blue-700 shadow-md disabled:opacity-60"
-          : "bg-slate-100 text-slate-900 hover:bg-slate-200 disabled:opacity-60"
+          ? "bg-blue-600 text-white hover:bg-blue-700 shadow-md"
+          : "bg-slate-100 text-slate-900 hover:bg-slate-200"
       }`}
     >
-      {loading ? "Laster..." : label}
+      {label}
     </button>
   );
 }

@@ -91,12 +91,17 @@ function LoginForm() {
             <Button type="submit" disabled={loading} className="w-full bg-blue-600 hover:bg-blue-700">
               {loading ? 'Logger inn...' : 'Logg inn'}
             </Button>
-            <p className="text-center text-sm text-muted-foreground">
-              Har du ikke konto?{' '}
-              <Link href="/register" className="underline hover:text-primary">
-                Registrer deg gratis
+            <div className="flex items-center justify-between text-sm text-muted-foreground">
+              <Link href="/forgot-password" className="hover:text-primary hover:underline text-xs">
+                Glemt passord?
               </Link>
-            </p>
+              <span>
+                Har du ikke konto?{' '}
+                <Link href="/register" className="underline hover:text-primary">
+                  Registrer deg
+                </Link>
+              </span>
+            </div>
           </form>
         </CardContent>
       </Card>
