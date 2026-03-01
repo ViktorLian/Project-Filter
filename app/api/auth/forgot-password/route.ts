@@ -17,7 +17,8 @@ function getAppUrl(): string {
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
   }
-  return 'https://flowpilot.no';
+  // Dev fallback — use the request origin or localhost
+  return 'http://localhost:3000';
 }
 
 export async function POST(req: Request) {
@@ -31,20 +32,32 @@ export async function POST(req: Request) {
     const appUrl = getAppUrl();
     console.log('[forgot-password] appUrl:', appUrl, '| email:', email);
 
-    // Check if user exists in public.users
+    // 1. Check public.users table first
     const { data: publicUser } = await supabase
       .from('users')
       .select('id, auth_user_id')
       .eq('email', email)
       .maybeSingle();
 
+    // 2. If not in public.users, fall back to checking Supabase Auth directly
     if (!publicUser) {
-      // Don't reveal whether the email exists — silently succeed
-      return NextResponse.json({ ok: true });
-    }
-
-    // If user has no Supabase Auth account yet, create one first
-    if (!publicUser.auth_user_id) {
+      const { data: authList } = await supabase.auth.admin.listUsers();
+      const authUser = authList?.users?.find((u: { email?: string }) => u.email === email);
+      if (!authUser) {
+        // Email truly not registered — silently succeed (don't reveal this)
+        console.log('[forgot-password] email not found anywhere:', email);
+        return NextResponse.json({ ok: true });
+      }
+      // Found in auth but not in public.users — create the missing record
+      console.log('[forgot-password] found in auth but not public.users, creating record for:', email);
+      await supabase.from('users').insert({
+        auth_user_id: authUser.id,
+        email,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      });
+    } else if (!publicUser.auth_user_id) {
+      // Public record exists but no auth account — create one
       const { data: authData, error: createError } = await supabase.auth.admin.createUser({
         email,
         email_confirm: true,
@@ -58,6 +71,18 @@ export async function POST(req: Request) {
           .eq('id', publicUser.id);
         console.log('[forgot-password] created auth user for:', email);
       }
+    }
+
+    // 3. Auto-confirm the user's email so the recovery link works
+    try {
+      const { data: authList2 } = await supabase.auth.admin.listUsers();
+      const targetAuthUser = authList2?.users?.find((u: { email?: string }) => u.email === email);
+      if (targetAuthUser && !targetAuthUser.email_confirmed_at) {
+        await supabase.auth.admin.updateUserById(targetAuthUser.id, { email_confirm: true });
+        console.log('[forgot-password] auto-confirmed email for:', email);
+      }
+    } catch (e) {
+      console.warn('[forgot-password] could not auto-confirm:', e);
     }
 
     // Generate the recovery link via Supabase Admin (no email sent by Supabase)

@@ -2,7 +2,7 @@
 import { authOptions } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import Link from 'next/link';
-import { Settings, Building2, Receipt, CreditCard, Key, User } from 'lucide-react';
+import { Settings, Building2, Receipt, CreditCard, Key, User, AlertTriangle } from 'lucide-react';
 import SettingsEditor from '@/components/settings/SettingsEditor';
 
 export const dynamic = 'force-dynamic';
@@ -123,6 +123,28 @@ export default async function SettingsPage() {
             Endre plan
           </Link>
         </div>
+      </div>
+
+      {/* Danger zone – cancel subscription */}
+      <div className="rounded-xl border border-red-200 bg-red-50 p-5">
+        <div className="flex items-center gap-2 mb-3">
+          <AlertTriangle className="h-5 w-5 text-red-500" />
+          <h2 className="font-semibold text-red-800">Avslutt abonnement</h2>
+        </div>
+        <p className="text-sm text-red-700 mb-4">
+          Hvis du avslutter vil abonnementet ditt løpe ut ved slutten av inneværende periode. Du beholder full tilgang frem til da. Alle data slettes etter 90 dager.
+        </p>
+        <div className="space-y-2 text-sm text-red-700 mb-5">
+          <p>• Vil du ha pengene tilbake (innen 14 dager)? Send e-post til <a href="mailto:support@flowpilot.no" className="underline font-medium">support@flowpilot.no</a> med emnefeltet «Refusjon».</p>
+          <p>• Les vår <Link href="/terms" className="underline font-medium">angrerettspolicy</Link> for detaljer.</p>
+        </div>
+        <a
+          href="mailto:support@flowpilot.no?subject=Ønske%20om%20oppsigelse%20av%20abonnement&body=Hei%2C%20jeg%20ønsker%20å%20si%20opp%20abonnementet%20mitt%20på%20FlowPilot."
+          className="inline-flex items-center gap-2 rounded-xl border border-red-400 bg-white px-4 py-2 text-sm font-semibold text-red-700 hover:bg-red-100 transition-colors"
+        >
+          Send oppsigelse på e-post
+        </a>
+        <p className="text-xs text-red-400 mt-2">Du vil motta bekreftelse innen 1 virkedag.</p>
       </div>
 
       {/* API / integration section */}

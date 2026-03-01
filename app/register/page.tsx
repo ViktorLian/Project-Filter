@@ -235,6 +235,12 @@ function RegisterFlow() {
                   Kortet belastes ikke i 14 dager. Avslutt når som helst.
                 </p>
               )}
+              <p className="text-xs text-center text-slate-400 mt-1">
+                Ved å registrere deg godtar du våre{' '}
+                <Link href="/terms" target="_blank" className="text-blue-500 hover:underline">Brukervilkår</Link>{' '}
+                og{' '}
+                <Link href="/privacy" target="_blank" className="text-blue-500 hover:underline">Personvernserklæring</Link>.
+              </p>
             </form>
           </div>
 
