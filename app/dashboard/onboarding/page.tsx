@@ -313,9 +313,9 @@ export default function OnboardingPage() {
               <div className="inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 mb-5">
                 <Star className="h-8 w-8 text-emerald-600" />
               </div>
-              <h2 className="text-2xl font-extrabold text-slate-900 mb-3">Forste steg fullført!</h2>
+              <h2 className="text-2xl font-extrabold text-slate-900 mb-3">Første steg fullført!</h2>
               <p className="text-slate-600 mb-8 leading-relaxed">
-                Vi jobber na med a skaffe deg ditt forste resultat. Systemet er konfigurert og klart.
+                Vi jobber nå med å skaffe deg ditt første resultat. Systemet er konfigurert og klart.
               </p>
 
               <div className="grid grid-cols-3 gap-3 mb-8">

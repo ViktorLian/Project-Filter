@@ -12,7 +12,7 @@ import {
   ClipboardList, Award, Shield, Rocket, Activity, Gift, Sparkles, GraduationCap,
   HelpCircle, Mail, Calculator, Wand2, Clock, Megaphone, Layout,
   Package, CheckSquare, FlaskConical, AlertTriangle, GitBranch, BookMarked,
-  Gauge, Sliders, Dna, Landmark, Cpu, TrendingDown, Globe, Flame
+  Gauge, Sliders, Dna, Landmark, Cpu, TrendingDown, Globe, Flame, Search
 } from 'lucide-react';
 
 interface NavItem { href: string; label: string; icon: React.ElementType }
@@ -150,13 +150,21 @@ const navGroups: NavGroup[] = [
 export default function Sidebar() {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
+  const [search, setSearch] = useState('');
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
     '🔥 Signatur': true, Hoved: true, Salg: true, 'Økonomi': true,
-    'AI Verktøy': false, Automatisering: false, Vekst: false, System: false,
+    'AI Verkøy': false, Automatisering: false, Vekst: false, System: false,
   });
 
   const toggleGroup = (label: string) =>
-    setOpenGroups((prev) => ({ ...prev, [label]: !prev[label] }));
+    setOpenGroups((prev) => {
+      const isCurrentlyOpen = !!prev[label];
+      // Close all, then toggle clicked one (single-open accordion)
+      const allClosed = Object.fromEntries(Object.keys(prev).map((k) => [k, false]));
+      return { ...allClosed, [label]: !isCurrentlyOpen };
+    });
+
+  const q = search.toLowerCase().trim();
 
   return (
     <aside
@@ -191,11 +199,33 @@ export default function Sidebar() {
         {collapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
       </button>
 
+      {/* Search bar */}
+      {!collapsed && (
+        <div className="px-3 py-2 border-b border-slate-800">
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Søk i meny..."
+              className="w-full bg-slate-800 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition"
+            />
+          </div>
+        </div>
+      )}
+
       {/* Nav */}
       <nav className="flex-1 py-2 space-y-0.5">
         {navGroups.map((group) => {
           const GroupIcon = group.icon;
-          const isOpen = openGroups[group.label] ?? true;
+          // Filter items by search
+          const filteredItems = q
+            ? group.items.filter((i) => i.label.toLowerCase().includes(q))
+            : group.items;
+          if (q && filteredItems.length === 0) return null;
+          // When searching, always expand; otherwise use state
+          const isOpen = q ? true : (openGroups[group.label] ?? true);
           const hasActive = group.items.some((item) =>
             item.href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(item.href)
           );
@@ -220,7 +250,7 @@ export default function Sidebar() {
 
               {(isOpen || collapsed) && (
                 <div className={cn('space-y-0.5', !collapsed ? 'px-2' : 'px-1 py-1')}>
-                  {group.items.map((item) => {
+                  {filteredItems.map((item) => {
                     const isActive =
                       item.href === '/dashboard'
                         ? pathname === '/dashboard'

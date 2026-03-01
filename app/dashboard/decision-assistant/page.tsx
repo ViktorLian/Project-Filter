@@ -7,28 +7,28 @@ import {
 } from 'lucide-react';
 
 const QUICK_QUESTIONS = [
-  'Bor jeg ansette en person til na?',
-  'Bor jeg oke prisen pa tjenestene mine?',
-  'Bor jeg investere i ny utstyr denne maneden?',
-  'Bor jeg sette av mer tid til markedsforing?',
-  'Bor jeg ta pa meg dette storprosjektet?',
-  'Bor jeg tilby rabatt til denne kunden?',
+  'Bør jeg ansette en person nå?',
+  'Bør jeg øke prisen på tjenestene mine?',
+  'Bør jeg investere i nytt utstyr denne måneden?',
+  'Bør jeg sette av mer tid til markedsføring?',
+  'Bør jeg ta på meg dette storprosjektet?',
+  'Bør jeg tilby rabatt til denne kunden?',
 ];
 
 const DEMO_DECISIONS: { q: string; pros: string[]; cons: string[]; rec: string; confScore: number }[] = [
   {
-    q: 'Bor jeg ansette en person til na?',
+    q: 'Bør jeg ansette en person nå?',
     pros: [
-      'Ordreboking er 87% full siste 3 mnd — kapasiteten er et flaskehals',
-      'Du mister estimert 2-3 jobber per mnd pa grunn av manglende kapasitet',
-      'Lonnskostnaden (+45 000 kr/mnd) dekkes allerede av tapte inntekter',
+      'Ordrebook er 87% full siste 3 mnd — kapasiteten er et flaskehals',
+      'Du mister estimert 2–3 jobber per mnd på grunn av manglende kapasitet',
+      'Lønnskostnaden (+45 000 kr/mnd) dekkes allerede av tapte inntekter',
     ],
     cons: [
-      'Kontantstrom er -12% siste mnd — buffer bor byes opp forst',
-      'Ansettelse tar 4-8 uker — ma startes umiddelbart',
+      'Kontantstrøm er -12% siste mnd — buffer bør bygges opp først',
+      'Ansettelse tar 4–8 uker — må startes umiddelbart',
       'Ukjent risiko: ny ansatt kan svekke kvalitet kortsiktig',
     ],
-    rec: 'Anbefalingen er JA — men vent 30 dager til kontantstrommen er stabilisert. Start annonsering na slik at du er klar til a ansette neste maned.',
+    rec: 'Anbefalingen er JA — men vent 30 dager til kontantstrømmen er stabilisert. Start annonsering nå slik at du er klar til å ansette neste måned.',
     confScore: 74,
   },
 ];
@@ -92,7 +92,7 @@ export default function DecisionAssistantPage() {
           onChange={e => setQuestion(e.target.value)}
           rows={2}
           className="mt-2 w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-300"
-          placeholder="Bor jeg ansette, oke prisen, investere i utstyr...?"
+          placeholder="Bør jeg ansette, øke prisen, investere i utstyr...?"
         />
         <label className="text-xs font-semibold text-slate-500 mt-3 block">Ekstra kontekst (valgfritt)</label>
         <textarea

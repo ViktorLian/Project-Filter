@@ -75,30 +75,32 @@ export default function SelfHealingPage() {
   const criticalCount = issues.filter((i) => i.severity === 'critical' && i.status !== 'done').length;
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 p-6">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
-          <RefreshCw className="h-5 w-5 text-white" />
-        </div>
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-white">Self-Healing Company</h1>
-            <span className="bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs px-3 py-1 rounded-full font-semibold">Enterprise</span>
+    <div className="min-h-full">
+      {/* Dark header */}
+      <div className="-mx-6 -mt-6 mb-6 px-6 pt-8 pb-8 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-3 mb-1">
+              <div className="h-9 w-9 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
+                <RefreshCw className="h-5 w-5 text-emerald-400" />
+              </div>
+              <h1 className="text-2xl font-bold text-white">Self-Healing Company</h1>
+              <span className="bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs px-3 py-1 rounded-full font-semibold">Enterprise</span>
+            </div>
+            <p className="text-slate-400 text-sm ml-12">Feil oppdages og fikses automatisk – mens du sover</p>
           </div>
-          <p className="text-slate-400 text-sm">Feil oppdages og fikses automatisk – mens du sover</p>
+          {criticalCount > 0 && (
+            <div className="bg-red-500/20 border border-red-500/30 text-red-300 text-sm font-bold px-4 py-2 rounded-xl animate-pulse">
+              ⚠ {criticalCount} kritiske problemer aktive
+            </div>
+          )}
         </div>
-        {criticalCount > 0 && (
-          <div className="ml-auto bg-red-500/20 border border-red-500/30 text-red-300 text-sm font-bold px-4 py-2 rounded-xl animate-pulse">
-            ⚠ {criticalCount} kritiske problemer aktive
-          </div>
-        )}
       </div>
 
-      {/* Friksjons-radar */}
-      <div className="bg-slate-800/60 rounded-2xl border border-slate-700 p-6 mb-6">
-        <h2 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-          <AlertCircle className="h-4 w-4 text-red-400" />
+      {/* Frisksjons-radar */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-6">
+        <h2 className="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+          <AlertCircle className="h-4 w-4 text-red-500" />
           Automatisk friksjons-deteksjon
         </h2>
         <div className="space-y-3">
@@ -114,10 +116,10 @@ export default function SelfHealingPage() {
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <span className={`text-xs font-bold uppercase ${s.color}`}>{s.label}</span>
-                        <p className="text-sm font-semibold text-white">{issue.title}</p>
+                        <p className="text-sm font-semibold text-slate-900">{issue.title}</p>
                         {isDone && <CheckCircle className="h-3.5 w-3.5 text-emerald-400" />}
                       </div>
-                      <p className="text-xs text-slate-400 mb-2">{issue.description}</p>
+                      <p className="text-xs text-slate-500 mb-2">{issue.description}</p>
                       <div className="flex items-center gap-2 text-xs">
                         <Bot className="h-3 w-3 text-blue-400" />
                         <span className="text-blue-300 font-medium">Auto-fix: {issue.autoFix}</span>
@@ -134,7 +136,7 @@ export default function SelfHealingPage() {
                         <Zap className="h-3 w-3" />
                         Fix nå
                       </button>
-                      <button className="text-xs bg-slate-700 hover:bg-slate-600 text-slate-400 px-3 py-1.5 rounded-lg transition">
+                      <button className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-500 px-3 py-1.5 rounded-lg transition">
                         Ignorer
                       </button>
                     </div>
@@ -148,28 +150,28 @@ export default function SelfHealingPage() {
 
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Prosesseffektivitet */}
-        <div className="bg-slate-800/60 rounded-2xl border border-slate-700 p-6">
-          <h2 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-yellow-400" />
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <h2 className="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-yellow-500" />
             Prosess-restrukturering
           </h2>
           <div className="space-y-4">
             {PROCESSES.map((p) => (
-              <div key={p.id} className="bg-slate-900/40 rounded-xl border border-slate-700/50 p-4">
+              <div key={p.id} className="bg-slate-50 rounded-xl border border-slate-200 p-4">
                 <div className="flex justify-between items-center mb-2">
-                  <p className="text-sm font-semibold text-white">{p.name}</p>
+                  <p className="text-sm font-semibold text-slate-900">{p.name}</p>
                   <span className={`text-sm font-bold ${
                     p.efficiency > 80 ? 'text-emerald-400' : p.efficiency > 60 ? 'text-yellow-400' : 'text-red-400'
                   }`}>{p.efficiency}%</span>
                 </div>
-                <div className="w-full bg-slate-700 rounded-full h-2 mb-2">
+                <div className="w-full bg-slate-200 rounded-full h-2 mb-2">
                   <div
                     className={`h-2 rounded-full ${p.efficiency > 80 ? 'bg-emerald-500' : p.efficiency > 60 ? 'bg-yellow-500' : 'bg-red-500'}`}
                     style={{ width: `${p.efficiency}%` }}
                   />
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs text-slate-500">Optimalisert: {p.lastOptimized}</span>
+                  <span className="text-xs text-slate-400">Optimalisert: {p.lastOptimized}</span>
                   {p.suggestion && (
                     <button className="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1 font-medium">
                       <Info className="h-3 w-3" />
@@ -178,7 +180,7 @@ export default function SelfHealingPage() {
                   )}
                 </div>
                 {p.suggestion && (
-                  <div className="mt-2 text-xs text-slate-300 bg-blue-900/20 border border-blue-700/20 rounded-lg px-3 py-2">
+                  <div className="mt-2 text-xs text-slate-700 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
                     💡 {p.suggestion}
                   </div>
                 )}
@@ -188,25 +190,25 @@ export default function SelfHealingPage() {
         </div>
 
         {/* Dynamisk org-kart */}
-        <div className="bg-slate-800/60 rounded-2xl border border-slate-700 p-6">
-          <h2 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-            <RefreshCw className="h-4 w-4 text-cyan-400" />
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <h2 className="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <RefreshCw className="h-4 w-4 text-cyan-500" />
             Dynamisk kapasitetskart
           </h2>
           <div className="space-y-3 mb-6">
             {orgChart.map((person) => (
-              <div key={person.name} className={`rounded-xl p-4 border ${person.overflow ? 'border-red-500/30 bg-red-500/5' : 'border-slate-700/50 bg-slate-900/40'}`}>
+              <div key={person.name} className={`rounded-xl p-4 border ${person.overflow ? 'border-red-200 bg-red-50' : 'border-slate-200 bg-slate-50'}`}>
                 <div className="flex items-center justify-between mb-2">
                   <div>
-                    <p className="text-sm font-semibold text-white">{person.name}</p>
-                    <p className="text-xs text-slate-400">{person.role}</p>
+                    <p className="text-sm font-semibold text-slate-900">{person.name}</p>
+                    <p className="text-xs text-slate-500">{person.role}</p>
                   </div>
                   <div className="text-right">
                     <p className={`text-lg font-extrabold ${person.loadColor}`}>{person.load}%</p>
                     {person.overflow && <p className="text-xs text-red-400 font-semibold">Overbelastet</p>}
                   </div>
                 </div>
-                <div className="w-full bg-slate-700 rounded-full h-2">
+                <div className="w-full bg-slate-200 rounded-full h-2">
                   <div
                     className={`h-2 rounded-full ${person.load > 90 ? 'bg-red-500' : person.load > 70 ? 'bg-yellow-500' : 'bg-emerald-500'}`}
                     style={{ width: `${person.load}%` }}
@@ -215,9 +217,9 @@ export default function SelfHealingPage() {
               </div>
             ))}
           </div>
-          <div className="bg-yellow-900/20 border border-yellow-700/30 rounded-xl p-4">
-            <p className="text-xs font-bold text-yellow-300 mb-1">🔀 Ressurs-anbefaling</p>
-            <p className="text-xs text-slate-300 leading-relaxed">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4">
+            <p className="text-xs font-bold text-yellow-700 mb-1">🔀 Ressurs-anbefaling</p>
+            <p className="text-xs text-slate-700 leading-relaxed">
               "Petter B." er underbelastet (41%). FlowPilot foreslår å flytte 2 rørlegger-jobber fra "Jens O." til "Petter B." denne uken.
             </p>
             <button className="mt-2 text-xs text-yellow-300 hover:text-yellow-200 font-semibold flex items-center gap-1">

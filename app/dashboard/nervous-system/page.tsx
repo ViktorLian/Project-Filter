@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import {
-  Activity, TrendingUp, TrendingDown, AlertTriangle, CheckCircle,
-  DollarSign, Users, Zap, Brain, ArrowUpRight, RefreshCw, Bell,
-  BarChart3, Clock, Target, Flame
+  Activity, TrendingUp, AlertTriangle,
+  DollarSign, Zap, Brain, ArrowUpRight, RefreshCw, Bell,
+  Target, Flame
 } from 'lucide-react';
 
 const SIGNALS = [
@@ -97,9 +97,9 @@ const DECISIONS = [
 ];
 
 const statusColors = {
-  good: 'bg-emerald-500/15 border-emerald-500/30 text-emerald-300',
-  warning: 'bg-yellow-500/15 border-yellow-500/30 text-yellow-300',
-  danger: 'bg-red-500/15 border-red-500/30 text-red-300',
+  good: 'bg-emerald-50 border-emerald-200 text-emerald-700',
+  warning: 'bg-yellow-50 border-yellow-200 text-yellow-700',
+  danger: 'bg-red-50 border-red-200 text-red-700',
 };
 
 const alertColors = {
@@ -119,44 +119,37 @@ export default function NervousSystemPage() {
   const [pulse, setPulse] = useState(false);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setLastUpdated(new Date());
-      setPulse(true);
-      setTimeout(() => setPulse(false), 600);
-    }, 30000);
-    return () => clearInterval(interval);
+    const iv = setInterval(() => { setLastUpdated(new Date()); setPulse(true); setTimeout(() => setPulse(false), 600); }, 30000);
+    return () => clearInterval(iv);
   }, []);
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
-              <Activity className="h-5 w-5 text-white" />
-            </div>
-            <div>
+    <div className="min-h-full">
+      {/* Dark header – bleeds edge to edge by negating parent padding */}
+      <div className="-mx-6 -mt-6 mb-6 px-6 pt-8 pb-8 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center gap-3 mb-1">
+              <div className="h-9 w-9 rounded-xl bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
+                <Activity className="h-5 w-5 text-emerald-400" />
+              </div>
               <h1 className="text-2xl font-bold text-white">Business Nervous System</h1>
-              <p className="text-slate-400 text-sm">Sansesystemet til bedriften din – alt i sanntid</p>
+              <span className="bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs px-3 py-1 rounded-full font-semibold">Enterprise</span>
             </div>
+            <p className="text-slate-400 text-sm ml-12">Sansesystemet til bedriften din – alt i sanntid</p>
           </div>
-          <div className="flex items-center gap-4 ml-13">
-            <span className={`inline-flex items-center gap-1.5 text-xs px-3 py-1 rounded-full font-semibold border
-              ${pulse ? 'bg-green-500/30 border-green-400/50 text-green-300' : 'bg-slate-800 border-slate-700 text-slate-400'} transition-all duration-300`}>
-              <span className="h-1.5 w-1.5 rounded-full bg-green-400 animate-pulse" />
-              Live · Oppdatert {lastUpdated.toLocaleTimeString('no-NO', { hour: '2-digit', minute: '2-digit' })}
+          <div className="flex items-center gap-3">
+            <span className={`inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-medium border transition-all
+              ${pulse ? 'bg-emerald-500/20 border-emerald-400/40 text-emerald-300' : 'bg-white/5 border-white/15 text-slate-400'}`}>
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Live · {lastUpdated.toLocaleTimeString('no-NO', { hour: '2-digit', minute: '2-digit' })}
             </span>
-            <span className="inline-block bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs px-3 py-1 rounded-full font-semibold">Enterprise</span>
+            <button onClick={() => { setLastUpdated(new Date()); setPulse(true); setTimeout(() => setPulse(false), 600); }}
+              className="flex items-center gap-2 bg-white/10 hover:bg-white/15 border border-white/15 text-slate-300 text-sm px-3 py-1.5 rounded-lg transition">
+              <RefreshCw className="h-3.5 w-3.5" /> Oppdater
+            </button>
           </div>
         </div>
-        <button
-          onClick={() => { setLastUpdated(new Date()); setPulse(true); setTimeout(() => setPulse(false), 600); }}
-          className="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 text-sm font-medium px-4 py-2 rounded-lg transition"
-        >
-          <RefreshCw className="h-4 w-4" />
-          Oppdater
-        </button>
       </div>
 
       {/* Live Signal Grid */}
@@ -175,8 +168,8 @@ export default function NervousSystemPage() {
                   {sig.trend}
                 </span>
               </div>
-              <p className="text-3xl font-extrabold text-white mb-1">{sig.value}</p>
-              <p className="text-xs opacity-70 leading-relaxed">{sig.detail}</p>
+              <p className="text-3xl font-extrabold text-slate-900 mb-1">{sig.value}</p>
+              <p className="text-xs text-slate-500 leading-relaxed">{sig.detail}</p>
             </div>
           );
         })}
@@ -184,10 +177,10 @@ export default function NervousSystemPage() {
 
       <div className="grid lg:grid-cols-2 gap-6 mb-8">
         {/* Situasjonsvarsler */}
-        <div className="bg-slate-800/60 rounded-2xl border border-slate-700 p-6">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-base font-bold text-white flex items-center gap-2">
-              <Bell className="h-4 w-4 text-yellow-400" />
+            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              <Bell className="h-4 w-4 text-yellow-500" />
               Situasjonsvarsler
             </h2>
             <span className="text-xs bg-red-500/20 text-red-300 border border-red-500/30 px-2 py-0.5 rounded-full font-semibold">
@@ -201,8 +194,8 @@ export default function NervousSystemPage() {
                   <div className="flex items-start gap-2.5">
                     <span className={`mt-1.5 h-2 w-2 rounded-full flex-shrink-0 ${alertDotColors[alert.level as keyof typeof alertDotColors]}`} />
                     <div>
-                      <p className="text-sm text-slate-200 font-medium">{alert.text}</p>
-                      <p className="text-xs text-slate-500 mt-0.5">{alert.time}</p>
+                      <p className="text-sm text-slate-800 font-medium">{alert.text}</p>
+                      <p className="text-xs text-slate-400 mt-0.5">{alert.time}</p>
                     </div>
                   </div>
                   <button className="text-xs text-blue-400 hover:text-blue-300 whitespace-nowrap font-medium flex items-center gap-1 flex-shrink-0">
@@ -216,36 +209,36 @@ export default function NervousSystemPage() {
         </div>
 
         {/* Beslutningssporing */}
-        <div className="bg-slate-800/60 rounded-2xl border border-slate-700 p-6">
-          <h2 className="text-base font-bold text-white flex items-center gap-2 mb-5">
-            <Brain className="h-4 w-4 text-purple-400" />
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <h2 className="text-base font-bold text-slate-900 flex items-center gap-2 mb-5">
+            <Brain className="h-4 w-4 text-purple-500" />
             Beslutnings-logg
             <span className="text-xs text-slate-500 font-normal ml-1">Bedriften lærer av seg selv</span>
           </h2>
           <div className="space-y-4">
             {DECISIONS.map((d, i) => (
-              <div key={i} className="bg-slate-900/50 rounded-xl border border-slate-700/50 p-4">
+              <div key={i} className="bg-slate-50 rounded-xl border border-slate-200 p-4">
                 <div className="flex items-start justify-between gap-3 mb-2">
-                  <p className="text-sm font-semibold text-white">{d.decision}</p>
+                  <p className="text-sm font-semibold text-slate-900">{d.decision}</p>
                   <span className="text-xs text-slate-500 whitespace-nowrap">{d.date}</span>
                 </div>
-                <p className="text-xs text-slate-400 mb-2">{d.outcome}</p>
+                <p className="text-xs text-slate-600 mb-2">{d.outcome}</p>
                 <span className={`text-xs font-bold ${d.color}`}>{d.verdict}</span>
               </div>
             ))}
           </div>
-          <button className="mt-4 w-full text-center text-xs text-blue-400 hover:text-blue-300 font-medium py-2 border border-slate-700 rounded-lg hover:border-blue-500/40 transition">
+          <button className="mt-4 w-full text-center text-xs text-blue-600 hover:text-blue-700 font-medium py-2 border border-slate-200 rounded-lg hover:border-blue-300 transition">
             + Logg ny beslutning
           </button>
         </div>
       </div>
 
       {/* ROI-fokus maskin */}
-      <div className="bg-gradient-to-r from-blue-900/40 to-purple-900/40 rounded-2xl border border-blue-700/30 p-6">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
         <div className="flex items-center gap-3 mb-4">
-          <Target className="h-5 w-5 text-blue-400" />
-          <h2 className="text-base font-bold text-white">Prioriterings-maskin</h2>
-          <span className="text-xs text-slate-400">Høyest ROI-fokus akkurat nå</span>
+          <Target className="h-5 w-5 text-blue-600" />
+          <h2 className="text-base font-bold text-slate-900">Prioriterings-maskin</h2>
+          <span className="text-xs text-slate-500">Høyest ROI-fokus akkurat nå</span>
         </div>
         <div className="grid sm:grid-cols-3 gap-4">
           {[
@@ -253,13 +246,13 @@ export default function NervousSystemPage() {
             { rank: '#2', action: 'Send purring på faktura #1042 – forfalt', roi: '+kr 18 500 umiddelbart', icon: '📄' },
             { rank: '#3', action: 'Aktiver sove-kampanje "Mars høysesong"', roi: '+kr 8 200 / uke est.', icon: '🚀' },
           ].map((p) => (
-            <div key={p.rank} className="bg-slate-900/60 rounded-xl border border-blue-700/20 p-4">
+            <div key={p.rank} className="bg-blue-50 rounded-xl border border-blue-200 p-4">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-2xl">{p.icon}</span>
-                <span className="text-xs font-bold text-blue-400 uppercase">{p.rank} Prioritet</span>
+                <span className="text-xs font-bold text-blue-600 uppercase">{p.rank} Prioritet</span>
               </div>
-              <p className="text-sm font-semibold text-white mb-2">{p.action}</p>
-              <p className="text-xs text-emerald-400 font-bold">{p.roi}</p>
+              <p className="text-sm font-semibold text-slate-900 mb-2">{p.action}</p>
+              <p className="text-xs text-emerald-600 font-bold">{p.roi}</p>
             </div>
           ))}
         </div>

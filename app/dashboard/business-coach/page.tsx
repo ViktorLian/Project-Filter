@@ -34,8 +34,8 @@ const WEEKLY: WeeklyCoach = {
     },
     {
       priority: 2,
-      title: 'Send purring pa 2 forfalte fakturaer',
-      why: 'Total utestaaende: ca. 28 500 kr. Disse pengene er dine – fa dem inn.',
+      title: 'Send purring på 2 forfalte fakturaer',
+      why: 'Total utestpående: ca. 28 500 kr. Disse pengene er dine – få dem inn.',
       action: 'Gå til Fakturaer → "Forfalt" → send purring med ett klikk.',
       impact: 'hoy',
     },

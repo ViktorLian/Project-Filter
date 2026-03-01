@@ -83,19 +83,17 @@ export default function ProfitIntelligencePage() {
   const activeLeverData = LEVERS.find((l) => l.id === activeLever);
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 p-6">
-      {/* Header */}
-      <div className="flex items-center gap-4 mb-8">
-        <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
-          <TrendingUp className="h-5 w-5 text-white" />
-        </div>
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold text-white">Profit Intelligence Layer</h1>
-            <span className="bg-orange-500/20 text-orange-300 border border-orange-500/30 text-xs px-3 py-1 rounded-full font-semibold">Pro</span>
+    <div className="min-h-full">
+      {/* Dark header */}
+      <div className="-mx-6 -mt-6 mb-6 px-6 pt-8 pb-8 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900">
+        <div className="flex items-center gap-3 mb-1">
+          <div className="h-9 w-9 rounded-xl bg-amber-500/20 border border-amber-500/30 flex items-center justify-center">
+            <TrendingUp className="h-5 w-5 text-amber-400" />
           </div>
-          <p className="text-slate-400 text-sm">Margin som maskin – jakk hver krone systematisk</p>
+          <h1 className="text-2xl font-bold text-white">Profit Intelligence Layer</h1>
+          <span className="bg-orange-500/20 text-orange-300 border border-orange-500/30 text-xs px-3 py-1 rounded-full font-semibold">Pro</span>
         </div>
+        <p className="text-slate-400 text-sm ml-12">Margin som maskin – jakt hver krone systematisk</p>
       </div>
 
       {/* KPI Overview */}
@@ -108,12 +106,12 @@ export default function ProfitIntelligencePage() {
         ].map((kpi) => {
           const Icon = kpi.icon;
           return (
-            <div key={kpi.label} className="bg-slate-800/60 rounded-2xl border border-slate-700 p-5">
+            <div key={kpi.label} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
               <div className="flex items-center gap-2 mb-2">
                 <Icon className={`h-4 w-4 ${kpi.color}`} />
-                <span className="text-xs text-slate-400 font-medium">{kpi.label}</span>
+                <span className="text-xs text-slate-500 font-medium">{kpi.label}</span>
               </div>
-              <p className="text-3xl font-extrabold text-white">{kpi.value}</p>
+              <p className="text-3xl font-extrabold text-slate-900">{kpi.value}</p>
             </div>
           );
         })}
@@ -121,9 +119,9 @@ export default function ProfitIntelligencePage() {
 
       <div className="grid lg:grid-cols-2 gap-6 mb-8">
         {/* Jobbtype margin tabell */}
-        <div className="bg-slate-800/60 rounded-2xl border border-slate-700 p-6">
-          <h2 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-            <BarChart3 className="h-4 w-4 text-blue-400" />
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <h2 className="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <BarChart3 className="h-4 w-4 text-blue-500" />
             Marginanalyse per jobbtype
           </h2>
           <div className="space-y-3">
@@ -133,23 +131,23 @@ export default function ProfitIntelligencePage() {
               const monthlyProfit = (j.revenue - j.cost) * j.volume;
               const isLowest = i === byMargin.length - 1;
               return (
-                <div key={j.name} className={`rounded-xl p-4 border ${isLowest ? 'border-red-500/30 bg-red-500/5' : 'border-slate-700/50 bg-slate-900/40'}`}>
+                <div key={j.name} className={`rounded-xl p-4 border ${isLowest ? 'border-red-200 bg-red-50' : 'border-slate-200 bg-slate-50'}`}>
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
-                      {isLowest && <span className="text-xs text-red-400 font-bold">⚠</span>}
-                      <span className="text-sm font-semibold text-white">{j.name}</span>
+                      {isLowest && <span className="text-xs text-red-500 font-bold">⚠</span>}
+                      <span className="text-sm font-semibold text-slate-900">{j.name}</span>
                     </div>
                     <span className={`text-sm font-bold ${margin > 55 ? 'text-emerald-400' : margin > 35 ? 'text-yellow-400' : 'text-red-400'}`}>
                       {margin.toFixed(0)}%
                     </span>
                   </div>
-                  <div className="w-full bg-slate-700 rounded-full h-2 mb-2">
+                  <div className="w-full bg-slate-200 rounded-full h-2 mb-2">
                     <div
                       className={`h-2 rounded-full transition-all ${margin > 55 ? 'bg-emerald-500' : margin > 35 ? 'bg-yellow-500' : 'bg-red-500'}`}
                       style={{ width: `${margin}%` }}
                     />
                   </div>
-                  <div className="flex justify-between text-xs text-slate-400">
+                  <div className="flex justify-between text-xs text-slate-500">
                     <span>kr {ratePerHour.toFixed(0)}/t</span>
                     <span>kr {(monthlyProfit / 1000).toFixed(1)}k/mnd</span>
                     <span>{j.volume} jobb/mnd</span>
@@ -161,9 +159,9 @@ export default function ProfitIntelligencePage() {
         </div>
 
         {/* Marginspaker */}
-        <div className="bg-slate-800/60 rounded-2xl border border-slate-700 p-6">
-          <h2 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-            <Zap className="h-4 w-4 text-yellow-400" />
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <h2 className="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <Zap className="h-4 w-4 text-yellow-500" />
             Margin-spaker
           </h2>
           <div className="space-y-2 mb-4">
@@ -172,29 +170,29 @@ export default function ProfitIntelligencePage() {
                 key={lever.id}
                 onClick={() => setActiveLever(lever.id === activeLever ? null : lever.id)}
                 className={`w-full flex items-center justify-between p-3 rounded-xl border text-left transition-all
-                  ${activeLever === lever.id ? 'border-blue-500/50 bg-blue-500/10' : 'border-slate-700 hover:border-slate-600 bg-slate-900/40'}`}
+                  ${activeLever === lever.id ? 'border-blue-500/50 bg-blue-50' : 'border-slate-200 hover:border-slate-300 bg-white'}`}
               >
                 <div className="flex items-center gap-3">
                   <span className="text-base">{lever.icon}</span>
                   <div>
-                    <p className="text-sm font-semibold text-white">{lever.title}</p>
-                    <p className="text-xs text-slate-400">{lever.description}</p>
+                    <p className="text-sm font-semibold text-slate-900">{lever.title}</p>
+                    <p className="text-xs text-slate-500">{lever.description}</p>
                   </div>
                 </div>
                 <div className="text-right flex-shrink-0 ml-3">
-                  <p className="text-xs font-bold text-emerald-400">+kr {(lever.gain / 1000).toFixed(0)}k/mnd</p>
+                  <p className="text-xs font-bold text-emerald-600">+kr {(lever.gain / 1000).toFixed(0)}k/mnd</p>
                   <p className={`text-xs ${lever.riskColor}`}>{lever.risk} risiko</p>
                 </div>
               </button>
             ))}
           </div>
           {activeLeverData && (
-            <div className="bg-blue-900/20 border border-blue-700/30 rounded-xl p-4">
-              <p className="text-xs font-bold text-blue-300 uppercase mb-2">Aksjonssteg – {activeLeverData.title}</p>
+            <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
+              <p className="text-xs font-bold text-blue-700 uppercase mb-2">Aksjonssteg – {activeLeverData.title}</p>
               <ul className="space-y-1">
                 {activeLeverData.steps.map((step, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-slate-300">
-                    <CheckCircleIcon className="h-3 w-3 text-blue-400 mt-1 flex-shrink-0" />
+                  <li key={i} className="flex items-start gap-2 text-sm text-slate-700">
+                    <CheckCircleIcon className="h-3 w-3 text-blue-600 mt-1 flex-shrink-0" />
                     {step}
                   </li>
                 ))}
@@ -205,19 +203,19 @@ export default function ProfitIntelligencePage() {
       </div>
 
       {/* AI Anbefalingscard */}
-      <div className="bg-gradient-to-r from-orange-900/30 to-red-900/20 rounded-2xl border border-orange-700/30 p-6">
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
         <div className="flex items-start gap-4">
-          <div className="h-10 w-10 rounded-xl bg-orange-500/20 flex items-center justify-center flex-shrink-0">
-            <Sparkles className="h-5 w-5 text-orange-400" />
+          <div className="h-10 w-10 rounded-xl bg-orange-100 flex items-center justify-center flex-shrink-0">
+            <Sparkles className="h-5 w-5 text-orange-500" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-white mb-1">AI Profitt-anbefaling</h3>
-            <p className="text-slate-300 text-sm leading-relaxed">
-              <span className="font-semibold text-orange-300">"{lowestMarginJob.name}"</span> er jobbtypet med lavest margin ({lowestMarginPct}%).
+            <h3 className="text-base font-bold text-slate-900 mb-1">AI Profitt-anbefaling</h3>
+            <p className="text-slate-600 text-sm leading-relaxed">
+              <span className="font-semibold text-orange-600">"{lowestMarginJob.name}"</span> er jobbtypet med lavest margin ({lowestMarginPct}%).
               Vi anbefaler å enten heve prisen med 15–20%, eller vri mer kapasitet mot høymargin-jobber som "Tilsynsrunde".
-              Estimert effekt: <span className="font-bold text-emerald-400">+kr {((parseFloat(lowestMarginPct) * 1.15 / 100) * lowestMarginJob.revenue * lowestMarginJob.volume / 1000).toFixed(0)}k/mnd</span> i økt fortjeneste.
+              Estimert effekt: <span className="font-bold text-emerald-600">+kr {((parseFloat(lowestMarginPct) * 1.15 / 100) * lowestMarginJob.revenue * lowestMarginJob.volume / 1000).toFixed(0)}k/mnd</span> i økt fortjeneste.
             </p>
-            <button className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-orange-300 hover:text-orange-200">
+            <button className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-orange-600 hover:text-orange-700">
               <ArrowUpRight className="h-4 w-4" />
               Aktiver prisøkning
             </button>

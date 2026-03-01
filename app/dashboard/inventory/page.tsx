@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import {
   Package, Plus, AlertTriangle, TrendingDown, CheckCircle2,
-  Search, Trash2, Pencil, X, Loader2, BarChart3
+  Search, Trash2, Pencil, X, Loader2, BarChart3, ShoppingCart
 } from 'lucide-react';
 
 interface Item {
@@ -34,6 +34,9 @@ export default function InventoryPage() {
   const [form, setForm] = useState<Omit<Item, 'id'>>(BLANK);
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<'all' | 'low' | 'ok'>('all');
+  const [saleItem, setSaleItem] = useState<Item | null>(null);
+  const [saleForm, setSaleForm] = useState({ qty: 1, note: '' });
+  const [saleSaving, setSaleSaving] = useState(false);
 
   useEffect(() => { loadItems(); }, []);
 
@@ -91,6 +94,24 @@ export default function InventoryPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ quantity: newQty }),
     });
+  }
+
+  async function logSale(e: React.FormEvent) {
+    e.preventDefault();
+    if (!saleItem) return;
+    const newQty = Math.max(0, saleItem.quantity - saleForm.qty);
+    setSaleSaving(true);
+    const res = await fetch(`/api/inventory/${saleItem.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ quantity: newQty }),
+    });
+    if (res.ok) {
+      setItems((prev) => prev.map((i) => i.id === saleItem.id ? { ...i, quantity: newQty } : i));
+    }
+    setSaleSaving(false);
+    setSaleItem(null);
+    setSaleForm({ qty: 1, note: '' });
   }
 
   async function deleteItem(id: string) {
@@ -253,6 +274,12 @@ export default function InventoryPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1 justify-end">
+                        <button
+                          onClick={() => { setSaleItem(item); setSaleForm({ qty: 1, note: '' }); }}
+                          title="Logg salg / bruk"
+                          className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 transition">
+                          <ShoppingCart className="h-3.5 w-3.5" />
+                        </button>
                         <button onClick={() => openEdit(item)} className="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition">
                           <Pencil className="h-3.5 w-3.5" />
                         </button>
@@ -266,6 +293,64 @@ export default function InventoryPage() {
               })}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* Log sale modal */}
+      {saleItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={() => setSaleItem(null)}>
+          <form onClick={(e) => e.stopPropagation()} onSubmit={logSale}
+            className="w-full max-w-sm bg-white rounded-2xl shadow-2xl p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <ShoppingCart className="h-5 w-5 text-emerald-500" />
+                <h2 className="font-bold text-lg text-slate-900">Logg salg / bruk</h2>
+              </div>
+              <button type="button" onClick={() => setSaleItem(null)} className="text-slate-400 hover:text-slate-700">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+            <div className="bg-slate-50 rounded-xl border border-slate-200 px-4 py-3">
+              <p className="text-sm font-semibold text-slate-900">{saleItem.name}</p>
+              <p className="text-xs text-slate-500 mt-0.5">Nåværende beholdning: <span className="font-bold text-slate-700">{saleItem.quantity} {saleItem.unit}</span></p>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-slate-700 block mb-1">
+                Antall solgt / brukt
+              </label>
+              <input
+                type="number"
+                min="1"
+                max={saleItem.quantity}
+                required
+                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                value={saleForm.qty}
+                onChange={(e) => setSaleForm((f) => ({ ...f, qty: Number(e.target.value) }))}
+              />
+              {saleForm.qty > 0 && (
+                <p className="text-xs text-slate-500 mt-1">
+                  Ny beholdning: <span className="font-semibold">{Math.max(0, saleItem.quantity - saleForm.qty)} {saleItem.unit}</span>
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="text-sm font-medium text-slate-700 block mb-1">Notat (valgfritt)</label>
+              <input
+                type="text"
+                className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                placeholder="f.eks. Solgt til prosjekt #14, brukt på jobb..."
+                value={saleForm.note}
+                onChange={(e) => setSaleForm((f) => ({ ...f, note: e.target.value }))}
+              />
+            </div>
+            <div className="flex gap-2 pt-1">
+              <button type="button" onClick={() => setSaleItem(null)} className="flex-1 rounded-xl border border-slate-200 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 transition">Avbryt</button>
+              <button type="submit" disabled={saleSaving || saleForm.qty < 1} className="flex-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 py-2.5 text-sm font-semibold text-white disabled:opacity-50 transition flex items-center justify-center gap-2">
+                {saleSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShoppingCart className="h-4 w-4" />}
+                Registrer salg
+              </button>
+            </div>
+          </form>
         </div>
       )}
 

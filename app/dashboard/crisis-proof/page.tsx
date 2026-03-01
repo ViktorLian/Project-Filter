@@ -90,60 +90,60 @@ export default function CrisisProofPage() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-4">
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-red-500 to-rose-700 flex items-center justify-center">
-            <Shield className="h-5 w-5 text-white" />
-          </div>
+    <div className="min-h-full">
+      {/* Dark header */}
+      <div className="-mx-6 -mt-6 mb-6 px-6 pt-8 pb-8 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900">
+        <div className="flex items-center justify-between">
           <div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 mb-1">
+              <div className="h-9 w-9 rounded-xl bg-red-500/20 border border-red-500/30 flex items-center justify-center">
+                <Shield className="h-5 w-5 text-red-400" />
+              </div>
               <h1 className="text-2xl font-bold text-white">Crisis-Proof Architecture</h1>
               <span className="bg-purple-500/20 text-purple-300 border border-purple-500/30 text-xs px-3 py-1 rounded-full font-semibold">Enterprise</span>
             </div>
-            <p className="text-slate-400 text-sm">Bedriften overlever alt – automatisk</p>
+            <p className="text-slate-400 text-sm ml-12">Bedriften overlever alt – automatisk</p>
           </div>
-        </div>
-        <div className="text-center">
-          <div className={`inline-flex items-center justify-center h-16 w-16 rounded-full border-4 ${
-            overallHealth > 70 ? 'border-emerald-500 text-emerald-400' :
-            overallHealth > 40 ? 'border-yellow-500 text-yellow-400' : 'border-red-500 text-red-400'
-          }`}>
-            <span className="text-xl font-extrabold">{overallHealth.toFixed(0)}</span>
+          <div className="text-center">
+            <div className={`inline-flex items-center justify-center h-16 w-16 rounded-full border-4 ${
+              overallHealth > 70 ? 'border-emerald-500 text-emerald-400' :
+              overallHealth > 40 ? 'border-yellow-500 text-yellow-400' : 'border-red-500 text-red-400'
+            }`}>
+              <span className="text-xl font-extrabold">{overallHealth.toFixed(0)}</span>
+            </div>
+            <p className="text-xs text-slate-400 mt-1">Krisemotstand</p>
           </div>
-          <p className="text-xs text-slate-400 mt-1">Krisemotstand</p>
         </div>
       </div>
 
       {/* Buffer-bygger */}
-      <div className="bg-slate-800/60 rounded-2xl border border-slate-700 p-6 mb-6">
-        <h2 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-          <Zap className="h-4 w-4 text-yellow-400" />
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-6">
+        <h2 className="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+          <Zap className="h-4 w-4 text-yellow-500" />
           Automatisk bufferbygging
         </h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {BUFFERS.map((buf) => {
             const pct = Math.min((buf.current / buf.target) * 100, 100);
             return (
-              <div key={buf.label} className="bg-slate-900/50 rounded-xl border border-slate-700/50 p-4">
+              <div key={buf.label} className="bg-slate-50 rounded-xl border border-slate-200 p-4">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="text-xl">{buf.icon}</span>
-                  <p className="text-xs font-semibold text-slate-300 leading-tight">{buf.label}</p>
+                  <p className="text-xs font-semibold text-slate-700 leading-tight">{buf.label}</p>
                 </div>
                 <div className="flex items-end gap-1 mb-2">
                   <span className={`text-2xl font-extrabold ${pct >= 80 ? 'text-emerald-400' : pct >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
                     {typeof buf.current === 'number' && buf.current >= 1000 ? `${(buf.current / 1000).toFixed(0)}k` : buf.current}
                   </span>
-                  <span className="text-xs text-slate-500 mb-1">/ {typeof buf.target === 'number' && buf.target >= 1000 ? `${(buf.target / 1000).toFixed(0)}k` : buf.target} {buf.unit}</span>
+                  <span className="text-xs text-slate-400 mb-1">/ {typeof buf.target === 'number' && buf.target >= 1000 ? `${(buf.target / 1000).toFixed(0)}k` : buf.target} {buf.unit}</span>
                 </div>
-                <div className="w-full bg-slate-700 rounded-full h-2">
+                <div className="w-full bg-slate-200 rounded-full h-2">
                   <div
                     className={`h-2 rounded-full ${pct >= 80 ? 'bg-emerald-500' : pct >= 50 ? 'bg-yellow-500' : 'bg-red-500'}`}
                     style={{ width: `${pct}%` }}
                   />
                 </div>
-                <p className="text-xs text-slate-500 mt-1">{pct.toFixed(0)}% av mål</p>
+                <p className="text-xs text-slate-400 mt-1">{pct.toFixed(0)}% av mål</p>
               </div>
             );
           })}
@@ -152,16 +152,16 @@ export default function CrisisProofPage() {
 
       <div className="grid lg:grid-cols-2 gap-6 mb-6">
         {/* Krisesimulator */}
-        <div className="bg-slate-800/60 rounded-2xl border border-slate-700 p-6">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-bold text-white flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-orange-400" />
+            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-orange-500" />
               Krisesimulator
             </h2>
             <button
               onClick={() => setSimMode(!simMode)}
               className={`text-xs font-bold px-3 py-1.5 rounded-lg transition border
-                ${simMode ? 'bg-red-500/20 border-red-500/40 text-red-300' : 'bg-slate-700 border-slate-600 text-slate-300 hover:border-slate-500'}`}
+                ${simMode ? 'bg-red-100 border-red-300 text-red-700' : 'bg-slate-100 border-slate-200 text-slate-600 hover:border-slate-300'}`}
             >
               {simMode ? '⚠ Sim aktiv' : 'Start simulasjon'}
             </button>
@@ -172,23 +172,23 @@ export default function CrisisProofPage() {
                 key={sc.id}
                 onClick={() => setActiveScenario(sc)}
                 className={`w-full flex items-center justify-between p-3 rounded-xl border text-left transition-all
-                  ${activeScenario.id === sc.id ? 'border-orange-500/50 bg-orange-500/10' : 'border-slate-700/50 hover:border-slate-600 bg-slate-900/30'}`}
+                  ${activeScenario.id === sc.id ? 'border-orange-400 bg-orange-50' : 'border-slate-200 hover:border-slate-300 bg-white'}`}
               >
                 <div>
-                  <p className="text-sm font-semibold text-white">{sc.title}</p>
-                  <p className="text-xs text-slate-400">{sc.type} · Sannsynlighet: {sc.probability}%</p>
+                  <p className="text-sm font-semibold text-slate-900">{sc.title}</p>
+                  <p className="text-xs text-slate-500">{sc.type} · Sannsynlighet: {sc.probability}%</p>
                 </div>
                 <span className={`text-xs font-bold ${sc.impactColor}`}>{sc.impact}</span>
               </button>
             ))}
           </div>
           {activeScenario && (
-            <div className="bg-orange-900/15 border border-orange-700/30 rounded-xl p-4">
-              <p className="text-xs font-bold text-orange-300 mb-1">📋 Overlevelsesplan – {activeScenario.title}</p>
-              <p className="text-xs text-slate-400 mb-3">Estimert overlevelse uten tiltak: <span className="font-bold text-white">{activeScenario.monthsSurvival} mnd</span></p>
+            <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
+              <p className="text-xs font-bold text-orange-700 mb-1">📋 Overlevelsesplan – {activeScenario.title}</p>
+              <p className="text-xs text-slate-500 mb-3">Estimert overlevelse uten tiltak: <span className="font-bold text-slate-900">{activeScenario.monthsSurvival} mnd</span></p>
               <ul className="space-y-1.5">
                 {activeScenario.actions.map((action, i) => (
-                  <li key={i} className="flex items-start gap-2 text-xs text-slate-200">
+                  <li key={i} className="flex items-start gap-2 text-xs text-slate-700">
                     <span className="text-orange-400 font-bold mt-0.5">{i + 1}.</span>
                     {action}
                   </li>
@@ -199,11 +199,11 @@ export default function CrisisProofPage() {
         </div>
 
         {/* Rehabiliteringsmodus */}
-        <div className="bg-slate-800/60 rounded-2xl border border-slate-700 p-6">
-          <h2 className="text-base font-bold text-white mb-4 flex items-center gap-2">
-            <TrendingDown className="h-4 w-4 text-blue-400" />
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <h2 className="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <TrendingDown className="h-4 w-4 text-blue-500" />
             Rehabiliterings-modus
-            <span className="text-xs text-slate-500 font-normal">Gjenopprett etter tap</span>
+            <span className="text-xs text-slate-400 font-normal">Gjenopprett etter tap</span>
           </h2>
           <div className="space-y-3">
             {rehab.map((step, i) => (
@@ -220,8 +220,8 @@ export default function CrisisProofPage() {
                   )}
                 </div>
                 <div className="pb-3">
-                  <p className={`text-sm font-semibold ${step.status === 'pending' ? 'text-slate-500' : 'text-white'}`}>{step.title}</p>
-                  <p className="text-xs text-slate-400">{step.desc}</p>
+                  <p className={`text-sm font-semibold ${step.status === 'pending' ? 'text-slate-400' : 'text-slate-900'}`}>{step.title}</p>
+                  <p className="text-xs text-slate-500">{step.desc}</p>
                   {step.status === 'active' && (
                     <span className="text-xs text-blue-400 font-semibold">← Aktiv nå</span>
                   )}
@@ -229,8 +229,8 @@ export default function CrisisProofPage() {
               </div>
             ))}
           </div>
-          <div className="mt-4 bg-blue-900/20 border border-blue-700/20 rounded-xl p-4">
-            <p className="text-xs font-bold text-blue-300 mb-1">Sårbarhetskart</p>
+          <div className="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4">
+            <p className="text-xs font-bold text-blue-700 mb-1">Sårbarhetskart</p>
             <div className="grid grid-cols-2 gap-2">
               {[
                 { label: 'Kundeavhengighet', score: 3, max: 5, bad: true },
@@ -238,13 +238,13 @@ export default function CrisisProofPage() {
                 { label: 'Leverandørrisiko', score: 1, max: 5, bad: false },
                 { label: 'Personalrisiko', score: 4, max: 5, bad: true },
               ].map((v) => (
-                <div key={v.label} className="bg-slate-900/50 rounded-lg p-2">
-                  <p className="text-xs text-slate-400 mb-1">{v.label}</p>
+                  <div key={v.label} className="bg-white rounded-lg border border-slate-200 p-2">
+                    <p className="text-xs text-slate-500 mb-1">{v.label}</p>
                   <div className="flex gap-0.5">
                     {Array.from({ length: v.max }).map((_, idx) => (
                       <div
                         key={idx}
-                        className={`h-2 flex-1 rounded-sm ${idx < v.score ? (v.bad && idx >= 3 ? 'bg-red-500' : 'bg-yellow-500') : 'bg-slate-700'}`}
+                        className={`h-2 flex-1 rounded-sm ${idx < v.score ? (v.bad && idx >= 3 ? 'bg-red-500' : 'bg-yellow-500') : 'bg-slate-200'}`}
                       />
                     ))}
                   </div>

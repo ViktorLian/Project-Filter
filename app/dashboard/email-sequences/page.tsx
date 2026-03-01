@@ -1,9 +1,9 @@
 ﻿'use client';
 
 import { useState } from 'react';
-import { Mail, Clock, Play, Eye, Copy, CheckCircle, Plus, Zap, BarChart3, Users, TrendingDown, ArrowRight, Star } from 'lucide-react';
+import { Mail, Clock, Play, Eye, Copy, CheckCircle, Plus, Star, ArrowRight } from 'lucide-react';
 
-type SequenceType = 'trial' | 'welcome' | 'churn' | 'upsell' | 'winback';
+type SequenceType = 'velkomst' | 'oppfolging' | 'anmeldelse' | 'reaktivering' | 'sesong';
 
 interface EmailStep {
   day: number;
@@ -26,215 +26,293 @@ interface Sequence {
 
 const SEQUENCES: Sequence[] = [
   {
-    id: 'trial',
-    name: 'Trial til betalt',
-    description: 'Følger opp nye bruker gjennom 14-dager prøveperioden og konverterer til betalt plan.',
-    trigger: 'Trigger: ny registrering',
-    icon: Zap,
-    color: 'text-blue-700',
-    bg: 'bg-blue-100',
-    active: true,
-    steps: [
-      { day: 1, subject: 'Din forste gevinst i FlowPilot', preview: 'Slik far du mest ut av uke 1...', body: `Hei [Fornavn],
-
-Velkommen til FlowPilot. Du har tatt et smart valg.
-
-Her er det viktigste du bor gjore i dag:
-
-1. Opprett ditt forste lead-skjema (tar 3 minutter)
-2. Send det til en eksisterende kunde og se hva som skjer
-3. Se lead-scoren automatisk beregnes
-
-Har du spørsmål? Svar pa denne e-posten — vi leser alt.
-
-Med venlig hilsen,
-FlowPilot-teamet` },
-      { day: 3, subject: 'Tips som oker salget ditt med 34%', preview: 'Ett enkelt grep de fleste glemmer...', body: `Hei [Fornavn],
-
-Visste du at bedrifter som aktiverer automatisk oppfølging far 34% flere bookinger?
-
-Det tar deg 5 minutter a sette opp:
-
-Gå til Dashboard → Salg → Smart Oppfølging
-
-Systemet sender da automatisk SMS og e-post til leads som ikke har svart — uten at du need a gjore noe.
-
-Probis det i dag mens du har tid.
-
-FlowPilot-teamet` },
-      { day: 7, subject: 'Uke 1 fullført — hva har du tjent?', preview: 'Se dine resultater hittil...', body: `Hei [Fornavn],
-
-En uke er gatt. Tid for en liten evaluering.
-
-Ga inn pa Analyse-siden din og se:
-- Hvor mange leads du har fatt
-- Hva gjennomsnittlig lead-score er
-- Estimert inntektspotensial
-
-Hvis du ikke er fornyd — send oss en e-post. Vi hjelper deg a fa ut mer av systemet.
-
-Med venlig hilsen,
-FlowPilot-teamet` },
-      { day: 12, subject: 'Kun 2 dager igjen av prøveperioden', preview: 'Slik fortsetter du etter trial...', body: `Hei [Fornavn],
-
-Prøveperioden din utloper om 2 dager.
-
-For a beholde tilgangen og ikke miste dataene dine, oppgrader til en betalt plan:
-
-Starter – 1 290 kr/mnd (passer for deg alene)
-Pro – 2 590 kr/mnd (mest populert, ubegrenset fakturaer + kampanjer)
-
-Om du vil snakke med noen forst — ring oss pa [telefon] eller svar pa denne e-posten.
-
-Sett opp betaling her: [LENKE]
-
-FlowPilot-teamet` },
-      { day: 14, subject: 'Prøveperioden er over — slik beholder du alt', preview: 'Siste sjanse...', body: `Hei [Fornavn],
-
-Prøveperioden din utloper i dag.
-
-For a beholde:
-- Alle leadene dine
-- Fakturahistorikk
-- Skjemaer og innstillinger
-
-Aktiver ditt abonnement na: [LENKE]
-
-Har det vaert noe som ikke fungerte? Vi vil gjerne hore det — svar pa denne e-posten om du velger a ikke fortsette.
-
-FlowPilot-teamet` },
-    ],
-  },
-  {
-    id: 'churn',
-    name: 'Churn-redning',
-    description: 'Oppdager inaktive brukere og prover a redde dem for kansellering.',
-    trigger: 'Trigger: 7+ dager uten innlogging',
-    icon: TrendingDown,
-    color: 'text-red-700',
-    bg: 'bg-red-100',
-    active: false,
-    steps: [
-      { day: 0, subject: 'Vi har ikke sett deg pa en stund', preview: 'Alt ok?', body: `Hei [Fornavn],
-
-Vi har lagt merke til at du ikke har vaert inne pa FlowPilot pa noen dager.
-
-Er det noe vi kan hjelpe med? Kanskje:
-- Det er noe som ikke funker som det skal?
-- Du er usikker pa hvordan du bruker en funksjon?
-- Du trenger hjelp a komme i gang?
-
-Svar pa denne e-posten — sa fikser vi det.
-
-FlowPilot-teamet` },
-      { day: 7, subject: 'Gratis gjennomgang av kontoen din', preview: 'Vi hjelper deg a komme i gang pa nytt', body: `Hei [Fornavn],
-
-Vi tilbyr alle inaktive kunder en gratis 15-minutters gjennomgang.
-
-Vi viser deg:
-- De 3 tingene som gir deg mest igjen for tida
-- Hvordan du setter opp automatisk oppfølging
-- Hva andre i din bransje gjor
-
-Book en tid her: [LENKE]
-
-FlowPilot-teamet` },
-      { day: 14, subject: 'Siste tilbud til deg som abonnent', preview: 'Eksklusivt tilbud', body: `Hei [Fornavn],
-
-Fordi du er abonnent og vi onsker deg suksess, tilbyr vi deg en maned gratis hvis du booker en gjennomgang med oss innen fredag.
-
-Svar pa denne e-posten for a losse inn tilbudet.
-
-FlowPilot-teamet` },
-    ],
-  },
-  {
-    id: 'welcome',
-    name: 'Ny kunde — velkommen',
-    description: 'Onboarding-serie for nye betalende kunder. Maks verdihenting fra dag 1.',
-    trigger: 'Trigger: forste betaling registrert',
+    id: 'velkomst',
+    name: 'Ny kunde – velkomst',
+    description: 'Sett i gang forholdet på rett måte fra dag én. Bygg tillit og vis verdi umiddelbart.',
+    trigger: 'Trigger: ny kunde opprettet / jobb akseptert',
     icon: Star,
     color: 'text-emerald-700',
     bg: 'bg-emerald-100',
-    active: false,
+    active: true,
     steps: [
-      { day: 0, subject: 'Velkommen som kunde — her er det du trenger', preview: 'Alt pa ett sted', body: `Hei [Fornavn],
+      {
+        day: 0,
+        subject: 'Takk for at du valgte oss – her er hva som skjer nå',
+        preview: 'En kort guide til neste steg...',
+        body: `Hei [Fornavn],
 
-Du er na offisielt FlowPilot-kunde. Takk for tilliten.
+Tusen takk for at du valgte oss til jobben. Vi setter stor pris på tilliten!
 
-Her er en rask oversikt over det viktigste:
+Her er hva som skjer videre:
 
-Dashboardet: Din oversikt over alt
-Leads: Alle henvendelser samlet
-Fakturaer: Send og spor betalinger
-AI-assistent: Hjelp med tekster og strategi
+1. [Beskriv neste steg i din prosess]
+2. [Tidspunkt/dato for oppstart]
+3. [Hvem de kan kontakte ved spørsmål]
 
-Har du behov for opplaring? Vi tilbyr gratis onboarding-samtale. Book her: [LENKE]
+Du kan alltid nå oss på [telefon] eller svare på denne e-posten.
 
-FlowPilot-teamet` },
-      { day: 3, subject: 'Den funksjonen de fleste glemmer', preview: 'Sett opp dette i dag', body: `Hei [Fornavn],
+Vi gleder oss til å hjelpe deg!
 
-Den funksjonen som gir mest igjen — og som de fleste glemmer a sette opp — er Smart Oppfølging.
+Med vennlig hilsen,
+[Bedriftsnavn]`,
+      },
+      {
+        day: 1,
+        subject: 'Forberedelse – dette trenger vi fra deg',
+        preview: 'Litt info fra deg gjør jobben raskere...',
+        body: `Hei [Fornavn],
 
-Den sender automatisk SMS og e-post til leads som ikke svarer.
+For at vi skal kunne gjøre jobben så effektivt som mulig, trenger vi litt informasjon fra deg:
 
-Sett det opp under Salg → Smart Oppfølging. Det tar 5 minutter.
+- [Spørsmål 1]
+- [Spørsmål 2]
+- [Tilgang / nøkler / annet]
 
-FlowPilot-teamet` },
+Send oss gjerne bilder eller mer informasjon: [E-post eller lenke]
+
+Takk for hjelpen!
+
+Med vennlig hilsen,
+[Bedriftsnavn]`,
+      },
+      {
+        day: 3,
+        subject: 'Status på oppdraget ditt',
+        preview: 'Her er en oppdatering...',
+        body: `Hei [Fornavn],
+
+Vi ønsket bare å ta kontakt og gi deg en oppdatering:
+
+[Beskriv status her – f.eks. “Vi er i rute og planlegger å starte opp [dato].”]
+
+Har du spørsmål eller ønsker? Ta gjerne kontakt.
+
+Med vennlig hilsen,
+[Bedriftsnavn]
+[Telefon]`,
+      },
     ],
   },
   {
-    id: 'upsell',
-    name: 'Upsell til Pro',
-    description: 'Guider Starter-kunder til a oppgradere til Pro nar de nærmer seg grenser.',
-    trigger: 'Trigger: 80% av lead-grense brukt',
-    icon: BarChart3,
+    id: 'oppfolging',
+    name: 'Jobb fullført – oppfølging',
+    description: 'Sikre at kunden er fornøyd, åpne for mersalg og be om videre samarbeid.',
+    trigger: 'Trigger: jobb markert som fullført',
+    icon: CheckCircle,
+    color: 'text-blue-700',
+    bg: 'bg-blue-100',
+    active: false,
+    steps: [
+      {
+        day: 0,
+        subject: 'Jobben er ferdig – er du fornøyd?',
+        preview: 'Vi vil gjerne høre fra deg...',
+        body: `Hei [Fornavn],
+
+Jobben er nå fullført, og vi håper alt er akkurat slik du ønsket det.
+
+Er det noe du ønsket annerledes, eller noe vi kan forbedre til neste gang?
+
+Og er du fornøyd – da setter vi umistelig stor pris på om du gir oss en anmeldelse:
+👉 [LENKE TIL GOOGLE / TRUSTPILOT]
+
+Det tar bare 2 minutter, men betyr enormt mye for oss.
+
+Takk for at du valgte oss!
+
+Med vennlig hilsen,
+[Bedriftsnavn]`,
+      },
+      {
+        day: 7,
+        subject: 'Trenger du hjelp med noe mer?',
+        preview: 'Vi er klare for neste oppdrag...',
+        body: `Hei [Fornavn],
+
+En uke har gått siden vi fullførte jobben. Håper alt fungerer som det skal!
+
+Har du lagt merke til noe du vil at vi skal se på? Eller har du planer om andre prosjekter?
+
+Vi hjelper gjerne – det er alltid best å ta kontakt tidlig, så kan vi planlegge godt.
+
+Ring oss på [telefon], eller svar på denne e-posten.
+
+Med vennlig hilsen,
+[Bedriftsnavn]`,
+      },
+      {
+        day: 30,
+        subject: 'Sjekk etter en måned – alt ok?',
+        preview: 'En liten sjekk fra oss...',
+        body: `Hei [Fornavn],
+
+En måned har gått siden vi gjorde jobben hos deg. Vi tar en liten sjekk:
+
+Alt fungerer som det skal? Ingen problemer eller spørsmål?
+
+Hvis du trenger noe – enten det er service, vedlikehold eller et nytt prosjekt – er vi bare et kall unna.
+
+[Telefon] | [E-post]
+
+Med vennlig hilsen,
+[Bedriftsnavn]`,
+      },
+    ],
+  },
+  {
+    id: 'anmeldelse',
+    name: 'Be om anmeldelse',
+    description: 'Automatisk forespørsel om Google-anmeldelse til fornøyde kunder.',
+    trigger: 'Trigger: 2 dager etter fullført jobb',
+    icon: Star,
+    color: 'text-yellow-700',
+    bg: 'bg-yellow-100',
+    active: false,
+    steps: [
+      {
+        day: 2,
+        subject: '[Fornavn], kan du hjelpe oss med en anmeldelse?',
+        preview: 'Det tar bare 2 minutter...',
+        body: `Hei [Fornavn],
+
+Vi håper du er fornøyd med jobben vi gjorde for deg!
+
+Vi er en liten bedrift, og anmeldelser fra fornøyde kunder betyr enormt mye for oss. Vil du ta deg 2 minutter til å skrive en kort anmeldelse?
+
+👉 Klikk her: [LENKE TIL GOOGLE]
+
+Det trenger ikke være langt – selv en stjerne og en linje gjør stor forskjell.
+
+Tusen takk på forhånd!
+
+Med vennlig hilsen,
+[Bedriftsnavn]`,
+      },
+      {
+        day: 7,
+        subject: 'Husk anmeldelsen – det hjelper oss masse',
+        preview: 'Husker du å gi oss en anmeldelse?',
+        body: `Hei [Fornavn],
+
+Vi sendte deg en forespørsel for noen dager siden – kanskje den druknet i innboksen?
+
+Hvis du er fornøyd med jobben vi gjorde, setter vi stor pris på om du tar deg tid:
+
+👉 [LENKE TIL GOOGLE]
+
+Takk uansett – og ikke nøl med å kontakte oss ved behov!
+
+Med vennlig hilsen,
+[Bedriftsnavn]`,
+      },
+    ],
+  },
+  {
+    id: 'reaktivering',
+    name: 'Inaktiv kunde – reaktivering',
+    description: 'Vekk opp kunder du ikke har hørt fra på 60+ dager.',
+    trigger: 'Trigger: 60 dager siden siste kontakt',
+    icon: ArrowRight,
     color: 'text-purple-700',
     bg: 'bg-purple-100',
     active: false,
     steps: [
-      { day: 0, subject: 'Du nærmer deg grensen din', preview: 'Hva skjer nar du nar maks?', body: `Hei [Fornavn],
+      {
+        day: 0,
+        subject: 'Hei [Fornavn] – det er en stund siden vi snakket',
+        preview: 'Vi tenkte på deg...',
+        body: `Hei [Fornavn],
 
-Du har na brukt over 80% av lead-kvoten din denne maneden.
+Det er en god stund siden vi sist hørtes – og vi ønsket bare å ta kontakt og si hei.
 
-Nar du nar 100 leads, slutter nye leads a komme inn — og du mister potensielle kunder.
+Har du noen prosjekter på gang? Ting du har tenkt å fikse, men ikke fått gjort noe med ennå?
 
-For a unnga dette, oppgrader til Pro — det gir deg 500 leads/mnd, ubegrenset fakturaer og automatiske kampanjer.
+Vi er her når du trenger oss – bare ta kontakt så ser vi på det sammen.
 
-Se Pro-planen: [LENKE]
+[Telefon] | [E-post]
 
-FlowPilot-teamet` },
-      { day: 3, subject: 'Slik tjener Pro-kunder 40% mer', preview: 'Reelle tall fra kunder', body: `Hei [Fornavn],
+Med vennlig hilsen,
+[Bedriftsnavn]`,
+      },
+      {
+        day: 7,
+        subject: 'Sesongsjekk – bør du bestille nå?',
+        preview: 'Ikke vent for lenge...',
+        body: `Hei [Fornavn],
 
-Pro-kunder bruker i gjennomsnitt 3 funksjoner Starter ikke har:
-- Automatiske kampanjer til eksisterende kunder
-- Lead ROI-sporing (vet hva som loner seg)
-- Ubegrenset fakturaer og prosjekter
+Mange av kundene våre bestiller [tjenestetype] nå i [sesong/måned] – og vi begynner å bli godt booket.
 
-Oppgrader neste betaling: [LENKE]
+Bruker du oss igjen i år? Da er det lurt å melde seg opp tidlig så vi kan sette av tid til deg.
 
-FlowPilot-teamet` },
+Svar på denne e-posten eller ring oss på [telefon].
+
+Med vennlig hilsen,
+[Bedriftsnavn]`,
+      },
+      {
+        day: 21,
+        subject: 'Et eksklusivt tilbud til deg som eksisterende kunde',
+        preview: 'Kun for deg...',
+        body: `Hei [Fornavn],
+
+Fordi du er kunde hos oss, ønsker vi å gi deg et eksklusivt tilbud:
+
+[BESKRIV TILBUDET – rabatt, gratis tillegg, prioritert booking, etc.]
+
+Tilbudet gjelder til [DATO].
+
+Ta kontakt for å benytte deg av det:
+[Telefon] | [E-post]
+
+Med vennlig hilsen,
+[Bedriftsnavn]`,
+      },
     ],
   },
   {
-    id: 'winback',
-    name: 'Gjenvin tidligere kunder',
-    description: 'Kontakter kunder som kansellerte for 30+ dager siden med nytt tilbud.',
-    trigger: 'Trigger: 30 dager etter kansellering',
-    icon: Users,
-    color: 'text-amber-700',
-    bg: 'bg-amber-100',
+    id: 'sesong',
+    name: 'Sesongkampanje',
+    description: 'Send til hele kundelisten din ved sesongstart, høytider eller kampanjer.',
+    trigger: 'Trigger: manuell utsending / dato-basert',
+    icon: Mail,
+    color: 'text-rose-700',
+    bg: 'bg-rose-100',
     active: false,
     steps: [
-      { day: 0, subject: 'Vi savner deg — og vi har forbedret oss', preview: 'Hva er nytt i FlowPilot', body: `Hei [Fornavn],
+      {
+        day: 0,
+        subject: '[Sesong] er her – bestill mens det er ledig!',
+        preview: 'Vi har åpnet kalenderen...',
+        body: `Hei [Fornavn],
 
-Siden du forlot oss har vi lagt til [OPPDATERINGER].
+[Sesong/periode] er i gang, og vi har åpnet opp for bestillinger!
 
-Mange av de tingene du kanskje manglet da er na laget.
+[Beskriv hva dere tilbyr i sesongen]
 
-Vil du prove igjen — vi tilbyr deg 1 maned til halv pris: [KODE]
+Vi blir fort fullbooket – så ikke vent for lenge.
 
-FlowPilot-teamet` },
+Book din plass: [LENKE] eller ring oss på [telefon].
+
+Med vennlig hilsen,
+[Bedriftsnavn]`,
+      },
+      {
+        day: 5,
+        subject: 'Siste ledige plasser for [sesong]',
+        preview: 'Knapt med tid igjen...',
+        body: `Hei [Fornavn],
+
+Vi har noen få ledige plasser igjen for [sesong/periode].
+
+Vil du sikre deg en tid? Ta kontakt nå:
+
+📞 [Telefon]
+📬 Svar på denne e-posten
+🌐 [Bestillingslenke]
+
+Med vennlig hilsen,
+[Bedriftsnavn]`,
+      },
     ],
   },
 ];
@@ -263,7 +341,7 @@ export default function EmailSequencesPage() {
           <Mail className="h-5 w-5 text-blue-500" />
           <h1 className="text-2xl font-bold text-slate-900">E-postsekvenser</h1>
         </div>
-        <p className="text-slate-500 text-sm">Automatiske e-postrekker som følger opp, selger og redder churn — uten at du trenger a lofte en finger.</p>
+        <p className="text-slate-500 text-sm">Ferdige e-postsekvenser du kan tilpasse og sende til kundene dine. Velg en mal, rediger teksten og aktiver automatisk utsending.</p>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">

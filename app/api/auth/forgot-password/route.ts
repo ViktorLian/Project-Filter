@@ -80,7 +80,7 @@ export async function POST(req: Request) {
 
     // Send the email ourselves via Resend — reliable delivery to Outlook/Gmail
     const { error: sendError } = await resend.emails.send({
-      from: 'FlowPilot <noreply@flowpilot.no>',
+      from: 'FlowPilot <onboarding@resend.dev>',
       to: email,
       subject: 'Tilbakestill passordet ditt – FlowPilot',
       html: `
