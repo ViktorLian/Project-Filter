@@ -67,6 +67,26 @@ export default function InboxPage() {
   const [activeConvo, setActiveConvo] = useState<Conversation>(CONVOS[0]);
   const [replyText, setReplyText] = useState('');
   const [search, setSearch] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
+
+  async function generateAiReply() {
+    setAiLoading(true);
+    try {
+      const lastMessages = MESSAGES.slice(-4).map(m => `${m.isMe ? 'Selger' : activeConvo.name}: ${m.text}`).join('\n');
+      const res = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: `Du er en norsk kundeservicemedarbeider for en håndverksbedrift. Skriv et profesjonelt, vennlig svar på denne samtalen. Bruk norsk bokmål. Svar direkte – ikke inkluder forklaring eller intro.\n\nSamtale:\n${lastMessages}\n\nSvar fra selger:`,
+          history: [],
+        }),
+      });
+      const data = await res.json();
+      if (data.reply) setReplyText(data.reply);
+    } finally {
+      setAiLoading(false);
+    }
+  }
 
   const filtered = CONVOS.filter((c) => {
     const chMatch = activeChannel === 'all' || c.channel === activeChannel;
@@ -193,9 +213,9 @@ export default function InboxPage() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <button className="flex items-center gap-1.5 text-xs bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 px-3 py-1.5 rounded-lg font-medium transition">
-              <Bot className="h-3.5 w-3.5" />
-              AI Svar
+            <button onClick={generateAiReply} disabled={aiLoading} className="flex items-center gap-1.5 text-xs bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 px-3 py-1.5 rounded-lg font-medium transition disabled:opacity-50">
+              <Bot className={`h-3.5 w-3.5 ${aiLoading ? 'animate-spin' : ''}`} />
+              {aiLoading ? 'Genererer...' : 'AI Svar'}
             </button>
             <button className="p-2 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition">
               <MoreHorizontal className="h-4 w-4" />
@@ -252,8 +272,9 @@ export default function InboxPage() {
               <div className="flex gap-2">
                 <button className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200 transition"><Paperclip className="h-4 w-4" /></button>
                 <button className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200 transition"><Smile className="h-4 w-4" /></button>
-                <button className="flex items-center gap-1 text-xs text-purple-600 hover:text-purple-700 px-2 py-1.5 rounded-lg hover:bg-purple-50 transition font-medium">
-                  <Bot className="h-3.5 w-3.5" /> Generer svar
+                <button onClick={generateAiReply} disabled={aiLoading} className="flex items-center gap-1 text-xs text-purple-600 hover:text-purple-700 px-2 py-1.5 rounded-lg hover:bg-purple-50 transition font-medium disabled:opacity-50">
+                  <Bot className={`h-3.5 w-3.5 ${aiLoading ? 'animate-spin' : ''}`} />
+                  {aiLoading ? 'Genererer...' : 'Generer svar'}
                 </button>
               </div>
               <button

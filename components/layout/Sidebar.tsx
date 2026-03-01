@@ -6,46 +6,53 @@ import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import {
   LayoutDashboard, MessageSquare, Calendar, Users, GitBranch,
-  Receipt, Megaphone, Zap, FileText, Star,
-  BarChart3, Bot, Settings, Package, Briefcase,
-  Search, LogOut, DollarSign, Map, ChevronRight
+  Receipt, Megaphone, Zap, FileText, Star, CheckSquare, FileCheck,
+  BarChart3, Bot, Settings, Package, Briefcase, Newspaper, Users2, Sparkles, Globe,
+  Search, LogOut, DollarSign, Map, ChevronRight, ChevronRight as ChevRight
 } from 'lucide-react';
+const Globe2 = Globe;
 import { signOut, useSession } from 'next-auth/react';
 
 // ─── Navigation structure ──────────────────────────────────────────────────────
 // Top-level items: each goes to a hub page with tabs for sub-features
 
-type NavSection = { section: string };
+type NavSection = { section: string; hub?: string };
 type NavItem = { section?: never; href: string; label: string; icon: React.ElementType; badge?: string; active?: (p: string) => boolean };
 type NavEntry = NavSection | NavItem;
 
 const NAV: NavEntry[] = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, active: (p) => p === '/dashboard' },
 
-  { section: 'Operasjon' },
+  { section: 'Operasjon', hub: '/dashboard/hub/operasjon' },
   { href: '/dashboard/inbox', label: 'Innboks', icon: MessageSquare, badge: 'NY' },
   { href: '/dashboard/calendar', label: 'Kalender', icon: Calendar },
   { href: '/dashboard/customers', label: 'Kontakter', icon: Users },
   { href: '/dashboard/pipeline', label: 'Muligheter', icon: GitBranch },
   { href: '/dashboard/jobs', label: 'Jobber', icon: Briefcase },
+  { href: '/dashboard/tasks', label: 'Oppgaver', icon: CheckSquare },
 
-  { section: 'Økonomi' },
+  { section: 'Økonomi', hub: '/dashboard/hub/okonomi' },
   { href: '/dashboard/invoices', label: 'Fakturaer', icon: Receipt },
   { href: '/dashboard/cashflow', label: 'Økonomi', icon: DollarSign },
   { href: '/dashboard/inventory', label: 'Lager', icon: Package },
+  { href: '/dashboard/proposals', label: 'Tilbud', icon: FileCheck },
 
-  { section: 'Vekst' },
+  { section: 'Vekst', hub: '/dashboard/hub/vekst' },
   { href: '/dashboard/campaigns', label: 'Markedsføring', icon: Megaphone },
   { href: '/dashboard/workflows', label: 'Automatisering', icon: Zap },
   { href: '/dashboard/forms', label: 'Skjemaer', icon: FileText },
   { href: '/dashboard/review-gatekeeper', label: 'Omdømme', icon: Star },
+  { href: '/dashboard/social-planner', label: 'Sosiale medier', icon: Newspaper },
+  { href: '/dashboard/affiliates', label: 'Affiliates', icon: Users2 },
 
-  { section: 'Innsikt' },
+  { section: 'Innsikt', hub: '/dashboard/hub/innsikt' },
   { href: '/dashboard/analytics', label: 'Analyse', icon: BarChart3 },
   { href: '/dashboard/ai-assistant', label: 'AI Assistent', icon: Bot },
   { href: '/dashboard/google-maps', label: 'Google / SEO', icon: Map },
+  { href: '/dashboard/creative-generator', label: 'Kreativ Gen.', icon: Sparkles },
 
   { section: 'System' },
+  { href: '/dashboard/client-portal', label: 'Kundeportal', icon: Globe2 },
   { href: '/dashboard/settings', label: 'Innstillinger', icon: Settings },
 ];
 
@@ -120,6 +127,14 @@ export default function Sidebar() {
         }).map((item, idx) => {
           if ('section' in item) {
             if (collapsed) return null;
+            if (item.hub) {
+              return (
+                <Link key={idx} href={item.hub} className="flex items-center justify-between px-3 pt-4 pb-1 group">
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-600 group-hover:text-slate-400 transition select-none">{item.section}</p>
+                  <ChevronRight className="h-3 w-3 text-slate-700 group-hover:text-slate-400 transition" />
+                </Link>
+              );
+            }
             return (
               <p key={idx} className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-600 select-none">
                 {item.section}
