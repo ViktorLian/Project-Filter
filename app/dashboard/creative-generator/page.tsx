@@ -44,9 +44,14 @@ export default function CreativeGeneratorPage() {
   const [results, setResults] = useState<GeneratedItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [variants, setVariants] = useState(2);
+  const [validationError, setValidationError] = useState('');
 
   async function generate() {
-    if (!industry || !service) return;
+    setValidationError('');
+    if (!industry || !service) {
+      setValidationError('Du må fylle inn bransje og tjeneste/produkt før du kan generere innhold.');
+      return;
+    }
     setLoading(true);
     setResults([]);
     try {
@@ -150,11 +155,17 @@ Norsk bokmål. Konkret, engasjerende og klar for bruk uten endringer.`,
           </div>
         </div>
 
-        <button onClick={generate} disabled={loading || !industry || !service}
+        <button onClick={generate} disabled={loading}
           className="flex items-center gap-2 rounded-xl bg-purple-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-purple-700 disabled:opacity-50 transition-colors shadow-sm">
           <Wand2 className="h-4 w-4" />
           {loading ? 'Genererer...' : 'Generer innhold'}
         </button>
+
+        {validationError && (
+          <p className="text-sm text-red-500 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+            ⚠️ {validationError}
+          </p>
+        )}
       </div>
 
       {/* Results */}

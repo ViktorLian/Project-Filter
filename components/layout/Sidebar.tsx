@@ -5,314 +5,199 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
 import {
-  LayoutDashboard, FileText, BarChart3, Settings, DollarSign, Receipt,
-  Users, Briefcase, ChevronLeft, ChevronRight, ChevronDown, ChevronUp,
-  Bot, Brain, Calendar, Map, Zap, TrendingUp, Target, BookOpen,
-  MessageSquare, Star, Bell, RefreshCw, Lightbulb, PieChart,
-  ClipboardList, Award, Shield, Rocket, Activity, Gift, Sparkles, GraduationCap,
-  HelpCircle, Mail, Calculator, Wand2, Clock, Megaphone, Layout,
-  Package, CheckSquare, FlaskConical, AlertTriangle, GitBranch, BookMarked,
-  Gauge, Sliders, Dna, Landmark, Cpu, TrendingDown, Globe, Flame, Search, Share2
+  LayoutDashboard, MessageSquare, Calendar, Users, GitBranch,
+  Receipt, Megaphone, Zap, FileText, Star,
+  BarChart3, Bot, Settings, Package, Briefcase,
+  Search, LogOut, DollarSign, Map, ChevronRight
 } from 'lucide-react';
+import { signOut, useSession } from 'next-auth/react';
 
-interface NavItem { href: string; label: string; icon: React.ElementType }
-interface NavGroup { label: string; icon: React.ElementType; color: string; items: NavItem[] }
+// ─── Navigation structure ──────────────────────────────────────────────────────
+// Top-level items: each goes to a hub page with tabs for sub-features
 
-const navGroups: NavGroup[] = [
-  {
-    label: '🔥 Signatur',
-    icon: Flame,
-    color: 'text-rose-400',
-    items: [
-      { href: '/dashboard/nervous-system', label: 'Business Nervesystem', icon: Activity },
-      { href: '/dashboard/profit-intelligence', label: 'Profit Intelligence', icon: TrendingUp },
-      { href: '/dashboard/market-engine', label: 'Market Domination', icon: Globe },
-      { href: '/dashboard/self-healing', label: 'Self-Healing Company', icon: RefreshCw },
-      { href: '/dashboard/crisis-proof', label: 'Crisis-Proof Arch.', icon: Shield },
-    ],
-  },
-  {
-    label: 'Oversikt',
-    icon: LayoutDashboard,
-    color: 'text-blue-400',
-    items: [
-      { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-      { href: '/dashboard/analytics', label: 'Analyse', icon: BarChart3 },
-      { href: '/dashboard/kpi-tracker', label: 'KPI-oversikt', icon: Target },
-      { href: '/dashboard/calendar', label: 'Kalender', icon: Calendar },
-      { href: '/dashboard/speed-to-lead', label: 'Speed to Lead', icon: Zap },
-    ],
-  },
-  {
-    label: 'Samtaler & CRM',
-    icon: MessageSquare,
-    color: 'text-cyan-400',
-    items: [
-      { href: '/dashboard/inbox', label: 'Innboks', icon: MessageSquare },
-      { href: '/dashboard/leads', label: 'Leads', icon: FileText },
-      { href: '/dashboard/customers', label: 'Kunder', icon: Users },
-      { href: '/dashboard/proposals', label: 'Tilbud', icon: ClipboardList },
-      { href: '/dashboard/pipeline', label: 'Jobbpipeline', icon: GitBranch },
-      { href: '/dashboard/follow-up', label: 'Smart Oppfølging', icon: Bell },
-    ],
-  },
-  {
-    label: 'Markedsføring',
-    icon: Megaphone,
-    color: 'text-pink-400',
-    items: [
-      { href: '/dashboard/social-planner', label: 'Social Planner', icon: Share2 },
-      { href: '/dashboard/campaigns', label: 'Kampanjer', icon: Rocket },
-      { href: '/dashboard/campaign-builder', label: 'Kampanjebygger', icon: Megaphone },
-      { href: '/dashboard/creative-generator', label: 'Kreativ Generator', icon: Wand2 },
-      { href: '/dashboard/email-sequences', label: 'E-postsekvenser', icon: Mail },
-      { href: '/dashboard/marketing-calendar', label: 'Markedskalender', icon: Calendar },
-      { href: '/dashboard/google-maps', label: 'Google Maps', icon: Map },
-    ],
-  },
-  {
-    label: 'Automatisering',
-    icon: Zap,
-    color: 'text-orange-400',
-    items: [
-      { href: '/dashboard/workflows', label: 'Arbeidsflyt-bygger', icon: Zap },
-      { href: '/dashboard/forms', label: 'Skjemaer', icon: FileText },
-      { href: '/dashboard/chatbot-embed', label: 'Chatbot på nettside', icon: Bot },
-      { href: '/dashboard/auto-backoffice', label: 'Autonom Backoffice', icon: Cpu },
-      { href: '/dashboard/contract-reminders', label: 'Kontraktpåminnelser', icon: Bell },
-      { href: '/dashboard/lost-leads', label: 'Tapte Leads', icon: RefreshCw },
-    ],
-  },
-  {
-    label: 'Økonomi',
-    icon: DollarSign,
-    color: 'text-yellow-400',
-    items: [
-      { href: '/dashboard/jobs', label: 'Jobber', icon: Briefcase },
-      { href: '/dashboard/invoices', label: 'Fakturaer', icon: Receipt },
-      { href: '/dashboard/cashflow', label: 'Cash Flow', icon: TrendingUp },
-      { href: '/dashboard/profit-tracker', label: 'Fortjenestesporing', icon: PieChart },
-      { href: '/dashboard/price-calculator', label: 'Prisskalkulator', icon: Calculator },
-      { href: '/dashboard/regnskap', label: 'Regnskap', icon: Receipt },
-      { href: '/dashboard/time-tracking', label: 'Timeregistrering', icon: Clock },
-    ],
-  },
-  {
-    label: 'Omdømme',
-    icon: Star,
-    color: 'text-amber-400',
-    items: [
-      { href: '/dashboard/review-gatekeeper', label: 'Review Gatekeeper', icon: Shield },
-      { href: '/dashboard/reputation', label: 'Omdømme-sentral', icon: Star },
-      { href: '/dashboard/feedback', label: 'Tilbakemeldinger', icon: Star },
-      { href: '/dashboard/tilleggstjenester', label: 'Tilleggstjenester', icon: Star },
-    ],
-  },
-  {
-    label: 'AI Verktøy',
-    icon: Brain,
-    color: 'text-purple-400',
-    items: [
-      { href: '/dashboard/fp-score', label: 'FlowPilot Score™', icon: Gauge },
-      { href: '/dashboard/business-genome', label: 'Business Genome', icon: Dna },
-      { href: '/dashboard/ai-assistant', label: 'AI Salgsassistent', icon: Bot },
-      { href: '/dashboard/ai-crm', label: 'AI CRM Autofill', icon: Brain },
-      { href: '/dashboard/win-loss', label: 'Vinn/Tap Analyse', icon: PieChart },
-      { href: '/dashboard/meeting-notes', label: 'Møtenotat AI', icon: MessageSquare },
-      { href: '/dashboard/objection-handler', label: 'Innvending Analyse', icon: Shield },
-      { href: '/dashboard/business-memory', label: 'Bedriftshukommelse', icon: Brain },
-      { href: '/dashboard/decision-assistant', label: 'Beslutningsassistent', icon: HelpCircle },
-      { href: '/dashboard/opportunity-radar', label: 'Mulighetssensor', icon: BarChart3 },
-      { href: '/dashboard/business-coach', label: 'Bedriftscoach', icon: Sparkles },
-      { href: '/dashboard/norsk-bi', label: 'Norsk Markedsdata', icon: Activity },
-    ],
-  },
-  {
-    label: 'Vekst',
-    icon: TrendingUp,
-    color: 'text-emerald-400',
-    items: [
-      { href: '/dashboard/digital-twin', label: 'Digital Tvilling', icon: Sliders },
-      { href: '/dashboard/profit-accelerator', label: 'Profit Accelerator', icon: TrendingDown },
-      { href: '/dashboard/affiliates', label: 'Affiliate-program', icon: Gift },
-      { href: '/dashboard/communities', label: 'Communities', icon: Users },
-      { href: '/dashboard/funding', label: 'Finansierings-hub', icon: Landmark },
-      { href: '/dashboard/roi-tracker', label: 'ROI Oversikt', icon: Award },
-      { href: '/dashboard/benchmarks', label: 'Bransjesammenligning', icon: Activity },
-      { href: '/dashboard/referral', label: 'Vervprogram', icon: Gift },
-      { href: '/dashboard/growth-playbook', label: 'Vekstplan', icon: Lightbulb },
-      { href: '/dashboard/growth-planner', label: 'Vekstplaner', icon: TrendingUp },
-      { href: '/dashboard/upsell-coach', label: 'Vekst-coach', icon: Sparkles },
-      { href: '/dashboard/negotiation-coach', label: 'Forhandlingscoach', icon: MessageSquare },
-    ],
-  },
-  {
-    label: 'Drift & System',
-    icon: Settings,
-    color: 'text-slate-400',
-    items: [
-      { href: '/dashboard/client-portal', label: 'Kundeportal', icon: Globe },
-      { href: '/dashboard/team', label: 'Team og roller', icon: Users },
-      { href: '/dashboard/inventory', label: 'Lager & Ressurser', icon: Package },
-      { href: '/dashboard/process-vault', label: 'Prosessbibliotek', icon: ClipboardList },
-      { href: '/dashboard/procedures', label: 'Prosedyre-bank', icon: BookMarked },
-      { href: '/dashboard/operations-hub', label: 'Driftssentral', icon: Layout },
-      { href: '/dashboard/compliance', label: 'Compliance & HMS', icon: Shield },
-      { href: '/dashboard/risk', label: 'Risiko-register', icon: AlertTriangle },
-      { href: '/dashboard/risk-monitor', label: 'Risikomonitor', icon: Shield },
-      { href: '/dashboard/acquisition-readiness', label: 'Selskapsberedskap', icon: Award },
-      { href: '/dashboard/revenue-lab', label: 'Inntekt & Vekst', icon: FlaskConical },
-      { href: '/dashboard/onboarding', label: 'Kom i gang', icon: GraduationCap },
-      { href: '/dashboard/manual', label: 'Brukermanual', icon: BookOpen },
-      { href: '/dashboard/settings', label: 'Innstillinger', icon: Settings },
-    ],
-  },
+const NAV: Array<{
+  section?: string;
+  href: string;
+  label: string;
+  icon: React.ElementType;
+  badge?: string;
+  active?: (p: string) => boolean;
+}> = [
+  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, active: (p) => p === '/dashboard' },
+
+  { section: 'Operasjon' },
+  { href: '/dashboard/inbox', label: 'Innboks', icon: MessageSquare, badge: 'NY' },
+  { href: '/dashboard/calendar', label: 'Kalender', icon: Calendar },
+  { href: '/dashboard/customers', label: 'Kontakter', icon: Users },
+  { href: '/dashboard/pipeline', label: 'Muligheter', icon: GitBranch },
+  { href: '/dashboard/jobs', label: 'Jobber', icon: Briefcase },
+
+  { section: 'Økonomi' },
+  { href: '/dashboard/invoices', label: 'Fakturaer', icon: Receipt },
+  { href: '/dashboard/cashflow', label: 'Økonomi', icon: DollarSign },
+  { href: '/dashboard/inventory', label: 'Lager', icon: Package },
+
+  { section: 'Vekst' },
+  { href: '/dashboard/campaigns', label: 'Markedsføring', icon: Megaphone },
+  { href: '/dashboard/workflows', label: 'Automatisering', icon: Zap },
+  { href: '/dashboard/forms', label: 'Skjemaer', icon: FileText },
+  { href: '/dashboard/review-gatekeeper', label: 'Omdømme', icon: Star },
+
+  { section: 'Innsikt' },
+  { href: '/dashboard/analytics', label: 'Analyse', icon: BarChart3 },
+  { href: '/dashboard/ai-assistant', label: 'AI Assistent', icon: Bot },
+  { href: '/dashboard/google-maps', label: 'Google / SEO', icon: Map },
+
+  { section: 'System' },
+  { href: '/dashboard/settings', label: 'Innstillinger', icon: Settings },
 ];
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const [collapsed, setCollapsed] = useState(false);
+  const { data: session } = useSession();
   const [search, setSearch] = useState('');
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
-    '🔥 Signatur': false, 'Oversikt': true, 'Samtaler & CRM': false,
-    'Markedsføring': false, 'Automatisering': false, 'Økonomi': false,
-    'Omdømme': false, 'Vekst': false, 'AI Verktøy': false, 'Drift & System': false,
-  });
-
-  const toggleGroup = (label: string) =>
-    setOpenGroups((prev) => {
-      const isCurrentlyOpen = !!prev[label];
-      // Close all, then toggle clicked one (single-open accordion)
-      const allClosed = Object.fromEntries(Object.keys(prev).map((k) => [k, false]));
-      return { ...allClosed, [label]: !isCurrentlyOpen };
-    });
+  const [collapsed, setCollapsed] = useState(false);
 
   const q = search.toLowerCase().trim();
 
+  const initials = (session?.user?.name || 'FP')
+    .split(' ')
+    .map((w: string) => w[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
+
   return (
-    <aside
-      className={cn(
-        'relative flex flex-col bg-slate-900 text-slate-100 transition-all duration-300 ease-in-out',
-        'h-screen sticky top-0 flex-shrink-0 overflow-y-auto',
-        collapsed ? 'w-16' : 'w-60'
-      )}
-    >
+    <aside className={cn(
+      'relative flex flex-col bg-[#1c1c27] text-slate-200 h-screen sticky top-0 flex-shrink-0 overflow-y-auto transition-all duration-200',
+      collapsed ? 'w-[56px]' : 'w-[220px]'
+    )}>
+
       {/* Logo */}
-      <div className={cn(
-        'flex items-center gap-3 px-4 py-4 border-b border-slate-800',
-        collapsed && 'justify-center px-2'
-      )}>
-        <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0">
-          <span className="text-white font-bold text-xs">FP</span>
+      <div className={cn('flex items-center gap-2.5 px-3 py-3.5 border-b border-white/8', collapsed && 'justify-center px-2')}>
+        <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-900/40">
+          <span className="text-white font-black text-xs tracking-tight">FP</span>
         </div>
         {!collapsed && (
-          <div className="min-w-0">
-            <h1 className="text-sm font-bold text-white truncate">FlowPilot</h1>
-            <p className="text-xs text-slate-400">CRM & AI</p>
+          <div>
+            <p className="text-[13px] font-bold text-white leading-tight">FlowPilot</p>
+            <p className="text-[10px] text-slate-500">Growth OS</p>
           </div>
         )}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className={cn('ml-auto p-1 rounded-md hover:bg-white/8 text-slate-500 hover:text-slate-300 transition', collapsed && 'hidden')}
+        >
+          <ChevronRight className="h-3.5 w-3.5 rotate-180" />
+        </button>
       </div>
 
-      {/* Collapse toggle */}
-      <button
-        onClick={() => setCollapsed(!collapsed)}
-        className="absolute -right-3 top-5 z-50 flex h-6 w-6 items-center justify-center rounded-full bg-slate-700 border border-slate-600 text-slate-300 hover:bg-blue-600 hover:text-white hover:border-blue-500 transition-all shadow-lg"
-        title={collapsed ? 'Utvid meny' : 'Minimer meny'}
-      >
-        {collapsed ? <ChevronRight className="h-3 w-3" /> : <ChevronLeft className="h-3 w-3" />}
-      </button>
+      {/* Expand button when collapsed */}
+      {collapsed && (
+        <button onClick={() => setCollapsed(false)} className="flex justify-center py-2 hover:bg-white/8 transition">
+          <ChevronRight className="h-3.5 w-3.5 text-slate-500" />
+        </button>
+      )}
 
-      {/* Search bar */}
+      {/* Search */}
       {!collapsed && (
-        <div className="px-3 py-2 border-b border-slate-800">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
+        <div className="px-2.5 py-2 border-b border-white/8">
+          <div className="flex items-center gap-2 bg-white/6 rounded-lg px-2.5 py-1.5 border border-white/8">
+            <Search className="h-3.5 w-3.5 text-slate-500 flex-shrink-0" />
             <input
-              type="text"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Søk i meny..."
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500/30 transition"
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Søk..."
+              className="bg-transparent text-xs text-slate-300 placeholder-slate-600 outline-none w-full"
             />
           </div>
         </div>
       )}
 
-      {/* Nav */}
-      <nav className="flex-1 py-2 space-y-0.5">
-        {navGroups.map((group) => {
-          const GroupIcon = group.icon;
-          // Filter items by search
-          const filteredItems = q
-            ? group.items.filter((i) => i.label.toLowerCase().includes(q))
-            : group.items;
-          if (q && filteredItems.length === 0) return null;
-          // When searching, always expand; otherwise use state
-          const isOpen = q ? true : (openGroups[group.label] ?? true);
-          const hasActive = group.items.some((item) =>
-            item.href === '/dashboard' ? pathname === '/dashboard' : pathname.startsWith(item.href)
-          );
+      {/* Nav items */}
+      <nav className="flex-1 py-1 overflow-y-auto">
+        {NAV.filter(item => {
+          if (item.section) return true; // always show section headers
+          if (!q) return true;
+          return item.label.toLowerCase().includes(q);
+        }).map((item, idx) => {
+          if (item.section) {
+            if (collapsed) return null;
+            return (
+              <p key={idx} className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-600 select-none">
+                {item.section}
+              </p>
+            );
+          }
+
+          const Icon = item.icon!;
+          const isActive = item.active
+            ? item.active(pathname)
+            : (item.href !== '/dashboard' && pathname.startsWith(item.href));
 
           return (
-            <div key={group.label}>
-              {!collapsed && (
-                <button
-                  onClick={() => toggleGroup(group.label)}
-                  className={cn(
-                    'w-full flex items-center justify-between px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wider transition-colors',
-                    hasActive ? 'text-white' : 'text-slate-500 hover:text-slate-300'
-                  )}
-                >
-                  <div className="flex items-center gap-2">
-                    <GroupIcon className={cn('h-3 w-3', group.color)} />
-                    {group.label}
-                  </div>
-                  {isOpen ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-                </button>
+            <Link
+              key={item.href}
+              href={item.href!}
+              title={collapsed ? item.label : undefined}
+              className={cn(
+                'flex items-center gap-2.5 mx-1.5 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-all group relative',
+                isActive
+                  ? 'bg-blue-600/20 text-blue-300'
+                  : 'text-slate-400 hover:bg-white/6 hover:text-slate-200',
+                collapsed && 'justify-center mx-1'
               )}
-
-              {(isOpen || collapsed) && (
-                <div className={cn('space-y-0.5', !collapsed ? 'px-2' : 'px-1 py-1')}>
-                  {filteredItems.map((item) => {
-                    const isActive =
-                      item.href === '/dashboard'
-                        ? pathname === '/dashboard'
-                        : pathname.startsWith(item.href);
-                    const Icon = item.icon;
-
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        title={collapsed ? item.label : undefined}
-                        className={cn(
-                          'flex items-center gap-2.5 rounded-lg py-2 text-sm font-medium transition-all group',
-                          collapsed ? 'justify-center px-2' : 'px-3',
-                          isActive
-                            ? 'bg-blue-600/15 text-blue-300 border border-blue-600/25'
-                            : 'text-slate-400 hover:bg-slate-800 hover:text-slate-100 border border-transparent'
-                        )}
-                      >
-                        <Icon className={cn('h-4 w-4 flex-shrink-0', isActive ? 'text-blue-400' : 'group-hover:text-slate-200')} />
-                        {!collapsed && <span className="truncate text-sm">{item.label}</span>}
-                        {!collapsed && isActive && (
-                          <div className="ml-auto h-1.5 w-1.5 rounded-full bg-blue-400 flex-shrink-0" />
-                        )}
-                      </Link>
-                    );
-                  })}
-                </div>
+            >
+              <Icon className={cn('h-4 w-4 flex-shrink-0', isActive ? 'text-blue-400' : 'text-slate-500 group-hover:text-slate-300')} />
+              {!collapsed && <span className="truncate">{item.label}</span>}
+              {!collapsed && item.badge && (
+                <span className="ml-auto text-[9px] font-bold bg-blue-500 text-white rounded-full px-1.5 py-0.5 leading-none">{item.badge}</span>
               )}
-            </div>
+              {!collapsed && isActive && (
+                <span className="ml-auto h-1.5 w-1.5 rounded-full bg-blue-400 flex-shrink-0" />
+              )}
+              {/* Tooltip when collapsed */}
+              {collapsed && (
+                <span className="pointer-events-none absolute left-full ml-2 whitespace-nowrap text-xs bg-slate-800 text-slate-200 px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                  {item.label}
+                </span>
+              )}
+            </Link>
           );
         })}
       </nav>
 
-      {!collapsed && (
-        <div className="px-4 py-3 border-t border-slate-800">
-          <p className="text-xs text-slate-600 text-center">FlowPilot &copy; 2026</p>
-        </div>
-      )}
+      {/* User + logout */}
+      <div className="border-t border-white/8 px-2.5 py-2.5">
+        {!collapsed ? (
+          <div className="flex items-center gap-2.5">
+            <div className="h-7 w-7 rounded-full bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center flex-shrink-0">
+              <span className="text-white font-bold text-[10px]">{initials}</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-[11px] font-semibold text-slate-200 truncate">{session?.user?.name || 'Bruker'}</p>
+              <p className="text-[10px] text-slate-500 truncate">{session?.user?.email || ''}</p>
+            </div>
+            <button
+              onClick={() => signOut({ callbackUrl: '/login' })}
+              className="p-1.5 rounded-md hover:bg-white/8 text-slate-500 hover:text-red-400 transition"
+              title="Logg ut"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={() => signOut({ callbackUrl: '/login' })}
+            className="flex justify-center w-full py-1 hover:bg-white/8 rounded-md transition"
+            title="Logg ut"
+          >
+            <LogOut className="h-4 w-4 text-slate-500 hover:text-red-400" />
+          </button>
+        )}
+      </div>
     </aside>
   );
 }
+
+
