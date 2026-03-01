@@ -153,10 +153,10 @@ export default function MarketEnginePage() {
             {PLAN_STEPS.map((step, i) => (
               <div key={step.phase} className="flex gap-4">
                 <div className="flex flex-col items-center">
-                  <div className={`h-8 w-8 rounded-full bg-blue-100 border border-blue-300 flex items-center justify-center text-xs font-bold text-blue-600 flex-shrink-0">
+                  <div className="h-8 w-8 rounded-full bg-blue-100 border border-blue-300 flex items-center justify-center text-xs font-bold text-blue-600 flex-shrink-0">
                     {step.phase}
                   </div>
-                  <div className={`w-px h-full bg-slate-200 my-1`} />
+                  {i < PLAN_STEPS.length - 1 && <div className="w-px flex-1 bg-slate-200 my-1" />}
                 </div>
                 <div className="pb-4">
                   <div className="flex items-center gap-2 mb-1">

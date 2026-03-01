@@ -12,7 +12,7 @@ import {
   ClipboardList, Award, Shield, Rocket, Activity, Gift, Sparkles, GraduationCap,
   HelpCircle, Mail, Calculator, Wand2, Clock, Megaphone, Layout,
   Package, CheckSquare, FlaskConical, AlertTriangle, GitBranch, BookMarked,
-  Gauge, Sliders, Dna, Landmark, Cpu, TrendingDown, Globe, Flame, Search
+  Gauge, Sliders, Dna, Landmark, Cpu, TrendingDown, Globe, Flame, Search, Share2
 } from 'lucide-react';
 
 interface NavItem { href: string; label: string; icon: React.ElementType }
@@ -32,26 +32,55 @@ const navGroups: NavGroup[] = [
     ],
   },
   {
-    label: 'Hoved',
+    label: 'Oversikt',
     icon: LayoutDashboard,
     color: 'text-blue-400',
     items: [
-      { href: '/dashboard', label: 'Oversikt', icon: LayoutDashboard },
+      { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
       { href: '/dashboard/analytics', label: 'Analyse', icon: BarChart3 },
       { href: '/dashboard/kpi-tracker', label: 'KPI-oversikt', icon: Target },
       { href: '/dashboard/calendar', label: 'Kalender', icon: Calendar },
+      { href: '/dashboard/speed-to-lead', label: 'Speed to Lead', icon: Zap },
     ],
   },
   {
-    label: 'Salg',
-    icon: Target,
-    color: 'text-emerald-400',
+    label: 'Samtaler & CRM',
+    icon: MessageSquare,
+    color: 'text-cyan-400',
     items: [
+      { href: '/dashboard/inbox', label: 'Innboks', icon: MessageSquare },
       { href: '/dashboard/leads', label: 'Leads', icon: FileText },
       { href: '/dashboard/customers', label: 'Kunder', icon: Users },
       { href: '/dashboard/proposals', label: 'Tilbud', icon: ClipboardList },
       { href: '/dashboard/pipeline', label: 'Jobbpipeline', icon: GitBranch },
       { href: '/dashboard/follow-up', label: 'Smart Oppfølging', icon: Bell },
+    ],
+  },
+  {
+    label: 'Markedsføring',
+    icon: Megaphone,
+    color: 'text-pink-400',
+    items: [
+      { href: '/dashboard/social-planner', label: 'Social Planner', icon: Share2 },
+      { href: '/dashboard/campaigns', label: 'Kampanjer', icon: Rocket },
+      { href: '/dashboard/campaign-builder', label: 'Kampanjebygger', icon: Megaphone },
+      { href: '/dashboard/creative-generator', label: 'Kreativ Generator', icon: Wand2 },
+      { href: '/dashboard/email-sequences', label: 'E-postsekvenser', icon: Mail },
+      { href: '/dashboard/marketing-calendar', label: 'Markedskalender', icon: Calendar },
+      { href: '/dashboard/google-maps', label: 'Google Maps', icon: Map },
+    ],
+  },
+  {
+    label: 'Automatisering',
+    icon: Zap,
+    color: 'text-orange-400',
+    items: [
+      { href: '/dashboard/workflows', label: 'Arbeidsflyt-bygger', icon: Zap },
+      { href: '/dashboard/forms', label: 'Skjemaer', icon: FileText },
+      { href: '/dashboard/chatbot-embed', label: 'Chatbot på nettside', icon: Bot },
+      { href: '/dashboard/auto-backoffice', label: 'Autonom Backoffice', icon: Cpu },
+      { href: '/dashboard/contract-reminders', label: 'Kontraktpåminnelser', icon: Bell },
+      { href: '/dashboard/lost-leads', label: 'Tapte Leads', icon: RefreshCw },
     ],
   },
   {
@@ -66,6 +95,17 @@ const navGroups: NavGroup[] = [
       { href: '/dashboard/price-calculator', label: 'Prisskalkulator', icon: Calculator },
       { href: '/dashboard/regnskap', label: 'Regnskap', icon: Receipt },
       { href: '/dashboard/time-tracking', label: 'Timeregistrering', icon: Clock },
+    ],
+  },
+  {
+    label: 'Omdømme',
+    icon: Star,
+    color: 'text-amber-400',
+    items: [
+      { href: '/dashboard/review-gatekeeper', label: 'Review Gatekeeper', icon: Shield },
+      { href: '/dashboard/reputation', label: 'Omdømme-sentral', icon: Star },
+      { href: '/dashboard/feedback', label: 'Tilbakemeldinger', icon: Star },
+      { href: '/dashboard/tilleggstjenester', label: 'Tilleggstjenester', icon: Star },
     ],
   },
   {
@@ -88,60 +128,42 @@ const navGroups: NavGroup[] = [
     ],
   },
   {
-    label: 'Automatisering',
-    icon: Zap,
-    color: 'text-orange-400',
-    items: [
-      { href: '/dashboard/forms', label: 'Skjemaer', icon: FileText },
-      { href: '/dashboard/auto-backoffice', label: 'Autonom Backoffice', icon: Cpu },
-      { href: '/dashboard/chatbot-embed', label: 'Chatbot på nettside', icon: Bot },
-      { href: '/dashboard/campaigns', label: 'Kampanjer', icon: Rocket },
-      { href: '/dashboard/campaign-builder', label: 'Kampanjebygger', icon: Megaphone },
-      { href: '/dashboard/creative-generator', label: 'Kreativ Generator', icon: Wand2 },
-      { href: '/dashboard/contract-reminders', label: 'Kontraktpåminnelser', icon: Bell },
-      { href: '/dashboard/lost-leads', label: 'Tapte Leads', icon: RefreshCw },
-      { href: '/dashboard/feedback', label: 'Tilbakemeldinger', icon: Star },
-      { href: '/dashboard/email-sequences', label: 'E-postsekvenser', icon: Mail },
-    ],
-  },
-  {
     label: 'Vekst',
     icon: TrendingUp,
-    color: 'text-pink-400',
+    color: 'text-emerald-400',
     items: [
       { href: '/dashboard/digital-twin', label: 'Digital Tvilling', icon: Sliders },
       { href: '/dashboard/profit-accelerator', label: 'Profit Accelerator', icon: TrendingDown },
+      { href: '/dashboard/affiliates', label: 'Affiliate-program', icon: Gift },
+      { href: '/dashboard/communities', label: 'Communities', icon: Users },
       { href: '/dashboard/funding', label: 'Finansierings-hub', icon: Landmark },
-      { href: '/dashboard/reputation', label: 'Omdømme-sentral', icon: Star },
-      { href: '/dashboard/google-maps', label: 'Google Maps', icon: Map },
-      { href: '/dashboard/growth-playbook', label: 'Vekstplan', icon: Lightbulb },
       { href: '/dashboard/roi-tracker', label: 'ROI Oversikt', icon: Award },
-      { href: '/dashboard/benchmarks', label: 'Bransje­sammenligning', icon: Activity },
-      { href: '/dashboard/upsell-coach', label: 'Vekst-coach', icon: Sparkles },
+      { href: '/dashboard/benchmarks', label: 'Bransjesammenligning', icon: Activity },
       { href: '/dashboard/referral', label: 'Vervprogram', icon: Gift },
+      { href: '/dashboard/growth-playbook', label: 'Vekstplan', icon: Lightbulb },
       { href: '/dashboard/growth-planner', label: 'Vekstplaner', icon: TrendingUp },
+      { href: '/dashboard/upsell-coach', label: 'Vekst-coach', icon: Sparkles },
       { href: '/dashboard/negotiation-coach', label: 'Forhandlingscoach', icon: MessageSquare },
-      { href: '/dashboard/marketing-calendar', label: 'Markedskalender', icon: Calendar },
-      { href: '/dashboard/tilleggstjenester', label: 'Tilleggstjenester', icon: Star },
     ],
   },
   {
-    label: 'System',
+    label: 'Drift & System',
     icon: Settings,
     color: 'text-slate-400',
     items: [
-      { href: '/dashboard/onboarding', label: 'Kom i gang', icon: GraduationCap },
-      { href: '/dashboard/manual', label: 'Brukermanual', icon: BookOpen },
+      { href: '/dashboard/client-portal', label: 'Kundeportal', icon: Globe },
       { href: '/dashboard/team', label: 'Team og roller', icon: Users },
+      { href: '/dashboard/inventory', label: 'Lager & Ressurser', icon: Package },
       { href: '/dashboard/process-vault', label: 'Prosessbibliotek', icon: ClipboardList },
       { href: '/dashboard/procedures', label: 'Prosedyre-bank', icon: BookMarked },
+      { href: '/dashboard/operations-hub', label: 'Driftssentral', icon: Layout },
+      { href: '/dashboard/compliance', label: 'Compliance & HMS', icon: Shield },
       { href: '/dashboard/risk', label: 'Risiko-register', icon: AlertTriangle },
       { href: '/dashboard/risk-monitor', label: 'Risikomonitor', icon: Shield },
       { href: '/dashboard/acquisition-readiness', label: 'Selskapsberedskap', icon: Award },
-      { href: '/dashboard/operations-hub', label: 'Driftssentral', icon: Layout },
-      { href: '/dashboard/inventory', label: 'Lager & Ressurser', icon: Package },
-      { href: '/dashboard/compliance', label: 'Compliance & HMS', icon: Shield },
       { href: '/dashboard/revenue-lab', label: 'Inntekt & Vekst', icon: FlaskConical },
+      { href: '/dashboard/onboarding', label: 'Kom i gang', icon: GraduationCap },
+      { href: '/dashboard/manual', label: 'Brukermanual', icon: BookOpen },
       { href: '/dashboard/settings', label: 'Innstillinger', icon: Settings },
     ],
   },
@@ -152,8 +174,9 @@ export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
   const [search, setSearch] = useState('');
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
-    '🔥 Signatur': true, Hoved: true, Salg: true, 'Økonomi': true,
-    'AI Verkøy': false, Automatisering: false, Vekst: false, System: false,
+    '🔥 Signatur': false, 'Oversikt': true, 'Samtaler & CRM': false,
+    'Markedsføring': false, 'Automatisering': false, 'Økonomi': false,
+    'Omdømme': false, 'Vekst': false, 'AI Verktøy': false, 'Drift & System': false,
   });
 
   const toggleGroup = (label: string) =>
