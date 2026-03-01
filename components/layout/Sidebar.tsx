@@ -15,14 +15,11 @@ import { signOut, useSession } from 'next-auth/react';
 // ─── Navigation structure ──────────────────────────────────────────────────────
 // Top-level items: each goes to a hub page with tabs for sub-features
 
-const NAV: Array<{
-  section?: string;
-  href: string;
-  label: string;
-  icon: React.ElementType;
-  badge?: string;
-  active?: (p: string) => boolean;
-}> = [
+type NavSection = { section: string };
+type NavItem = { section?: never; href: string; label: string; icon: React.ElementType; badge?: string; active?: (p: string) => boolean };
+type NavEntry = NavSection | NavItem;
+
+const NAV: NavEntry[] = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, active: (p) => p === '/dashboard' },
 
   { section: 'Operasjon' },
@@ -117,11 +114,11 @@ export default function Sidebar() {
       {/* Nav items */}
       <nav className="flex-1 py-1 overflow-y-auto">
         {NAV.filter(item => {
-          if (item.section) return true; // always show section headers
+          if ('section' in item) return true;
           if (!q) return true;
           return item.label.toLowerCase().includes(q);
         }).map((item, idx) => {
-          if (item.section) {
+          if ('section' in item) {
             if (collapsed) return null;
             return (
               <p key={idx} className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-600 select-none">
@@ -130,7 +127,7 @@ export default function Sidebar() {
             );
           }
 
-          const Icon = item.icon!;
+          const Icon = item.icon;
           const isActive = item.active
             ? item.active(pathname)
             : (item.href !== '/dashboard' && pathname.startsWith(item.href));
@@ -138,7 +135,7 @@ export default function Sidebar() {
           return (
             <Link
               key={item.href}
-              href={item.href!}
+              href={item.href}
               title={collapsed ? item.label : undefined}
               className={cn(
                 'flex items-center gap-2.5 mx-1.5 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-all group relative',
@@ -156,7 +153,6 @@ export default function Sidebar() {
               {!collapsed && isActive && (
                 <span className="ml-auto h-1.5 w-1.5 rounded-full bg-blue-400 flex-shrink-0" />
               )}
-              {/* Tooltip when collapsed */}
               {collapsed && (
                 <span className="pointer-events-none absolute left-full ml-2 whitespace-nowrap text-xs bg-slate-800 text-slate-200 px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50">
                   {item.label}
