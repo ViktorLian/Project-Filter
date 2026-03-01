@@ -48,6 +48,7 @@ const NAV: NavEntry[] = [
   { section: 'Innsikt', hub: '/dashboard/hub/innsikt' },
   { href: '/dashboard/analytics', label: 'Analyse', icon: BarChart3 },
   { href: '/dashboard/ai-assistant', label: 'AI Assistent', icon: Bot },
+  { href: '/dashboard/chatbot-widget', label: 'Chatbot Widget', icon: Globe2 },
   { href: '/dashboard/google-maps', label: 'Google / SEO', icon: Map },
   { href: '/dashboard/creative-generator', label: 'Kreativ Gen.', icon: Sparkles },
 
