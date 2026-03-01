@@ -17,7 +17,7 @@ import { signOut, useSession } from 'next-auth/react';
 // Top-level items: each goes to a hub page with tabs for sub-features
 
 type NavSection = { section: string; hub?: string };
-type NavItem = { section?: never; href: string; label: string; icon: React.ElementType; badge?: string; active?: (p: string) => boolean };
+type NavItem = { href: string; label: string; icon: React.ElementType; badge?: string; active?: (p: string) => boolean };
 type NavEntry = NavSection | NavItem;
 
 const NAV: NavEntry[] = [
