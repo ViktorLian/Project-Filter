@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { DemoBanner } from '@/components/ui/DemoBanner';
 import {
   Star, Shield, TrendingUp, ExternalLink, Settings, Send,
   AlertCircle, CheckCircle, BarChart2, MessageSquare, Mail, Phone,
@@ -52,6 +53,7 @@ export default function ReviewGatekeeperPage() {
 
   return (
     <div className="max-w-5xl mx-auto">
+      <DemoBanner feature="Review Gatekeeper" />
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>

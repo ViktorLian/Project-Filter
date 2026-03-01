@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { DemoBanner } from '@/components/ui/DemoBanner';
 import {
   Calendar, Plus, Facebook, Instagram, Linkedin, Globe,
   Image, Clock, Send, ChevronLeft, ChevronRight, MoreHorizontal,
@@ -72,6 +73,7 @@ export default function SocialPlannerPage() {
 
   return (
     <div className="max-w-7xl mx-auto">
+      <DemoBanner feature="Sosiale medier" />
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>

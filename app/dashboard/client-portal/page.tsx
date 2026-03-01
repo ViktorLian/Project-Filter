@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { DemoBanner } from '@/components/ui/DemoBanner';
 import {
   Users, Globe, Eye, Copy, CheckCircle, Palette, Lock,
   ExternalLink, Settings, Plus, Search, ToggleLeft, ToggleRight,
@@ -51,6 +52,7 @@ export default function ClientPortalPage() {
 
   return (
     <div className="max-w-5xl mx-auto">
+      <DemoBanner feature="Klientportal" />
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>

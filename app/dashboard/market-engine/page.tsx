@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { DemoBanner } from '@/components/ui/DemoBanner';
 import { Map, Target, Rocket, BarChart3, ArrowUpRight, Star, Search, TrendingUp, Globe } from 'lucide-react';
 
 const DISTRICTS = [
@@ -30,6 +31,7 @@ export default function MarketEnginePage() {
 
   return (
     <div className="min-h-full">
+      <DemoBanner feature="Market Engine" />
       {/* Dark header */}
       <div className="-mx-6 -mt-6 mb-6 px-6 pt-8 pb-8 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900">
         <div className="flex items-center gap-3 mb-1">

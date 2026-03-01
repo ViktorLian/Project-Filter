@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { DemoBanner } from '@/components/ui/DemoBanner';
 import {
   Activity, TrendingUp, AlertTriangle,
   DollarSign, Zap, Brain, ArrowUpRight, RefreshCw, Bell,
@@ -125,6 +126,7 @@ export default function NervousSystemPage() {
 
   return (
     <div className="min-h-full">
+      <DemoBanner feature="Business Nervous System" />
       {/* Dark header – bleeds edge to edge by negating parent padding */}
       <div className="-mx-6 -mt-6 mb-6 px-6 pt-8 pb-8 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900">
         <div className="flex items-center justify-between">

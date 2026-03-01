@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { DemoBanner } from '@/components/ui/DemoBanner';
 import { Clock, Zap, AlertCircle, CheckCircle, TrendingDown, TrendingUp, Phone, MessageSquare, Mail, Target, Award, Users } from 'lucide-react';
 
 interface LeadEvent {
@@ -62,6 +63,7 @@ export default function SpeedToLeadPage() {
 
   return (
     <div className="max-w-5xl mx-auto">
+      <DemoBanner feature="Speed to Lead" />
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>

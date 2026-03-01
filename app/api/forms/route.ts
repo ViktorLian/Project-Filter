@@ -8,12 +8,11 @@ import slugify from 'slugify';
 export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    // TEMP: Allow testing without auth
-    // if (!session) {
-    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    // }
+    if (!session) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-    const companyId = session ? ((session.user as any).companyId || (session.user as any).id) : 'demo';
+    const companyId = (session.user as any).companyId || (session.user as any).id;
     const supabase = createAdminClient();
 
     const { data: forms } = await supabase
@@ -32,16 +31,8 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
-    // TEMP: Allow testing without auth
     if (!session) {
-      // Create demo form for testing
-      const body = await req.json();
-      return NextResponse.json({ 
-        id: 'demo-' + Date.now(), 
-        ...body,
-        slug: 'demo-form',
-        created_at: new Date().toISOString()
-      });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const companyId = (session.user as any).companyId || (session.user as any).id;

@@ -1,38 +1,26 @@
-import nodemailer from 'nodemailer'
+import { Resend } from 'resend';
 
-// Gmail SMTP configuration - lazy init to avoid module-level env issues
-function getTransporter() {
-  return nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
-    }
-  })
+// Lazy-init Resend client
+function getResend() {
+  return new Resend(process.env.RESEND_API_KEY);
 }
 
-// Generic email sending function
-export async function sendEmail(
-  to: string,
-  subject: string,
-  html: string
-) {
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    console.log('SMTP not configured - skipping email')
-    return
-  }
+const FROM = process.env.EMAIL_FROM || 'FlowPilot <onboarding@resend.dev>';
 
+// Generic email sending function (Resend)
+export async function sendEmail(to: string, subject: string, html: string) {
+  if (!process.env.RESEND_API_KEY) {
+    console.log('[email] No RESEND_API_KEY – skipping:', subject);
+    return;
+  }
   try {
-    await getTransporter().sendMail({
-      from: process.env.SMTP_USER,
-      to,
-      subject,
-      html
-    })
-    console.log('Email sent to', to)
-  } catch (error) {
-    console.error('Failed to send email:', error)
-    throw error
+    const resend = getResend();
+    const { error } = await resend.emails.send({ from: FROM, to, subject, html });
+    if (error) console.error('[email] Resend error:', error);
+    else console.log('[email] Sent to', to, '–', subject);
+  } catch (err) {
+    console.error('[email] Failed to send:', err);
+    throw err;
   }
 }
 
@@ -43,29 +31,15 @@ export async function sendLeadNotification(lead: {
   formName: string
   companyOwnerEmail: string
 }) {
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    console.log('SMTP not configured - skipping email')
-    return
-  }
-
-  try {
-    await getTransporter().sendMail({
-      from: process.env.SMTP_USER,
-      to: lead.companyOwnerEmail,
-      subject: `New Lead: ${lead.name}`,
-      html: `
-        <h2>New Lead Submitted</h2>
-        <p><strong>Form:</strong> ${lead.formName}</p>
-        <p><strong>Name:</strong> ${lead.name}</p>
-        <p><strong>Email:</strong> ${lead.email}</p>
-        ${lead.company ? `<p><strong>Company:</strong> ${lead.company}</p>` : ''}
-        <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/leads">View in Dashboard</a></p>
-      `
-    })
-    console.log('Email notification sent')
-  } catch (error) {
-    console.error('Failed to send email:', error)
-  }
+  await sendEmail(
+    lead.companyOwnerEmail,
+    `Ny lead: ${lead.name}`,
+    `<h2>Ny lead fra ${lead.formName}</h2>
+     <p><strong>Navn:</strong> ${lead.name}</p>
+     <p><strong>E-post:</strong> ${lead.email}</p>
+     ${lead.company ? `<p><strong>Bedrift:</strong> ${lead.company}</p>` : ''}
+     <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/leads">Se lead i dashboardet</a></p>`
+  );
 }
 
 export async function sendInvoiceEmail(
@@ -74,29 +48,24 @@ export async function sendInvoiceEmail(
   html: string,
   pdfBuffer: Buffer
 ) {
-  if (!process.env.SMTP_USER || !process.env.SMTP_PASS) {
-    console.log('SMTP not configured - skipping invoice email')
-    return
+  if (!process.env.RESEND_API_KEY) {
+    console.log('[email] No RESEND_API_KEY – skipping invoice email');
+    return;
   }
-
   try {
-    await getTransporter().sendMail({
-      from: process.env.SMTP_USER,
+    const resend = getResend();
+    const { error } = await resend.emails.send({
+      from: FROM,
       to,
       subject,
       html,
-      attachments: [
-        {
-          filename: 'invoice.pdf',
-          content: pdfBuffer,
-          contentType: 'application/pdf'
-        }
-      ]
-    })
-    console.log('Invoice email sent to', to)
-  } catch (error) {
-    console.error('Failed to send invoice email:', error)
-    throw error
+      attachments: [{ filename: 'faktura.pdf', content: pdfBuffer }],
+    });
+    if (error) console.error('[email] Invoice Resend error:', error);
+    else console.log('[email] Invoice sent to', to);
+  } catch (err) {
+    console.error('[email] Failed to send invoice:', err);
+    throw err;
   }
 }
 

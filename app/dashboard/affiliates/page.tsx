@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { DemoBanner } from '@/components/ui/DemoBanner';
 import {
   Plus, Copy, ExternalLink, TrendingUp, Users, DollarSign,
   ChevronRight, Edit2, Search, ArrowUpRight, CheckCircle,
@@ -59,6 +60,7 @@ export default function AffiliatesPage() {
 
   return (
     <div className="max-w-5xl mx-auto">
+      <DemoBanner feature="Affiliates" />
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>

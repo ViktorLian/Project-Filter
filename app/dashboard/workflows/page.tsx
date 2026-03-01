@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { DemoBanner } from '@/components/ui/DemoBanner';
 import {
   Zap, Plus, Play, Pause, MoreHorizontal, Mail, Phone, MessageSquare,
   Clock, ChevronRight, ArrowRight, Tag, Star, Check, X, GitBranch,
@@ -158,7 +159,11 @@ export default function WorkflowsPage() {
   );
 
   return (
-    <div className="flex h-[calc(100vh-80px)] -mt-6 -mx-6 overflow-hidden">
+    <>
+      <div className="-mx-6 -mt-6 px-6 py-2.5 border-b border-amber-200 bg-amber-50 mb-0">
+        <DemoBanner feature="Automatiseringer" />
+      </div>
+      <div className="flex h-[calc(100vh-136px)] -mx-6 overflow-hidden">
       {/* Left: Workflow list */}
       <div className="w-80 flex-shrink-0 border-r border-slate-200 bg-white flex flex-col">
         <div className="px-4 pt-5 pb-3 border-b border-slate-100">
@@ -298,5 +303,6 @@ export default function WorkflowsPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

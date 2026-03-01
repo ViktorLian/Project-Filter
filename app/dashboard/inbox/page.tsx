@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { DemoBanner } from '@/components/ui/DemoBanner';
 import {
   MessageSquare, Mail, Phone, Instagram, Facebook, Globe,
   Search, Star, Clock, CheckCheck, Filter, Send, Paperclip,
@@ -78,7 +79,11 @@ export default function InboxPage() {
   const ChannelIcon = channelIcons[activeConvo.channel];
 
   return (
-    <div className="flex h-[calc(100vh-80px)] -mt-6 -mx-6 overflow-hidden">
+    <>
+      <div className="-mx-6 -mt-6 px-6 py-2.5 border-b border-amber-200 bg-amber-50 mb-0">
+        <DemoBanner feature="Innboks" />
+      </div>
+      <div className="flex h-[calc(100vh-136px)] -mx-6 overflow-hidden">
       {/* Left: Conversation list */}
       <div className="w-80 flex-shrink-0 border-r border-slate-200 bg-white flex flex-col">
         {/* Header */}
@@ -308,5 +313,6 @@ export default function InboxPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

@@ -36,7 +36,7 @@ export function Hero() {
           <div className="flex flex-col items-center text-center">
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-500/30 bg-blue-500/10 px-4 py-1.5 text-sm font-medium text-blue-300 mb-8">
               <Zap className="h-4 w-4" />
-              Nordens mest avanserte SMB-plattform
+              Bygget for norske vekstbedrifter
             </div>
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-4xl leading-tight">
               Ikke bare et verktøy.{' '}

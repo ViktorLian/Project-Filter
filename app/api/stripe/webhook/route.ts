@@ -75,12 +75,15 @@ async function createAccountFromStripeMetadata(metadata: Record<string, string>,
   });
 
   // Create company with 14-day trial
+  // IMPORTANT: id is set explicitly to newUser.id so that session.companyId (= users.id)
+  // matches leads_companies.id for all DB queries (settings, analytics, etc.)
   const trialEndsAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
   await supabase.from('leads_companies').insert({
+    id: newUser.id,      // <-- company.id === user.id (by design)
     user_id: newUser.id,
     name: companyName,
     subscription_status: 'trialing',
-    subscription_plan: 'starter',
+    subscription_plan: metadata.plan || 'starter',
     trial_ends_at: trialEndsAt,
     stripe_customer_id: stripeCustomerId || null,
     created_at: new Date().toISOString(),

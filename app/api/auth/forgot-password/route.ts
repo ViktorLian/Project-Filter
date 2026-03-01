@@ -9,7 +9,7 @@ const supabase = createClient(
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-function getAppUrl(): string {
+function getAppUrl(req: Request): string {
   const configured = process.env.NEXT_PUBLIC_APP_URL ?? '';
   if (configured && !configured.includes('localhost') && !configured.includes('127.0.0.1')) {
     return configured.replace(/\/$/, '');
@@ -17,8 +17,10 @@ function getAppUrl(): string {
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
   }
-  // Dev fallback — use the request origin or localhost
-  return 'http://localhost:3000';
+  // Dev: use the request's own host (works on any port - 3000, 3001, etc.)
+  const host = req.headers.get('host') || 'localhost:3001';
+  const protocol = host.startsWith('localhost') ? 'http' : 'https';
+  return `${protocol}://${host}`;
 }
 
 export async function POST(req: Request) {
@@ -29,7 +31,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'E-post er påkrevd' }, { status: 400 });
     }
 
-    const appUrl = getAppUrl();
+    const appUrl = getAppUrl(req);
     console.log('[forgot-password] appUrl:', appUrl, '| email:', email);
 
     // 1. Check public.users table first
@@ -105,7 +107,7 @@ export async function POST(req: Request) {
 
     // Send the email ourselves via Resend — reliable delivery to Outlook/Gmail
     const { error: sendError } = await resend.emails.send({
-      from: 'FlowPilot <onboarding@resend.dev>',
+      from: process.env.EMAIL_FROM || 'FlowPilot <onboarding@resend.dev>',
       to: email,
       subject: 'Tilbakestill passordet ditt – FlowPilot',
       html: `

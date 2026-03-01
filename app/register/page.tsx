@@ -227,13 +227,13 @@ function RegisterFlow() {
                   className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
               </div>
               <button type="submit" disabled={loading}
-                className="w-full rounded-xl bg-blue-600 py-3 text-sm font-bold text-white hover:bg-blue-700 disabled:opacity-50 transition flex items-center justify-center gap-2 mt-1">
-                {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> Behandler...</> : inviteToken ? 'Bli med i teamet' : 'Gå til betaling →'}
+                className="w-full rounded-xl bg-emerald-600 py-3 text-sm font-bold text-white hover:bg-emerald-700 disabled:opacity-50 transition flex items-center justify-center gap-2 mt-1">
+                {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> Behandler...</> : inviteToken ? 'Bli med i teamet' : '🔒 Start 14 dager gratis'}
               </button>
               {!inviteToken && (
-                <p className="text-xs text-center text-slate-400">
-                  Kortet belastes ikke i 14 dager. Avslutt når som helst.
-                </p>
+                <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800 text-center">
+                  <strong>Kortet belastes IKKE nå.</strong> Du legger kun inn kortinformasjon og abonnementet starter automatisk etter 14 dager. Avslutt gratis når som helst før det.
+                </div>
               )}
               <p className="text-xs text-center text-slate-400 mt-1">
                 Ved å registrere deg godtar du våre{' '}
