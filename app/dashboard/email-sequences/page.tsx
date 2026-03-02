@@ -1,7 +1,7 @@
 ﻿'use client';
 
-import { useState } from 'react';
-import { Mail, Clock, Play, Eye, Copy, CheckCircle, Plus, Star, ArrowRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Mail, Clock, Play, Eye, Copy, CheckCircle, Plus, Star, ArrowRight, Edit2, Save, X } from 'lucide-react';
 
 type SequenceType = 'velkomst' | 'oppfolging' | 'anmeldelse' | 'reaktivering' | 'sesong';
 
@@ -322,10 +322,89 @@ export default function EmailSequencesPage() {
   const [selected, setSelected] = useState<Sequence>(SEQUENCES[0]);
   const [previewStep, setPreviewStep] = useState<EmailStep | null>(null);
   const [copied, setCopied] = useState('');
+  const [editingStep, setEditingStep] = useState<{ seqId: SequenceType; day: number } | null>(null);
+  const [editBody, setEditBody] = useState('');
+  const [editSubject, setEditSubject] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [savedMsg, setSavedMsg] = useState('');
 
-  const toggleActive = (id: SequenceType) => {
-    setSequences(p => p.map(s => s.id === id ? { ...s, active: !s.active } : s));
-    setSelected(prev => prev.id === id ? { ...prev, active: !prev.active } : prev);
+  // Load saved settings from API on mount
+  useEffect(() => {
+    fetch('/api/email-sequences')
+      .then(r => r.json())
+      .then(({ settings }) => {
+        if (!settings || Object.keys(settings).length === 0) return;
+        setSequences(prev => prev.map(s => {
+          const saved = settings[s.id];
+          if (!saved) return s;
+          return {
+            ...s,
+            active: saved.active ?? s.active,
+            steps: s.steps.map((step, i) => ({
+              ...step,
+              subject: saved.steps?.[i]?.subject ?? step.subject,
+              body: saved.steps?.[i]?.body ?? step.body,
+            })),
+          };
+        }));
+      })
+      .catch(() => {});
+  }, []);
+
+  const persistSettings = async (updated: Sequence[]) => {
+    const settings: Record<string, any> = {};
+    for (const s of updated) {
+      settings[s.id] = {
+        active: s.active,
+        steps: s.steps.map(st => ({ subject: st.subject, body: st.body })),
+      };
+    }
+    await fetch('/api/email-sequences', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ settings }),
+    });
+  };
+
+  const toggleActive = async (id: SequenceType) => {
+    const updated = sequences.map(s => s.id === id ? { ...s, active: !s.active } : s);
+    setSequences(updated);
+    const updatedSelected = updated.find(s => s.id === selected.id);
+    if (updatedSelected) setSelected(updatedSelected);
+    setSaving(true);
+    await persistSettings(updated).catch(() => {});
+    setSaving(false);
+    setSavedMsg('Lagret!');
+    setTimeout(() => setSavedMsg(''), 2000);
+  };
+
+  const startEdit = (seqId: SequenceType, step: EmailStep) => {
+    setEditingStep({ seqId, day: step.day });
+    setEditBody(step.body);
+    setEditSubject(step.subject);
+    setPreviewStep(null);
+  };
+
+  const saveEdit = async () => {
+    if (!editingStep) return;
+    const updated = sequences.map(s => {
+      if (s.id !== editingStep.seqId) return s;
+      return {
+        ...s,
+        steps: s.steps.map(st =>
+          st.day === editingStep.day ? { ...st, subject: editSubject, body: editBody } : st
+        ),
+      };
+    });
+    setSequences(updated);
+    const updatedSelected = updated.find(s => s.id === selected.id);
+    if (updatedSelected) setSelected(updatedSelected);
+    setEditingStep(null);
+    setSaving(true);
+    await persistSettings(updated).catch(() => {});
+    setSaving(false);
+    setSavedMsg('Lagret!');
+    setTimeout(() => setSavedMsg(''), 2000);
   };
 
   const copyBody = (body: string, key: string) => {
@@ -340,8 +419,10 @@ export default function EmailSequencesPage() {
         <div className="flex items-center gap-2 mb-1">
           <Mail className="h-5 w-5 text-blue-500" />
           <h1 className="text-2xl font-bold text-slate-900">E-postsekvenser</h1>
+          {saving && <span className="text-xs text-slate-400 ml-2">Lagrer...</span>}
+          {savedMsg && <span className="text-xs text-emerald-600 font-semibold ml-2">{savedMsg}</span>}
         </div>
-        <p className="text-slate-500 text-sm">Ferdige e-postsekvenser du kan tilpasse og sende til kundene dine. Velg en mal, rediger teksten og aktiver automatisk utsending.</p>
+        <p className="text-slate-500 text-sm">Ferdige e-postmaler du kan redigere og aktivere. Aktive sekvenser sendes automatisk ved riktig trigger.</p>
       </div>
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -350,7 +431,7 @@ export default function EmailSequencesPage() {
           {sequences.map(s => {
             const Icon = s.icon;
             return (
-              <button key={s.id} onClick={() => setSelected(s)}
+              <button key={s.id} onClick={() => { setSelected(s); setEditingStep(null); }}
                 className={`w-full rounded-xl border p-4 text-left transition ${selected.id === s.id ? 'border-blue-600 bg-blue-50' : 'border-slate-200 bg-white hover:border-blue-200'}`}>
                 <div className="flex items-center gap-3 mb-2">
                   <div className={`h-8 w-8 flex-shrink-0 rounded-lg flex items-center justify-center ${s.bg}`}>
@@ -379,40 +460,86 @@ export default function EmailSequencesPage() {
               </div>
               <button onClick={() => toggleActive(selected.id)}
                 className={`flex-shrink-0 rounded-xl px-4 py-2 text-sm font-semibold transition ${selected.active ? 'bg-emerald-100 text-emerald-700 hover:bg-red-100 hover:text-red-700' : 'bg-blue-600 text-white hover:bg-blue-700'}`}>
-                {selected.active ? 'Aktiv' : 'Aktiver'}
+                {selected.active ? '● Aktiv' : 'Aktiver'}
               </button>
             </div>
           </div>
 
           <div className="space-y-3">
-            {selected.steps.map((step, i) => (
-              <div key={i} className="rounded-xl border border-slate-200 bg-white overflow-hidden">
-                <div className="flex items-center gap-4 p-4">
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700">
-                    D{step.day}
+            {selected.steps.map((step, i) => {
+              const isEditing = editingStep?.seqId === selected.id && editingStep?.day === step.day;
+              return (
+                <div key={i} className="rounded-xl border border-slate-200 bg-white overflow-hidden">
+                  <div className="flex items-center gap-4 p-4">
+                    <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700">
+                      D{step.day}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-slate-900">{step.subject}</p>
+                      <p className="text-xs text-slate-500">{step.preview}</p>
+                    </div>
+                    <div className="flex gap-2">
+                      {isEditing ? (
+                        <>
+                          <button onClick={saveEdit}
+                            className="rounded-lg bg-emerald-600 text-white px-3 py-1.5 text-xs font-medium flex items-center gap-1 hover:bg-emerald-700">
+                            <Save className="h-3 w-3" /> Lagre
+                          </button>
+                          <button onClick={() => setEditingStep(null)}
+                            className="rounded-lg border border-slate-200 px-2 py-1.5 text-xs text-slate-600 hover:bg-slate-50">
+                            <X className="h-3 w-3" />
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button onClick={() => setPreviewStep(previewStep?.day === step.day && previewStep?.subject === step.subject ? null : step)}
+                            className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50 transition flex items-center gap-1">
+                            <Eye className="h-3 w-3" /> Vis
+                          </button>
+                          <button onClick={() => startEdit(selected.id, step)}
+                            className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50 transition flex items-center gap-1">
+                            <Edit2 className="h-3 w-3" /> Rediger
+                          </button>
+                          <button onClick={() => copyBody(step.body, `${selected.id}-${step.day}`)}
+                            className={`rounded-lg px-3 py-1.5 text-xs font-medium transition flex items-center gap-1 ${copied === `${selected.id}-${step.day}` ? 'bg-emerald-100 text-emerald-700' : 'border border-slate-200 text-slate-600 hover:bg-slate-50'}`}>
+                            {copied === `${selected.id}-${step.day}` ? <><CheckCircle className="h-3 w-3" /> Kopiert</> : <><Copy className="h-3 w-3" /> Kopier</>}
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-slate-900">{step.subject}</p>
-                    <p className="text-xs text-slate-500">{step.preview}</p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button onClick={() => setPreviewStep(previewStep?.day === step.day ? null : step)}
-                      className="rounded-lg border border-slate-200 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-50 transition flex items-center gap-1">
-                      <Eye className="h-3 w-3" /> Vis
-                    </button>
-                    <button onClick={() => copyBody(step.body, `${selected.id}-${step.day}`)}
-                      className={`rounded-lg px-3 py-1.5 text-xs font-medium transition flex items-center gap-1 ${copied === `${selected.id}-${step.day}` ? 'bg-emerald-100 text-emerald-700' : 'border border-slate-200 text-slate-600 hover:bg-slate-50'}`}>
-                      {copied === `${selected.id}-${step.day}` ? <><CheckCircle className="h-3 w-3" /> Kopiert</> : <><Copy className="h-3 w-3" /> Kopier</>}
-                    </button>
-                  </div>
+
+                  {isEditing && (
+                    <div className="border-t border-slate-100 p-4 space-y-3">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-600 mb-1">Emne</label>
+                        <input
+                          value={editSubject}
+                          onChange={e => setEditSubject(e.target.value)}
+                          className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-600 mb-1">E-posttekst</label>
+                        <textarea
+                          value={editBody}
+                          onChange={e => setEditBody(e.target.value)}
+                          rows={12}
+                          className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+                        />
+                      </div>
+                      <p className="text-xs text-slate-400">Bruk [Fornavn], [Bedriftsnavn], [Telefon] som variabler – disse erstattes automatisk ved utsending.</p>
+                    </div>
+                  )}
+
+                  {!isEditing && previewStep?.subject === step.subject && previewStep?.day === step.day && (
+                    <div className="border-t border-slate-100 px-4 pb-4">
+                      <pre className="text-xs text-slate-700 whitespace-pre-wrap leading-relaxed font-sans mt-3 bg-slate-50 rounded-lg p-4">{step.body}</pre>
+                    </div>
+                  )}
                 </div>
-                {previewStep?.day === step.day && (
-                  <div className="border-t border-slate-100 px-4 pb-4">
-                    <pre className="text-xs text-slate-700 whitespace-pre-wrap leading-relaxed font-sans mt-3 bg-slate-50 rounded-lg p-4">{step.body}</pre>
-                  </div>
-                )}
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

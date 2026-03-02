@@ -19,8 +19,8 @@ export async function POST(req: NextRequest) {
 
     // Verify lead belongs to company
     const { data: lead } = await supabase
-      .from('leads_leads')
-      .select('*')
+      .from('leads')
+      .select('id')
       .eq('id', leadId)
       .eq('company_id', companyId)
       .single();

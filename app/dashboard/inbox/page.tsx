@@ -68,6 +68,42 @@ export default function InboxPage() {
   const [replyText, setReplyText] = useState('');
   const [search, setSearch] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [localMessages, setLocalMessages] = useState(MESSAGES);
+  const [sentMsg, setSentMsg] = useState('');
+
+  async function sendReply() {
+    if (!replyText.trim() || sending) return;
+    setSending(true);
+    try {
+      const res = await fetch('/api/inbox/reply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          leadId: (activeConvo as any).leadId ?? null,
+          channel: activeConvo.channel,
+          customerName: activeConvo.name,
+          customerEmail: (activeConvo as any).email ?? null,
+          message: replyText.trim(),
+        }),
+      });
+      const data = await res.json();
+      // Add to local messages
+      setLocalMessages(prev => [...prev, {
+        id: `m${Date.now()}`,
+        from: 'meg',
+        text: replyText.trim(),
+        time: new Date().toLocaleTimeString('nb-NO', { hour: '2-digit', minute: '2-digit' }),
+        isMe: true,
+      }]);
+      setReplyText('');
+      if (data.sentEmail) setSentMsg('E-post sendt!');
+      else setSentMsg('Melding lagret');
+      setTimeout(() => setSentMsg(''), 3000);
+    } finally {
+      setSending(false);
+    }
+  }
 
   async function generateAiReply() {
     setAiLoading(true);
@@ -234,7 +270,7 @@ export default function InboxPage() {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
-          {MESSAGES.map((msg) => (
+          {localMessages.map((msg) => (
             <div key={msg.id} className={`flex ${msg.isMe ? 'justify-end' : 'justify-start'}`}>
               {!msg.isMe && (
                 <div className="h-7 w-7 rounded-full bg-blue-100 flex items-center justify-center mr-2 flex-shrink-0 self-end">
@@ -277,12 +313,13 @@ export default function InboxPage() {
                   {aiLoading ? 'Genererer...' : 'Generer svar'}
                 </button>
               </div>
+              {sentMsg && <span className="text-xs text-emerald-600 font-semibold">{sentMsg}</span>}
               <button
-                onClick={() => setReplyText('')}
-                disabled={!replyText.trim()}
+                onClick={sendReply}
+                disabled={!replyText.trim() || sending}
                 className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 text-white text-sm font-semibold px-4 py-1.5 rounded-xl transition"
               >
-                <Send className="h-3.5 w-3.5" /> Send
+                <Send className="h-3.5 w-3.5" /> {sending ? 'Sender...' : 'Send'}
               </button>
             </div>
           </div>

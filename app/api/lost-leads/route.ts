@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
   const supabase = createAdminClient();
   const sessAny = session as any;
   const userId = sessAny?.user?.id;
+  const companyId = sessAny?.user?.companyId || userId;
 
   const { searchParams } = new URL(request.url);
   const dormantDays = parseInt(searchParams.get('days') || '30');
@@ -21,8 +22,8 @@ export async function GET(request: NextRequest) {
 
   const { data, error } = await supabase
     .from('leads')
-    .select('id, name, email, phone, status, score, created_at, updated_at')
-    .eq('user_id', userId)
+    .select('id, customer_name, customer_email, customer_phone, status, score, created_at, updated_at')
+    .eq('company_id', companyId)
     .in('status', ['new', 'contacted', 'qualified'])
     .lt('updated_at', cutoff.toISOString())
     .order('score', { ascending: false })
@@ -47,6 +48,7 @@ export async function POST(request: NextRequest) {
   const supabase = createAdminClient();
   const sessAny = session as any;
   const userId = sessAny?.user?.id;
+  const companyId = sessAny?.user?.companyId || userId;
 
   const body = await request.json();
   const { leadIds, message, subject } = body as {
@@ -62,9 +64,9 @@ export async function POST(request: NextRequest) {
   // Fetch lead data
   const { data: leads, error } = await supabase
     .from('leads')
-    .select('id, name, email, status')
+    .select('id, customer_name, customer_email, status')
     .in('id', leadIds)
-    .eq('user_id', userId);
+    .eq('company_id', companyId);
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
@@ -72,17 +74,17 @@ export async function POST(request: NextRequest) {
   let failed = 0;
 
   for (const lead of leads || []) {
-    if (!lead.email) { failed++; continue; }
+    if (!lead.customer_email) { failed++; continue; }
 
-    const emailSubject = subject || `Vi tenkte på deg, ${lead.name} – fortsatt interessert?`;
+    const emailSubject = subject || `Vi tenkte på deg, ${lead.customer_name} – fortsatt interessert?`;
     const emailHtml = message
       ? `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px">
-           <p>Hei ${lead.name},</p>
+           <p>Hei ${lead.customer_name},</p>
            <p>${message}</p>
            <p style="color:#94a3b8;font-size:13px">FlowPilot</p>
          </div>`
       : `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px">
-           <h2 style="color:#1e293b">Hei ${lead.name} 👋</h2>
+           <h2 style="color:#1e293b">Hei ${lead.customer_name} 👋</h2>
            <p style="color:#475569">Vi la merke til at vi ikke har hørt fra deg på en stund.</p>
            <p style="color:#475569">Er du fortsatt interessert? Vi har kanskje noe som passer deg perfekt akkurat nå.</p>
            <p style="color:#475569">Ta kontakt – vi hjelper deg gjerne videre.</p>
@@ -90,7 +92,7 @@ export async function POST(request: NextRequest) {
          </div>`;
 
     try {
-      await sendEmail(lead.email, emailSubject, emailHtml);
+      await sendEmail(lead.customer_email, emailSubject, emailHtml);
       // Update lead status + timestamp
       await supabase
         .from('leads')

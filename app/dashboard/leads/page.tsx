@@ -11,9 +11,9 @@ type Lead = {
   id: string;
   created_at: string;
   status?: string;
-  name?: string;
-  email?: string;
-  phone?: string;
+  customer_name?: string;
+  customer_email?: string;
+  customer_phone?: string;
   score?: number;
   risk_level?: string;
   answers?: Record<string, any>;
@@ -39,9 +39,9 @@ export default function LeadsPage() {
     const rows = [
       ['Navn', 'E-post', 'Telefon', 'Status', 'Score', 'Risiko', 'Skjema', 'Dato'],
       ...leads.map(l => [
-        l.name || '',
-        l.email || '',
-        l.phone || '',
+        l.customer_name || '',
+        l.customer_email || '',
+        l.customer_phone || '',
         l.status || '',
         l.score ?? '',
         l.risk_level || '',
@@ -78,15 +78,15 @@ export default function LeadsPage() {
   const filtered = leads
     .filter((l) => {
       const matchSearch =
-        (l.name || '').toLowerCase().includes(search.toLowerCase()) ||
-        (l.email || '').toLowerCase().includes(search.toLowerCase()) ||
-        (l.phone || '').includes(search);
+        (l.customer_name || '').toLowerCase().includes(search.toLowerCase()) ||
+        (l.customer_email || '').toLowerCase().includes(search.toLowerCase()) ||
+        (l.customer_phone || '').includes(search);
       const matchStatus = filterStatus === 'ALL' || (l.status || 'NEW') === filterStatus;
       return matchSearch && matchStatus;
     })
     .sort((a, b) => {
       if (sortBy === 'score') return (b.score || 0) - (a.score || 0);
-      if (sortBy === 'name') return (a.name || '').localeCompare(b.name || '');
+      if (sortBy === 'name') return (a.customer_name || '').localeCompare(b.customer_name || '');
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     });
 
@@ -209,11 +209,11 @@ export default function LeadsPage() {
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center flex-shrink-0">
                       <span className="text-white font-bold text-sm">
-                        {(lead.name || 'L').charAt(0).toUpperCase()}
+                        {(lead.customer_name || 'L').charAt(0).toUpperCase()}
                       </span>
                     </div>
                     <div>
-                      <p className="font-semibold text-slate-900 text-sm">{lead.name || `Lead ${lead.id.slice(0, 6)}`}</p>
+                      <p className="font-semibold text-slate-900 text-sm">{lead.customer_name || `Lead ${lead.id.slice(0, 6)}`}</p>
                       <p className="text-xs text-slate-400">{new Date(lead.created_at).toLocaleDateString('nb-NO')}</p>
                     </div>
                   </div>
@@ -225,16 +225,16 @@ export default function LeadsPage() {
                 </div>
 
                 <div className="space-y-1.5 mb-3">
-                  {lead.email && (
+                  {lead.customer_email && (
                     <div className="flex items-center gap-2 text-xs text-slate-500">
                       <Mail className="h-3 w-3 flex-shrink-0" />
-                      <span className="truncate">{lead.email}</span>
+                      <span className="truncate">{lead.customer_email}</span>
                     </div>
                   )}
-                  {lead.phone && (
+                  {lead.customer_phone && (
                     <div className="flex items-center gap-2 text-xs text-slate-500">
                       <Phone className="h-3 w-3 flex-shrink-0" />
-                      <span>{lead.phone}</span>
+                      <span>{lead.customer_phone}</span>
                     </div>
                   )}
                   {lead.form?.name && (

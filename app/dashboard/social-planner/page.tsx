@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DemoBanner } from '@/components/ui/DemoBanner';
 import {
   Calendar, Plus, Facebook, Instagram, Linkedin, Globe,
   Image, Clock, Send, ChevronLeft, ChevronRight, MoreHorizontal,
-  Hash, Link, Smile, Repeat, Eye, ThumbsUp, MessageSquare, CheckCircle
+  Hash, Link, Smile, Repeat, Eye, ThumbsUp, MessageSquare, CheckCircle,
+  AlertCircle
 } from 'lucide-react';
 
 type Channel = 'facebook' | 'instagram' | 'linkedin' | 'google';
@@ -62,6 +63,28 @@ export default function SocialPlannerPage() {
   const [selectedChannels, setSelectedChannels] = useState<Channel[]>(['facebook']);
   const [postText, setPostText] = useState('');
   const [showAI, setShowAI] = useState(false);
+  const [connections, setConnections] = useState<Record<string, { connected: boolean; account_name?: string }>>({});
+  const [connMsg, setConnMsg] = useState('');
+
+  useEffect(() => {
+    // Read connection status from DB via company settings
+    fetch('/api/social/status')
+      .then(r => r.json())
+      .then(d => setConnections(d.connections || {}))
+      .catch(() => {});
+    // Check URL params for success/error from OAuth callback
+    const params = new URLSearchParams(window.location.search);
+    const connected = params.get('connected');
+    const error = params.get('error');
+    if (connected) { setConnMsg(`${connected} koblet til!`); window.history.replaceState({}, '', window.location.pathname); }
+    if (error) { setConnMsg(`Feil: ${error}`); window.history.replaceState({}, '', window.location.pathname); }
+  }, []);
+
+  const PLATFORMS = [
+    { id: 'facebook', label: 'Facebook', Icon: Facebook, color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-200' },
+    { id: 'instagram', label: 'Instagram', Icon: Instagram, color: 'text-pink-600', bg: 'bg-pink-50', border: 'border-pink-200' },
+    { id: 'google', label: 'Google Business', Icon: Globe, color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-200' },
+  ];
 
   const toggleChannel = (c: Channel) => {
     setSelectedChannels((prev) => prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c]);
@@ -74,6 +97,53 @@ export default function SocialPlannerPage() {
   return (
     <div className="max-w-7xl mx-auto">
       <DemoBanner feature="Sosiale medier" />
+
+      {/* Connected accounts */}
+      <div className="mb-6 rounded-xl border border-slate-200 bg-white p-5">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-sm font-bold text-slate-900">Tilkoblede kontoer</h2>
+          {connMsg && (
+            <span className={`text-xs font-semibold px-3 py-1 rounded-full ${connMsg.startsWith('Feil') ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'}`}>
+              {connMsg}
+            </span>
+          )}
+        </div>
+        <div className="grid grid-cols-3 gap-3">
+          {PLATFORMS.map(({ id, label, Icon, color, bg, border }) => {
+            const conn = connections[id];
+            return (
+              <div key={id} className={`rounded-xl border p-4 ${conn?.connected ? `${bg} ${border}` : 'border-slate-200 bg-slate-50'}`}>
+                <div className="flex items-center gap-3 mb-3">
+                  <div className={`h-9 w-9 rounded-xl flex items-center justify-center ${conn?.connected ? bg : 'bg-white border border-slate-200'}`}>
+                    <Icon className={`h-5 w-5 ${conn?.connected ? color : 'text-slate-400'}`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-slate-900">{label}</p>
+                    {conn?.connected
+                      ? <p className="text-xs text-emerald-600 truncate">{conn.account_name || 'Tilkoblet'}</p>
+                      : <p className="text-xs text-slate-400">Ikke tilkoblet</p>
+                    }
+                  </div>
+                </div>
+                {conn?.connected
+                  ? <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700 bg-emerald-100 px-2.5 py-1 rounded-full">
+                      <CheckCircle className="h-3 w-3" /> Tilkoblet
+                    </span>
+                  : <a href={`/api/social/connect?platform=${id}`}
+                      className={`inline-flex items-center gap-1 text-xs font-semibold px-3 py-1.5 rounded-lg ${color} bg-white border border-slate-200 hover:border-slate-400 transition`}>
+                      Koble til →
+                    </a>
+                }
+              </div>
+            );
+          })}
+        </div>
+        <p className="text-xs text-slate-400 mt-3 flex items-center gap-1">
+          <AlertCircle className="h-3 w-3" />
+          Krever META_APP_ID, META_APP_SECRET og GOOGLE_CLIENT_ID i miljøvariabler for å aktivere OAuth.
+        </p>
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>

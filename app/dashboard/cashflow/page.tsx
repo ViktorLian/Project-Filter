@@ -1,8 +1,9 @@
 ﻿'use client';
 
 import { useEffect, useState, useMemo } from 'react';
+import Link from 'next/link';
 import {
-  TrendingUp, TrendingDown, DollarSign, Plus, ArrowUpCircle, ArrowDownCircle, FileSpreadsheet
+  TrendingUp, TrendingDown, DollarSign, Plus, ArrowUpCircle, ArrowDownCircle, FileSpreadsheet, Clock
 } from 'lucide-react';
 
 type Dir = 'IN' | 'OUT';
@@ -10,29 +11,6 @@ type Transaction = { id: string; direction: Dir; amount: number; category: strin
 
 const INCOME_CATS = ['Salg', 'Faktura', 'Tjeneste', 'Prosjekt', 'Annet inntekt'];
 const EXPENSE_CATS = ['Materiell', 'Lønn', 'Underentreprenør', 'Transport', 'Markedsføring', 'Forsikring', 'Leie', 'Utstyr', 'Annet utgift'];
-
-const DEMO: Transaction[] = [
-  { id: '1', direction: 'IN', amount: 45000, category: 'Faktura', description: 'Kari Nordmann – Baderom renovering', occurred_at: '2026-02-18' },
-  { id: '2', direction: 'OUT', amount: 12000, category: 'Materiell', description: 'Fliser og plater – Maxbo', occurred_at: '2026-02-17' },
-  { id: '3', direction: 'IN', amount: 28500, category: 'Faktura', description: 'Erik Bakke AS – Takarbeid', occurred_at: '2026-02-15' },
-  { id: '4', direction: 'OUT', amount: 45000, category: 'Lønn', description: 'Lonnsutbetaling – ansatt 1', occurred_at: '2026-02-15' },
-  { id: '5', direction: 'OUT', amount: 5200, category: 'Transport', description: 'Diesel + bompenger', occurred_at: '2026-02-10' },
-  { id: '6', direction: 'IN', amount: 62000, category: 'Prosjekt', description: 'Nordic Tak – Fasade prosjekt', occurred_at: '2026-02-08' },
-  { id: '7', direction: 'OUT', amount: 8900, category: 'Markedsføring', description: 'Facebook Ads – februar', occurred_at: '2026-02-05' },
-  { id: '8', direction: 'OUT', amount: 3500, category: 'Forsikring', description: 'Yrkesskadeforsikring', occurred_at: '2026-02-01' },
-  { id: '9', direction: 'IN', amount: 19000, category: 'Salg', description: 'Maling innvendig – Ingrid Hansen', occurred_at: '2026-01-28' },
-  { id: '10', direction: 'OUT', amount: 22000, category: 'Underentreprenør', description: 'Elektriker AS – UE-oppdrag', occurred_at: '2026-01-25' },
-];
-
-const MONTHLY = [
-  { month: 'Aug', income: 82000, expense: 54000 },
-  { month: 'Sep', income: 94000, expense: 61000 },
-  { month: 'Okt', income: 71000, expense: 48000 },
-  { month: 'Nov', income: 108000, expense: 72000 },
-  { month: 'Des', income: 62000, expense: 40000 },
-  { month: 'Jan', income: 95000, expense: 65000 },
-  { month: 'Feb', income: 154500, expense: 96600 },
-];
 
 const CAT_COLORS: Record<string, string> = {
   Faktura: '#3b82f6', Salg: '#10b981', Prosjekt: '#8b5cf6', 'Annet inntekt': '#06b6d4', Tjeneste: '#f59e0b',
@@ -51,11 +29,21 @@ function exportCSV(rows: Transaction[]) {
 }
 
 export default function CashflowPage() {
-  const [transactions, setTransactions] = useState<Transaction[]>(DEMO);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [filterDir, setFilterDir] = useState<'ALL' | Dir>('ALL');
   const [filterCat, setFilterCat] = useState('ALL');
   const [tx, setTx] = useState({ direction: 'IN' as Dir, amount: '', category: 'Faktura', description: '', occurred_at: new Date().toISOString().split('T')[0] });
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    fetch('/api/cashflow')
+      .then(r => r.json())
+      .then(d => setTransactions(d.transactions || []))
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
 
   const income = transactions.filter(t => t.direction === 'IN').reduce((s, t) => s + t.amount, 0);
   const expense = transactions.filter(t => t.direction === 'OUT').reduce((s, t) => s + t.amount, 0);
@@ -73,11 +61,34 @@ export default function CashflowPage() {
     (filterCat === 'ALL' || t.category === filterCat)
   );
 
-  const maxM = Math.max(...MONTHLY.map(m => m.income));
+  // Build monthly chart from real data
+  const MONTHLY = useMemo(() => {
+    const months: Record<string, { income: number; expense: number }> = {};
+    transactions.forEach(t => {
+      const m = t.occurred_at?.slice(0, 7) || '';
+      if (!months[m]) months[m] = { income: 0, expense: 0 };
+      if (t.direction === 'IN') months[m].income += t.amount;
+      else months[m].expense += t.amount;
+    });
+    return Object.entries(months).sort(([a], [b]) => a.localeCompare(b)).slice(-7).map(([k, v]) => ({ month: k.slice(5), income: v.income, expense: v.expense }));
+  }, [transactions]);
 
-  const submit = (e: React.FormEvent) => {
+  const maxM = MONTHLY.length > 0 ? Math.max(...MONTHLY.map(m => m.income), 1) : 1;
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setTransactions(prev => [{ id: Date.now().toString(), direction: tx.direction, amount: Number(tx.amount), category: tx.category, description: tx.description, occurred_at: tx.occurred_at }, ...prev]);
+    setSaving(true);
+    try {
+      const res = await fetch('/api/cashflow', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ direction: tx.direction, amount: Number(tx.amount), category: tx.category, description: tx.description, occurred_at: tx.occurred_at }),
+      });
+      const json = await res.json();
+      if (json.transaction) {
+        setTransactions(prev => [json.transaction, ...prev]);
+      }
+    } catch (e) { console.error(e); } finally { setSaving(false); }
     setTx({ direction: 'IN', amount: '', category: 'Faktura', description: '', occurred_at: new Date().toISOString().split('T')[0] });
     setShowForm(false);
   };
@@ -233,12 +244,38 @@ export default function CashflowPage() {
               </div>
               <div className="flex gap-2 pt-1">
                 <button type="button" onClick={() => setShowForm(false)} className="flex-1 rounded-xl border border-slate-200 py-2.5 text-sm text-slate-600 hover:bg-slate-50">Avbryt</button>
-                <button type="submit" className="flex-1 rounded-xl bg-blue-600 py-2.5 text-sm font-semibold text-white hover:bg-blue-700">Lagre</button>
+                <button type="submit" disabled={saving} className="flex-1 rounded-xl bg-blue-600 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50">{saving ? 'Lagrer...' : 'Lagre'}</button>
               </div>
             </form>
           </div>
         </div>
       )}
+
+      {/* ──────────────────────────────────── TIME TRACKING SECTION ──────────────────────────────────── */}
+      <div className="rounded-xl border-2 border-dashed border-slate-200 bg-white p-6">
+        <div className="flex items-center justify-between mb-1">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-xl bg-blue-100 flex items-center justify-center">
+              <Clock className="h-5 w-5 text-blue-600" />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-slate-900">Timeregistrering</h2>
+              <p className="text-xs text-slate-500">Logg timer direkte – koblet til økonomi</p>
+            </div>
+          </div>
+          <Link href="/dashboard/time-tracking"
+            className="text-sm text-blue-600 font-medium hover:underline flex items-center gap-1">
+            Gå til timeregistrering →
+          </Link>
+        </div>
+        <p className="text-sm text-slate-500 mt-3 mb-4">
+          Timeregistreringen din er tilgjengelig som en dedikert side. Der kan du logge timer per ansatt, koble til prosjekter og eksportere til faktura.
+        </p>
+        <Link href="/dashboard/time-tracking"
+          className="inline-flex items-center gap-2 rounded-xl bg-slate-900 text-white px-5 py-2.5 text-sm font-semibold hover:bg-slate-800 transition">
+          <Clock className="h-4 w-4" /> Åpne timeregistrering
+        </Link>
+      </div>
     </div>
   );
 }

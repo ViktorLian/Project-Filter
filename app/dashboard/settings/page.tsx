@@ -2,7 +2,7 @@
 import { authOptions } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import Link from 'next/link';
-import { Settings, Building2, Receipt, CreditCard, Key, User, AlertTriangle } from 'lucide-react';
+import { Settings, Building2, Receipt, CreditCard, Key, User, AlertTriangle, BarChart2, TrendingUp, BookOpen, Brain, Calculator, Target, ChevronRight } from 'lucide-react';
 import SettingsEditor from '@/components/settings/SettingsEditor';
 
 export const dynamic = 'force-dynamic';
@@ -153,25 +153,33 @@ export default async function SettingsPage() {
           <Key className="h-5 w-5 text-slate-600" />
           <h2 className="font-semibold text-slate-800">Integrasjoner</h2>
         </div>
-        <div className="space-y-3 text-sm text-slate-600">
-          <div className="flex items-center justify-between py-2 border-b border-slate-100">
-            <span>OpenAI (AI-funksjoner)</span>
-            <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${process.env.OPENAI_API_KEY ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-600'}`}>
-              {process.env.OPENAI_API_KEY ? 'Konfigurert' : 'Mangler nokkel'}
-            </span>
-          </div>
-          <div className="flex items-center justify-between py-2 border-b border-slate-100">
-            <span>Stripe (Betalinger)</span>
-            <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${process.env.STRIPE_SECRET_KEY ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-600'}`}>
-              {process.env.STRIPE_SECRET_KEY ? 'Konfigurert' : 'Mangler nokkel'}
-            </span>
-          </div>
-          <div className="flex items-center justify-between py-2">
-            <span>Google Maps</span>
-            <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${process.env.GOOGLE_MAPS_API_KEY ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500'}`}>
-              {process.env.GOOGLE_MAPS_API_KEY ? 'Konfigurert' : 'Ikke konfigurert'}
-            </span>
-          </div>
+      {/* Advanced tools / Business analysis */}
+      <div className="rounded-xl border border-slate-200 bg-white p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <BarChart2 className="h-5 w-5 text-indigo-600" />
+          <h2 className="font-semibold text-slate-800">Avanserte verktøy</h2>
+        </div>
+        <p className="text-xs text-slate-500 mb-4">Strategiske analyseverktøy for å vokse og optimere bedriften din.</p>
+        <div className="grid gap-2">
+          {[
+            { href: '/dashboard/acquisition-readiness', icon: Target, label: 'Bedrift klar for salg', desc: 'Vurder om bedriften er klar for oppkjøp eller salg' },
+            { href: '/dashboard/win-loss', icon: TrendingUp, label: 'Vinn/tap-analyse', desc: 'Forstå hvorfor du vinner og taper jobber' },
+            { href: '/dashboard/growth-playbook', icon: BookOpen, label: 'Vekstspillebok', desc: 'Konkrete tiltak for å skalere bedriften' },
+            { href: '/dashboard/business-memory', icon: Brain, label: 'Forretningshjerne', desc: 'Lagre og hent opp kunnskap om bedriften' },
+            { href: '/dashboard/roi-tracker', icon: Calculator, label: 'ROI-kalkulator', desc: 'Beregn avkastning på tiltak og investeringer' },
+          ].map(({ href, icon: Icon, label, desc }) => (
+            <Link key={href} href={href}
+              className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition group border border-transparent hover:border-slate-200">
+              <div className="h-9 w-9 flex-shrink-0 rounded-lg bg-indigo-50 flex items-center justify-center">
+                <Icon className="h-4 w-4 text-indigo-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-slate-800">{label}</p>
+                <p className="text-xs text-slate-500">{desc}</p>
+              </div>
+              <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-slate-500 transition" />
+            </Link>
+          ))}
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ import {
   ArrowUpRight, Bot, Bell, Briefcase, Star, Activity, ChevronRight, Zap
 } from 'lucide-react';
 
-type Lead = { id: string; created_at: string; status?: string; name?: string };
+type Lead = { id: string; created_at: string; status?: string; customer_name?: string };
 type Invoice = { id: string; amount: number; status: string; due_date?: string; customer?: { name: string } };
 
 const quickLinks = [
