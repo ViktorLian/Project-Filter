@@ -60,8 +60,6 @@ export default function LeadActions({ leadId, currentStatus }: { leadId: string;
   );
 }
 
-
-export default function LeadActions({
   leadId,
   currentStatus,
 }: {
