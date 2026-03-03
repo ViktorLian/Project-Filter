@@ -85,6 +85,39 @@ export async function POST(req: NextRequest) {
 
 		try { await assignLeadToSalesman(lead.id, form.user_id); } catch (e) { console.error('[ASSIGN LEAD ERROR]', e); }
 
+		// Fire per-company webhook (configured in settings)
+		try {
+			const { data: companyConfig } = await supabase
+				.from('leads_companies')
+				.select('webhook_url, webhook_secret, webhook_enabled')
+				.eq('id', form.company_id)
+				.single();
+
+			if (companyConfig?.webhook_enabled && companyConfig?.webhook_url) {
+				await fetch(companyConfig.webhook_url, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						...(companyConfig.webhook_secret ? { 'X-Lead-Secret': companyConfig.webhook_secret } : {}),
+					},
+					body: JSON.stringify({
+						event: 'lead.created',
+						lead: {
+							id: lead.id,
+							customer_name: lead.customer_name,
+							customer_email: lead.customer_email,
+							customer_phone: lead.customer_phone,
+							score,
+							status: 'new',
+							form_id: formId,
+							created_at: lead.created_at,
+						},
+					}),
+				});
+			}
+		} catch (e) { console.error('[COMPANY WEBHOOK ERROR]', e); }
+
+		// Legacy global Zapier webhook (env var fallback)
 		try {
 			const webhookUrl = process.env.ZAPIER_WEBHOOK_URL;
 			const webhookSecret = process.env.ZAPIER_WEBHOOK_SECRET;

@@ -4,6 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import Link from 'next/link';
 import { Settings, Building2, Receipt, CreditCard, Key, User, AlertTriangle, BarChart2, TrendingUp, BookOpen, Brain, Calculator, Target, ChevronRight } from 'lucide-react';
 import SettingsEditor from '@/components/settings/SettingsEditor';
+import WebhookSettings from '@/components/settings/WebhookSettings';
 
 export const dynamic = 'force-dynamic';
 
@@ -147,14 +148,8 @@ export default async function SettingsPage() {
         <p className="text-xs text-red-400 mt-2">Du vil motta bekreftelse innen 1 virkedag.</p>
       </div>
 
-      {/* API / integration section */}
-      <div className="rounded-xl border border-slate-200 bg-white p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <Key className="h-5 w-5 text-slate-600" />
-          <h2 className="font-semibold text-slate-800">Integrasjoner</h2>
-        </div>
-        <p className="text-xs text-slate-500">Administrer API-nøkler og tilkoblinger under <strong>Innstillinger → Miljøvariabler</strong> i Vercel.</p>
-      </div>
+      {/* Webhook section */}
+      <WebhookSettings />
 
       {/* Advanced tools / Business analysis */}
       <div className="rounded-xl border border-slate-200 bg-white p-5">

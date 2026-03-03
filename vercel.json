@@ -8,6 +8,10 @@
     {
       "path": "/api/cron/review-emails",
       "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/cron/send-sequences",
+      "schedule": "0 8 * * *"
     }
   ]
 }
