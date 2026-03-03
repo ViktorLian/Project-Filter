@@ -7,7 +7,7 @@ import {
   ArrowUpRight, Bot, Bell, Briefcase, Star, Activity, ChevronRight, Zap
 } from 'lucide-react';
 
-type Lead = { id: string; created_at: string; status?: string; customer_name?: string };
+type Lead = { id: string; created_at: string; status?: string; customer_name?: string; name?: string };
 type Invoice = { id: string; amount: number; status: string; due_date?: string; customer?: { name: string } };
 
 const quickLinks = [
@@ -168,11 +168,11 @@ export default function DashboardOverview() {
                 <div key={lead.id} className="flex items-center gap-3 px-5 py-3 hover:bg-slate-50 transition-colors">
                   <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
                     <span className="text-xs font-semibold text-blue-600">
-                      {(lead.name || 'L').charAt(0).toUpperCase()}
+                      {(lead.customer_name || lead.name || 'L').charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-slate-800 truncate">{lead.name || `Lead #${lead.id.slice(0, 6)}`}</p>
+                    <p className="text-sm font-medium text-slate-800 truncate">{lead.customer_name || lead.name || `Lead #${lead.id.slice(0, 6)}`}</p>
                     <p className="text-xs text-slate-400">{new Date(lead.created_at).toLocaleDateString('nb-NO')}</p>
                   </div>
                   <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${

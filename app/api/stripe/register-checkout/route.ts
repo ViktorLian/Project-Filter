@@ -6,17 +6,34 @@ function getStripe() {
   return new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2023-10-16' });
 }
 
+// 3 canonical plan tiers that map to Stripe price IDs
 const PLAN_CONFIGS: Record<string, { name: string; amount: number; priceId: string }> = {
-  starter:    { name: 'FlowPilot Starter',   amount: 129000, priceId: 'price_1SxRpVHTxh2T1zNz6jPfJtcD' },
-  pro:        { name: 'FlowPilot Pro',        amount: 259000, priceId: 'price_1SxRqIHTxh2T1zNz00HrfAlQ' },
-  enterprise: { name: 'FlowPilot Enterprise', amount: 399000, priceId: 'price_1SxRqeHTxh2T1zNzRYKM4DUl' },
+  starter:    { name: 'FlowPilot Starter',   amount: 129000, priceId: process.env.STRIPE_PRICE_ID_STARTER    || 'price_1SxRpVHTxh2T1zNz6jPfJtcD' },
+  pro:        { name: 'FlowPilot Pro',        amount: 259000, priceId: process.env.STRIPE_PRICE_ID_PRO       || 'price_1SxRqIHTxh2T1zNz00HrfAlQ' },
+  enterprise: { name: 'FlowPilot Enterprise', amount: 399000, priceId: process.env.STRIPE_PRICE_ID_ENTERPRISE || 'price_1SxRqeHTxh2T1zNzRYKM4DUl' },
 };
+
+// All 18 niche IDs → map to the Pro tier by default
+const NICHE_PLAN_MAP: Record<string, string> = {};
+const NICHE_IDS = [
+  'rorlegger','elektriker','maler','snekker','renholder','friseur','tannlege',
+  'lege','advokat','regnskapsforer','eiendomsmegler','bilverksted','restaurant',
+  'treningssenter','barnehage','fotograf','konsulent','nettbutikk',
+];
+NICHE_IDS.forEach(id => { NICHE_PLAN_MAP[id] = 'pro'; });
+
+function resolvePlanKey(planOrNiche: string): string {
+  if (PLAN_CONFIGS[planOrNiche]) return planOrNiche;
+  if (NICHE_PLAN_MAP[planOrNiche]) return NICHE_PLAN_MAP[planOrNiche];
+  return 'pro'; // sensible default
+}
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { companyName, name, email, password, phone, plan = 'starter' } = body as {
-      companyName: string; name: string; email: string; password: string; phone?: string; plan?: string;
+    const { companyName, name, email, password, phone, plan, nicheId } = body as {
+      companyName: string; name: string; email: string; password: string;
+      phone?: string; plan?: string; nicheId?: string;
     };
 
     if (!companyName || !name || !email || !password) {
@@ -26,8 +43,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Passord må være minst 8 tegn.' }, { status: 400 });
     }
 
-    const planKey = PLAN_CONFIGS[plan] ? plan : 'starter';
+    // Resolve the plan: prefer nicheId, then plan field, then default 'pro'
+    const planKey = resolvePlanKey(nicheId || plan || 'pro');
     const planConfig = PLAN_CONFIGS[planKey];
+    const resolvedNicheId = nicheId || (NICHE_IDS.includes(plan || '') ? plan : null) || '';
+
     const stripe = getStripe();
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
@@ -40,7 +60,7 @@ export async function POST(req: NextRequest) {
       lineItems = [{
         price_data: {
           currency: 'nok',
-          product_data: { name: planConfig.name, description: '14 dager gratis prøveperiode — avslutt når som helst' },
+          product_data: { name: planConfig.name, description: `FlowPilot for ${resolvedNicheId || planKey} — 14 dager gratis prøveperiode` },
           unit_amount: planConfig.amount,
           recurring: { interval: 'month' },
         },
@@ -48,11 +68,12 @@ export async function POST(req: NextRequest) {
       }];
     }
 
-    const registrationMeta: Record<string, string> = {
+    const meta: Record<string, string> = {
       registration: 'true',
       companyName, name, email,
-      password,   // Stripe encrypts metadata at rest — only used server-side in webhook
+      password,   // stored encrypted in Stripe metadata, only read server-side in webhook
       plan: planKey,
+      nicheId: resolvedNicheId,
       ...(phone ? { phone } : {}),
     };
 
@@ -60,9 +81,9 @@ export async function POST(req: NextRequest) {
       mode: 'subscription',
       payment_method_types: ['card'],
       customer_email: email,
-      subscription_data: { trial_period_days: 14, metadata: registrationMeta },
+      subscription_data: { trial_period_days: 14, metadata: meta },
       line_items: lineItems,
-      metadata: registrationMeta,
+      metadata: meta,
       allow_promotion_codes: true,
       success_url: `${appUrl}/register/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/register?cancelled=1&plan=${planKey}`,

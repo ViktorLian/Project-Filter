@@ -11,7 +11,7 @@ function getStripe() {
 
 // Helper: create a full FlowPilot account from registration metadata
 async function createAccountFromStripeMetadata(metadata: Record<string, string>, stripeCustomerId?: string) {
-  const { companyName, name, email, password } = metadata;
+  const { companyName, name, email, password, nicheId } = metadata;
   if (!email || !password || !companyName || !name) {
     console.error('[WEBHOOK] Missing registration metadata', { email: !!email, password: !!password, companyName: !!companyName });
     return;
@@ -51,6 +51,7 @@ async function createAccountFromStripeMetadata(metadata: Record<string, string>,
       auth_user_id: createdUser.user.id,
       email,
       business_name: companyName,
+      niche_id: nicheId || null,
       stripe_customer_id: stripeCustomerId || null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
@@ -82,6 +83,7 @@ async function createAccountFromStripeMetadata(metadata: Record<string, string>,
     id: newUser.id,      // <-- company.id === user.id (by design)
     user_id: newUser.id,
     name: companyName,
+    niche_id: nicheId || null,
     subscription_status: 'trialing',
     subscription_plan: metadata.plan || 'starter',
     trial_ends_at: trialEndsAt,

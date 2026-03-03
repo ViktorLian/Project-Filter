@@ -98,12 +98,12 @@ export default function Sidebar() {
 
   // Fetch niche once per session
   useEffect(() => {
-    if (!session?.user?.id) return;
+    if (!(session?.user as any)?.id) return;
     fetch('/api/onboarding/niche')
       .then(r => r.json())
       .then(d => setNicheId(d.nicheId || null))
       .catch(() => {});
-  }, [session?.user?.id]);
+  }, [(session?.user as any)?.id]);
 
   const niche = nicheId ? getNiche(nicheId) : null;
   // Build set of enabled hrefs: if niche defined, filter; otherwise show all

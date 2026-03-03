@@ -179,7 +179,7 @@ function RegisterFlow() {
               <p className="text-xs text-slate-500 mb-2">Inkludert i pakken:</p>
               <div className="grid grid-cols-2 gap-1.5">
                 {selectedNiche.nicheFeatures.slice(0, 4).map(f => (
-                  <div key={f.id} className="flex items-center gap-1.5 text-xs text-slate-300">
+                  <div key={f.name} className="flex items-center gap-1.5 text-xs text-slate-300">
                     <Check className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" />
                     <span className="truncate">{f.name}</span>
                   </div>
