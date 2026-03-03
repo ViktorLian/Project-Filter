@@ -16,11 +16,14 @@ const PLAN_CONFIGS: Record<string, { name: string; amount: number; priceId: stri
 // All 18 niche IDs → map to the Pro tier by default
 const NICHE_PLAN_MAP: Record<string, string> = {};
 const NICHE_IDS = [
-  'rorlegger','elektriker','maler','snekker','renholder','friseur','tannlege',
-  'lege','advokat','regnskapsforer','eiendomsmegler','bilverksted','restaurant',
-  'treningssenter','barnehage','fotograf','konsulent','nettbutikk',
+  'rorlegger','elektriker','maler','snekker','rengjoring','frisor','hudpleie',
+  'personlig-trener','vaktmester','restaurant','transport','bilverksted','landbruk',
+];
+const PREMIUM_NICHE_IDS = [
+  'regnskapsforer','it-konsulent','eiendomsmegler','markedsbyra','tannlege','advokat',
 ];
 NICHE_IDS.forEach(id => { NICHE_PLAN_MAP[id] = 'pro'; });
+PREMIUM_NICHE_IDS.forEach(id => { NICHE_PLAN_MAP[id] = 'enterprise'; });
 
 function resolvePlanKey(planOrNiche: string): string {
   if (PLAN_CONFIGS[planOrNiche]) return planOrNiche;
