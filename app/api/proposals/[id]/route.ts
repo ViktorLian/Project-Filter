@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export async function PATCH(req: Request, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions as any) as any;
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     const companyId = (session.user as any).companyId;
     const body = await req.json();
@@ -28,7 +28,7 @@ export async function PATCH(req: Request, { params }: { params: { id: string } }
 
 export async function DELETE(_: Request, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions as any) as any;
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     const companyId = (session.user as any).companyId;
     const supabase = createAdminClient();

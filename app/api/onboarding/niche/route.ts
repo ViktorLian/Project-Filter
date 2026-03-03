@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { nicheId } = await req.json();
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const supabase = createAdminClient();

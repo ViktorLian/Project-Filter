@@ -15,7 +15,7 @@ const ALLOWED_FIELDS = [
 ];
 
 export async function PATCH(req: NextRequest) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const companyId = (session.user as any).companyId;
 

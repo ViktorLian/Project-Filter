@@ -6,7 +6,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 
 export async function GET(req: NextRequest, { params }: { params: { customerId: string } }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions as any) as any;
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const supabase = createAdminClient();
@@ -25,7 +25,7 @@ export async function GET(req: NextRequest, { params }: { params: { customerId: 
 
 export async function PATCH(req: NextRequest, { params }: { params: { customerId: string } }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions as any) as any;
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const body = await req.json();
@@ -47,7 +47,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { customerId
 
 export async function DELETE(req: NextRequest, { params }: { params: { customerId: string } }) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions as any) as any;
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const supabase = createAdminClient();

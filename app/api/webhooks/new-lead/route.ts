@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 // GET — return current webhook config for the company
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions as any) as any;
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const companyId = (session.user as any).companyId;
@@ -32,7 +32,7 @@ export async function GET() {
 // PATCH — save webhook config
 export async function PATCH(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions as any) as any;
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const companyId = (session.user as any).companyId;
@@ -54,7 +54,7 @@ export async function PATCH(req: NextRequest) {
 // POST — manual test-fire
 export async function POST() {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions as any) as any;
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const companyId = (session.user as any).companyId;

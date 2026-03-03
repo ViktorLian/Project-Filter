@@ -14,7 +14,7 @@ function getStripe() {
 
 export async function POST(request: Request) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions as any) as any;
 
     if (!session?.user) {
       return NextResponse.json({ error: 'Ikke innlogget' }, { status: 401 });

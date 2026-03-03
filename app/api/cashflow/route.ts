@@ -14,7 +14,7 @@ type TransactionInput = {
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions as any) as any;
     // TEMP: Allow testing without auth
     if (!session) {
       // Demo mode - return mock success
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions as any) as any;
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }

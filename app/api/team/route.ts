@@ -5,7 +5,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import crypto from 'crypto';
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const companyId = (session.user as any).companyId || (session.user as any).id;
   const supabase = createAdminClient();
@@ -19,7 +19,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session?.user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const companyId = (session.user as any).companyId || (session.user as any).id;
 

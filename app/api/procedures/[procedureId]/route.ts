@@ -4,7 +4,7 @@ import { authOptions } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 
 export async function PATCH(req: Request, { params }: { params: { procedureId: string } }) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions as any) as any;
   const companyId = (session?.user as any)?.companyId;
   if (!companyId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
@@ -22,7 +22,7 @@ export async function PATCH(req: Request, { params }: { params: { procedureId: s
 }
 
 export async function DELETE(_: Request, { params }: { params: { procedureId: string } }) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions as any) as any;
   const companyId = (session?.user as any)?.companyId;
   if (!companyId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 

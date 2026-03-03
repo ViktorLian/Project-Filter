@@ -7,7 +7,7 @@ import { sendEmail } from '@/lib/email';
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions as any) as any;
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { customerId, serviceType, interval, intervalUnit, nextBookingDate, notes } = await req.json();
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions as any) as any;
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { searchParams } = new URL(req.url);

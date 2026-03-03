@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 
 // GET all documents + deviations for the company
 export async function GET() {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions as any) as any;
   const companyId = (session?.user as any)?.companyId;
   if (!companyId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
@@ -33,7 +33,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions as any) as any;
   const companyId = (session?.user as any)?.companyId;
   if (!companyId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions as any) as any;
   const companyId = (session?.user as any)?.companyId;
   if (!companyId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 

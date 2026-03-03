@@ -6,7 +6,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions as any) as any;
   const companyId = (session?.user as any)?.companyId;
   if (!companyId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
@@ -22,7 +22,7 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(authOptions as any) as any;
   const companyId = (session?.user as any)?.companyId;
   if (!companyId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
