@@ -1,57 +1,35 @@
 ﻿'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Check, ChevronRight, ArrowLeft, Loader2 } from 'lucide-react';
-
-const PLANS = [
-  {
-    key: 'starter',
-    title: 'Starter',
-    price: '1 290',
-    period: 'kr/mnd',
-    description: 'Perfekt for nystartede bedrifter',
-    features: ['50 leads/mnd', '2 skjemaer', 'AI lead-scoring', 'E-postsvar', '10 fakturaer/mnd'],
-    highlight: false,
-  },
-  {
-    key: 'pro',
-    title: 'Pro',
-    price: '2 590',
-    period: 'kr/mnd',
-    description: 'For voksende bedrifter',
-    badge: 'MEST POPULÆR',
-    features: ['300 leads/mnd', '10 skjemaer', 'AI scoring + kategorisering', 'E-postkampanjer', 'Ubegrensede fakturaer'],
-    highlight: true,
-  },
-  {
-    key: 'enterprise',
-    title: 'Enterprise',
-    price: '3 990',
-    period: 'kr/mnd',
-    description: 'For seriøse vekstbedrifter',
-    features: ['Ubegrenset leads', 'Ubegrenset skjemaer', 'White-label', 'Dedikert support', 'Full API-tilgang'],
-    highlight: false,
-  },
-];
+import { Check, ChevronRight, ArrowLeft, Loader2, ArrowRight } from 'lucide-react';
+import { NICHES, getNiche, NICHE_CATEGORIES } from '@/lib/niches';
 
 function RegisterFlow() {
   const router = useRouter();
   const params = useSearchParams();
-  const planFromUrl = params.get('plan') || '';
+  const nicheFromUrl = params.get('niche') || '';
   const inviteToken = params.get('invite') || '';
   const cancelled = params.get('cancelled') === '1';
 
-  const [step, setStep] = useState<'plan' | 'form'>(planFromUrl && PLANS.find(p => p.key === planFromUrl) ? 'form' : 'plan');
-  const [selectedPlan, setSelectedPlan] = useState(planFromUrl || 'pro');
+  const preselectedNiche = nicheFromUrl ? getNiche(nicheFromUrl) : null;
+
+  const [step, setStep] = useState<'niche' | 'form'>(
+    preselectedNiche || inviteToken ? 'form' : 'niche'
+  );
+  const [selectedNicheId, setSelectedNicheId] = useState(nicheFromUrl || 'rorlegger');
+  const [nicheFilter, setNicheFilter] = useState('Alle');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   const [form, setForm] = useState({ companyName: '', name: '', email: '', phone: '', password: '', confirmPassword: '' });
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement>) => setForm(f => ({ ...f, [k]: e.target.value }));
 
-  const selectedPlanData = PLANS.find(p => p.key === selectedPlan) || PLANS[1];
+  const selectedNiche = getNiche(selectedNicheId) || NICHES[0];
+
+  const filteredNiches = nicheFilter === 'Alle' ? NICHES : NICHES.filter(n => n.category === nicheFilter);
+  const allCategories = ['Alle', ...NICHE_CATEGORIES];
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -60,7 +38,6 @@ function RegisterFlow() {
     if (form.password.length < 8) { setError('Passord må være minst 8 tegn.'); return; }
     setLoading(true);
 
-    // Invite flow — no payment
     if (inviteToken) {
       const res = await fetch('/api/register', {
         method: 'POST',
@@ -74,7 +51,6 @@ function RegisterFlow() {
       return;
     }
 
-    // Normal flow → Stripe checkout
     const res = await fetch('/api/stripe/register-checkout', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -84,7 +60,8 @@ function RegisterFlow() {
         email: form.email,
         password: form.password,
         phone: form.phone,
-        plan: selectedPlan,
+        plan: selectedNicheId,
+        nicheId: selectedNicheId,
       }),
     });
     const data = await res.json();
@@ -94,66 +71,75 @@ function RegisterFlow() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-emerald-50 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-[#0a0f1a] flex flex-col items-center justify-center p-4">
       {/* Logo */}
       <Link href="/" className="flex items-center gap-2 mb-8">
-        <div className="h-10 w-10 rounded-xl bg-blue-600 flex items-center justify-center">
+        <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-900/40">
           <span className="text-white font-bold text-sm">FP</span>
         </div>
-        <span className="text-2xl font-bold text-slate-900">FlowPilot</span>
+        <span className="text-2xl font-bold text-white">FlowPilot</span>
       </Link>
 
       {cancelled && (
-        <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700 max-w-md w-full text-center">
+        <div className="mb-4 rounded-xl border border-amber-700/40 bg-amber-900/20 px-4 py-3 text-sm text-amber-300 max-w-md w-full text-center">
           Betalingen ble avbrutt. Ingen belastning ble gjort.
         </div>
       )}
 
-      {/* STEP 1: Plan selection */}
-      {step === 'plan' && !inviteToken && (
-        <div className="w-full max-w-4xl">
+      {/* STEP 1: Niche selection */}
+      {step === 'niche' && !inviteToken && (
+        <div className="w-full max-w-5xl">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-slate-900">Velg din plan</h1>
-            <p className="text-slate-500 mt-2">14 dagers gratis prøveperiode — avslutt når som helst</p>
+            <h1 className="text-3xl font-bold text-white">Velg din bransje</h1>
+            <p className="text-slate-400 mt-2">Vi tilpasser hele systemet for din nisje — 14 dager gratis</p>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {PLANS.map(plan => (
-              <div key={plan.key}
-                onClick={() => { setSelectedPlan(plan.key); setStep('form'); }}
-                className={`relative rounded-2xl border-2 p-6 flex flex-col cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5 ${
-                  plan.highlight ? 'border-blue-600 shadow-lg bg-gradient-to-b from-blue-50 to-white scale-[1.02]' : 'border-slate-200 bg-white hover:border-blue-300'
-                }`}>
-                {plan.badge && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-blue-600 px-4 py-0.5 text-xs font-bold text-white">
-                    {plan.badge}
+
+          {/* Category filter */}
+          <div className="flex flex-wrap gap-2 justify-center mb-6">
+            {allCategories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setNicheFilter(cat)}
+                className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
+                  nicheFilter === cat
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-slate-800 border border-slate-700 text-slate-300 hover:border-blue-500'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 mb-6">
+            {filteredNiches.map(niche => (
+              <div
+                key={niche.id}
+                onClick={() => { setSelectedNicheId(niche.id); setStep('form'); }}
+                className={`relative rounded-xl border p-4 cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-lg ${
+                  selectedNicheId === niche.id
+                    ? 'border-blue-500 bg-blue-900/20 shadow-blue-900/30 shadow-md'
+                    : 'border-slate-700 bg-slate-900 hover:border-blue-600/50'
+                }`}
+                style={selectedNicheId === niche.id ? { boxShadow: `0 4px 20px ${niche.color}30` } : {}}
+              >
+                {niche.popular && (
+                  <div className="absolute -top-2 -right-2 rounded-full bg-amber-500 px-2 py-0.5 text-[9px] font-bold text-white">
+                    POPULÆR
                   </div>
                 )}
-                <h3 className="text-xl font-bold text-slate-900">{plan.title}</h3>
-                <p className="text-xs text-slate-500 mt-0.5 mb-3">{plan.description}</p>
-                <div className="mb-4">
-                  <span className="text-4xl font-extrabold text-slate-900">{plan.price}</span>
-                  <span className="text-slate-500 text-sm ml-1">{plan.period}</span>
+                <div className="text-2xl mb-2">{niche.emoji}</div>
+                <p className="text-sm font-semibold text-white leading-tight">{niche.name}</p>
+                <p className="text-xs text-slate-400 mt-0.5">{niche.priceMonthly.toLocaleString('nb-NO')} kr/mnd</p>
+                <div className="mt-2 flex items-center gap-1 text-xs text-blue-400 font-medium">
+                  Velg <ChevronRight className="h-3 w-3" />
                 </div>
-                <ul className="space-y-2 flex-1">
-                  {plan.features.map(f => (
-                    <li key={f} className="flex items-center gap-2 text-sm text-slate-700">
-                      <Check className="h-4 w-4 text-emerald-500 flex-shrink-0" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  className={`mt-5 w-full rounded-xl py-2.5 text-sm font-bold flex items-center justify-center gap-1.5 transition ${
-                    plan.highlight ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-slate-100 text-slate-900 hover:bg-slate-200'
-                  }`}
-                >
-                  Velg {plan.title} <ChevronRight className="h-4 w-4" />
-                </button>
               </div>
             ))}
           </div>
-          <p className="text-center text-sm text-slate-400 mt-6">
-            Har du allerede konto? <Link href="/login" className="text-blue-600 hover:underline font-medium">Logg inn</Link>
+
+          <p className="text-center text-sm text-slate-500">
+            Har du allerede konto? <Link href="/login" className="text-blue-400 hover:underline font-medium">Logg inn</Link>
           </p>
         </div>
       )}
@@ -162,91 +148,116 @@ function RegisterFlow() {
       {(step === 'form' || inviteToken) && (
         <div className="w-full max-w-md">
           {!inviteToken && (
-            <button onClick={() => setStep('plan')} className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 mb-5 transition">
-              <ArrowLeft className="h-4 w-4" /> Tilbake til planvalg
+            <button onClick={() => setStep('niche')} className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-300 mb-5 transition">
+              <ArrowLeft className="h-4 w-4" /> Tilbake til bransjevalg
             </button>
           )}
 
           {inviteToken ? (
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 mb-5 text-sm text-emerald-800">
+            <div className="rounded-xl border border-emerald-700/40 bg-emerald-900/20 px-4 py-3 mb-5 text-sm text-emerald-300">
               <p className="font-semibold">Du er invitert til et team!</p>
-              <p className="text-xs mt-0.5">Opprett konto for å få tilgang — gratis, inkludert i abonnementet.</p>
+              <p className="text-xs mt-0.5 text-emerald-400">Opprett konto for å få tilgang — gratis, inkludert i abonnementet.</p>
             </div>
           ) : (
-            <div className="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 mb-5 flex items-center justify-between">
-              <div>
-                <p className="text-xs text-slate-500">Valgt plan</p>
-                <p className="font-bold text-slate-900">{selectedPlanData.title} — {selectedPlanData.price} kr/mnd</p>
+            <div className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 mb-5 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">{selectedNiche.emoji}</span>
+                <div>
+                  <p className="text-xs text-slate-500">Valgt nisje</p>
+                  <p className="font-bold text-white text-sm">
+                    {selectedNiche.name} — {selectedNiche.priceMonthly.toLocaleString('nb-NO')} kr/mnd
+                  </p>
+                </div>
               </div>
-              <button onClick={() => setStep('plan')} className="text-xs text-blue-600 hover:underline font-medium">Endre</button>
+              <button onClick={() => setStep('niche')} className="text-xs text-blue-400 hover:underline font-medium">Endre</button>
             </div>
           )}
 
-          <div className="rounded-2xl bg-white border border-slate-200 shadow-xl p-6">
-            <h2 className="text-xl font-bold text-slate-900 mb-1">{inviteToken ? 'Bli med i teamet' : 'Opprett din konto'}</h2>
-            <p className="text-sm text-slate-500 mb-5">
+          {/* Features preview */}
+          {!inviteToken && (
+            <div className="rounded-xl border border-slate-800 bg-slate-900/50 px-4 py-3 mb-5">
+              <p className="text-xs text-slate-500 mb-2">Inkludert i pakken:</p>
+              <div className="grid grid-cols-2 gap-1.5">
+                {selectedNiche.nicheFeatures.slice(0, 4).map(f => (
+                  <div key={f.id} className="flex items-center gap-1.5 text-xs text-slate-300">
+                    <Check className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" />
+                    <span className="truncate">{f.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="rounded-2xl bg-slate-900 border border-slate-800 shadow-xl shadow-black/40 p-6">
+            <h2 className="text-xl font-bold text-white mb-1">{inviteToken ? 'Bli med i teamet' : 'Opprett din konto'}</h2>
+            <p className="text-sm text-slate-400 mb-5">
               {inviteToken ? 'Fyll inn dine opplysninger for å starte.' : '14 dager gratis — kortet belastes ikke nå.'}
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-3">
               {error && (
-                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                <div className="rounded-lg border border-red-800/40 bg-red-900/20 px-3 py-2 text-sm text-red-400">
                   {error}
                 </div>
               )}
               {!inviteToken && (
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 mb-1">Bedriftsnavn *</label>
+                  <label className="block text-xs font-semibold text-slate-400 mb-1">Bedriftsnavn *</label>
                   <input value={form.companyName} onChange={set('companyName')} required placeholder="Nordmann Rørlegger AS"
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    className="w-full rounded-lg border border-slate-700 bg-slate-800 text-white px-3 py-2.5 text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                 </div>
               )}
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">Ditt navn *</label>
+                <label className="block text-xs font-semibold text-slate-400 mb-1">Ditt navn *</label>
                 <input value={form.name} onChange={set('name')} required placeholder="Ola Nordmann"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  className="w-full rounded-lg border border-slate-700 bg-slate-800 text-white px-3 py-2.5 text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">E-post *</label>
+                <label className="block text-xs font-semibold text-slate-400 mb-1">E-post *</label>
                 <input type="email" value={form.email} onChange={set('email')} required placeholder="ola@bedrift.no"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  className="w-full rounded-lg border border-slate-700 bg-slate-800 text-white px-3 py-2.5 text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">Telefon</label>
+                <label className="block text-xs font-semibold text-slate-400 mb-1">Telefon</label>
                 <input type="tel" value={form.phone} onChange={set('phone')} placeholder="+47 900 00 000"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  className="w-full rounded-lg border border-slate-700 bg-slate-800 text-white px-3 py-2.5 text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">Passord * (min. 8 tegn)</label>
+                <label className="block text-xs font-semibold text-slate-400 mb-1">Passord * (min. 8 tegn)</label>
                 <input type="password" value={form.password} onChange={set('password')} required minLength={8} placeholder="••••••••"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  className="w-full rounded-lg border border-slate-700 bg-slate-800 text-white px-3 py-2.5 text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-600 mb-1">Bekreft passord *</label>
+                <label className="block text-xs font-semibold text-slate-400 mb-1">Bekreft passord *</label>
                 <input type="password" value={form.confirmPassword} onChange={set('confirmPassword')} required placeholder="••••••••"
-                  className="w-full rounded-lg border border-slate-200 px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  className="w-full rounded-lg border border-slate-700 bg-slate-800 text-white px-3 py-2.5 text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
               </div>
               <button type="submit" disabled={loading}
-                className="w-full rounded-xl bg-emerald-600 py-3 text-sm font-bold text-white hover:bg-emerald-700 disabled:opacity-50 transition flex items-center justify-center gap-2 mt-1">
-                {loading ? <><Loader2 className="h-4 w-4 animate-spin" /> Behandler...</> : inviteToken ? 'Bli med i teamet' : '🔒 Start 14 dager gratis'}
+                className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 py-3 text-sm font-bold text-white hover:opacity-90 disabled:opacity-50 transition flex items-center justify-center gap-2 mt-1 shadow-lg shadow-blue-900/30">
+                {loading
+                  ? <><Loader2 className="h-4 w-4 animate-spin" /> Behandler...</>
+                  : inviteToken
+                    ? 'Bli med i teamet'
+                    : <> Start 14 dager gratis <ArrowRight className="h-4 w-4" /></>
+                }
               </button>
               {!inviteToken && (
-                <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800 text-center">
-                  <strong>Kortet belastes IKKE nå.</strong> Du legger kun inn kortinformasjon og abonnementet starter automatisk etter 14 dager. Avslutt gratis når som helst før det.
+                <div className="rounded-lg border border-emerald-800/30 bg-emerald-900/20 px-3 py-2 text-xs text-emerald-400 text-center">
+                  <strong>Kortet belastes IKKE nå.</strong> Abonnementet starter automatisk etter 14 dager.
                 </div>
               )}
-              <p className="text-xs text-center text-slate-400 mt-1">
+              <p className="text-xs text-center text-slate-500 mt-1">
                 Ved å registrere deg godtar du våre{' '}
-                <Link href="/terms" target="_blank" className="text-blue-500 hover:underline">Brukervilkår</Link>{' '}
+                <Link href="/terms" target="_blank" className="text-blue-400 hover:underline">Brukervilkår</Link>{' '}
                 og{' '}
-                <Link href="/privacy" target="_blank" className="text-blue-500 hover:underline">Personvernserklæring</Link>.
+                <Link href="/privacy" target="_blank" className="text-blue-400 hover:underline">Personvernserklæring</Link>.
               </p>
             </form>
           </div>
 
           <p className="text-center text-sm text-slate-500 mt-4">
             Har du allerede konto?{' '}
-            <Link href="/login" className="text-blue-600 hover:underline font-medium">Logg inn her</Link>
+            <Link href="/login" className="text-blue-400 hover:underline font-medium">Logg inn her</Link>
           </p>
         </div>
       )}
@@ -256,7 +267,7 @@ function RegisterFlow() {
 
 export default function RegisterPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-slate-500">Laster...</div>}>
+    <Suspense fallback={<div className="min-h-screen bg-[#0a0f1a] flex items-center justify-center text-slate-400">Laster...</div>}>
       <RegisterFlow />
     </Suspense>
   );

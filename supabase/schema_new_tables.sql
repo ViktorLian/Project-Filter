@@ -357,4 +357,31 @@ create policy "Company members can manage their brain entries"
     )
   );
 
+-- ──────────────────────────────────────────
+-- 8. NICHE CONFIG — add niche_id to leads_companies
+-- ──────────────────────────────────────────
+alter table leads_companies add column if not exists niche_id text;
 
+-- Contact & service inquiry submissions
+create table if not exists contact_submissions (
+  id         uuid        default gen_random_uuid() primary key,
+  name       text,
+  email      text,
+  company    text,
+  message    text,
+  created_at timestamptz default now()
+);
+
+create table if not exists service_inquiries (
+  id         uuid        default gen_random_uuid() primary key,
+  name       text,
+  email      text,
+  phone      text,
+  company    text,
+  industry   text,
+  services   text,
+  goals      text,
+  budget     text,
+  message    text,
+  created_at timestamptz default now()
+);

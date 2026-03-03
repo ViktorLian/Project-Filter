@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import {
   LayoutDashboard, MessageSquare, Calendar, Users, GitBranch,
@@ -12,9 +12,41 @@ import {
 } from 'lucide-react';
 const Globe2 = Globe;
 import { signOut, useSession } from 'next-auth/react';
+import { getNiche } from '@/lib/niches';
 
-// ─── Navigation structure ──────────────────────────────────────────────────────
-// Top-level items: each goes to a hub page with tabs for sub-features
+// Map niche module keys → dashboard hrefs they should enable
+const MODULE_HREFS: Record<string, string[]> = {
+  dashboard:          ['/dashboard'],
+  leads:              ['/dashboard/leads'],
+  inbox:              ['/dashboard/inbox'],
+  calendar:           ['/dashboard/calendar'],
+  customers:          ['/dashboard/customers'],
+  pipeline:           ['/dashboard/pipeline'],
+  jobs:               ['/dashboard/jobs'],
+  tasks:              ['/dashboard/tasks'],
+  invoices:           ['/dashboard/invoices'],
+  cashflow:           ['/dashboard/cashflow'],
+  inventory:          ['/dashboard/inventory'],
+  proposals:          ['/dashboard/proposals'],
+  campaigns:          ['/dashboard/campaigns'],
+  workflows:          ['/dashboard/workflows'],
+  forms:              ['/dashboard/forms'],
+  'review-gatekeeper':['/dashboard/review-gatekeeper'],
+  'social-planner':   ['/dashboard/social-planner'],
+  affiliates:         ['/dashboard/affiliates'],
+  analytics:          ['/dashboard/analytics'],
+  'ai-assistant':     ['/dashboard/ai-assistant'],
+  'chatbot-widget':   ['/dashboard/chatbot-widget'],
+  'google-maps':      ['/dashboard/google-maps'],
+  'creative-generator':['/dashboard/creative-generator'],
+  'client-portal':    ['/dashboard/client-portal'],
+  settings:           ['/dashboard/settings'],
+};
+
+// Always enabled regardless of niche
+const ALWAYS_ENABLED = new Set(['/dashboard', '/dashboard/settings', '/dashboard/analytics']);
+
+
 
 type NavSection = { section: string; hub?: string };
 type NavItem = { href: string; label: string; icon: React.ElementType; badge?: string; active?: (p: string) => boolean };
@@ -62,6 +94,25 @@ export default function Sidebar() {
   const { data: session } = useSession();
   const [search, setSearch] = useState('');
   const [collapsed, setCollapsed] = useState(false);
+  const [nicheId, setNicheId] = useState<string | null>(null);
+
+  // Fetch niche once per session
+  useEffect(() => {
+    if (!session?.user?.id) return;
+    fetch('/api/onboarding/niche')
+      .then(r => r.json())
+      .then(d => setNicheId(d.nicheId || null))
+      .catch(() => {});
+  }, [session?.user?.id]);
+
+  const niche = nicheId ? getNiche(nicheId) : null;
+  // Build set of enabled hrefs: if niche defined, filter; otherwise show all
+  const enabledHrefs: Set<string> | null = niche
+    ? new Set([
+        ...ALWAYS_ENABLED,
+        ...niche.modules.flatMap(m => MODULE_HREFS[m] ?? []),
+      ])
+    : null;
 
   const q = search.toLowerCase().trim();
 
@@ -123,8 +174,10 @@ export default function Sidebar() {
       <nav className="flex-1 py-1 overflow-y-auto">
         {NAV.filter(item => {
           if ('section' in item) return true;
-          if (!q) return true;
-          return item.label.toLowerCase().includes(q);
+          if (!q && !enabledHrefs) return true;
+          if (q && !item.label.toLowerCase().includes(q)) return false;
+          if (enabledHrefs && !enabledHrefs.has(item.href)) return false;
+          return true;
         }).map((item, idx) => {
           if ('section' in item) {
             if (collapsed) return null;
@@ -181,6 +234,13 @@ export default function Sidebar() {
 
       {/* User + logout */}
       <div className="border-t border-white/8 px-2.5 py-2.5">
+        {/* Niche badge */}
+        {!collapsed && niche && (
+          <div className="mb-2 flex items-center gap-2 px-1">
+            <span className="text-base">{niche.emoji}</span>
+            <span className="text-[10px] text-slate-500 truncate">{niche.name}-pakken</span>
+          </div>
+        )}
         {!collapsed ? (
           <div className="flex items-center gap-2.5">
             <div className="h-7 w-7 rounded-full bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center flex-shrink-0">

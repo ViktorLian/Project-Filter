@@ -3,8 +3,7 @@ import { Problems } from '@/components/landing/problems'
 import { Features } from '@/components/landing/features'
 import { SignatureSystems } from '@/components/landing/SignatureSystems'
 import { DemoVideo } from '@/components/landing/DemoVideo'
-import { Pricing } from '@/components/landing/pricing'
-import { Services } from '@/components/landing/Services'
+import { NicheSection } from '@/components/landing/NicheSection'
 import { FAQ } from '@/components/landing/faq'
 import { Contact } from '@/components/landing/contact'
 import { Footer } from '@/components/landing/footer'
@@ -19,8 +18,7 @@ export default function HomePage() {
       <SignatureSystems />
       <Features />
       <DemoVideo />
-      <Pricing />
-      <Services />
+      <NicheSection />
       <FAQ />
       <Contact />
       <Footer />
