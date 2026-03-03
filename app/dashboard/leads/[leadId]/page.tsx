@@ -144,12 +144,6 @@ export default async function LeadDetailPage({ params }: { params: { leadId: str
     </div>
   );
 }
-
-export default async function LeadDetailPage({
-  params,
-}: {
-  params: { leadId: string };
-}) {
   const session = await getServerSession(authOptions);
   if (!session) return null;
 

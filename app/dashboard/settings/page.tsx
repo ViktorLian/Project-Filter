@@ -153,6 +153,9 @@ export default async function SettingsPage() {
           <Key className="h-5 w-5 text-slate-600" />
           <h2 className="font-semibold text-slate-800">Integrasjoner</h2>
         </div>
+        <p className="text-xs text-slate-500">Administrer API-nøkler og tilkoblinger under <strong>Innstillinger → Miljøvariabler</strong> i Vercel.</p>
+      </div>
+
       {/* Advanced tools / Business analysis */}
       <div className="rounded-xl border border-slate-200 bg-white p-5">
         <div className="flex items-center gap-2 mb-4">
