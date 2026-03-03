@@ -96,6 +96,8 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error('[SERVICE INQUIRY ERROR]', err);
     return NextResponse.json({ error: 'Intern feil' }, { status: 500 });
   }
 }

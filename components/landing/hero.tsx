@@ -19,6 +19,7 @@ export function Hero() {
               <a href="#how-it-works" className="text-sm font-medium text-slate-400 hover:text-blue-400 transition">Slik fungerer det</a>
               <a href="#pricing" className="text-sm font-medium text-slate-400 hover:text-blue-400 transition">Priser</a>
               <a href="#contact" className="text-sm font-medium text-slate-400 hover:text-blue-400 transition">Kontakt</a>
+              <Link href="/blog" className="text-sm font-medium text-slate-400 hover:text-blue-400 transition">Blogg</Link>
             </div>
             <div className="flex items-center gap-3">
               <Link href="/login" className="text-sm font-medium text-slate-400 hover:text-white transition hidden sm:block">Logg inn</Link>

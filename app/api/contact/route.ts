@@ -89,6 +89,8 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error('[CONTACT ERROR]', err);
     return NextResponse.json({ error: 'Kunne ikke sende melding' }, { status: 500 });
   }
 }
