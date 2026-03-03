@@ -1,5 +1,6 @@
 export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 async function sendViaResend(to: string, subject: string, html: string, replyTo?: string) {
   const apiKey = process.env.RESEND_API_KEY;
@@ -76,9 +77,18 @@ export async function POST(req: NextRequest) {
       </div>`,
     );
 
+    // Save to Supabase
+    try {
+      const supabase = createAdminClient();
+      await supabase.from('contact_submissions').insert({
+        name, email, company: company || null,
+        message, created_at: new Date().toISOString(),
+      });
+    } catch (dbErr) {
+      console.error('[CONTACT DB SAVE ERROR]', dbErr);
+    }
+
     return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Contact form error:', error);
     return NextResponse.json({ error: 'Kunne ikke sende melding' }, { status: 500 });
   }
 }

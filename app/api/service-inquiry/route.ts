@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 async function sendViaResend(to: string, subject: string, html: string) {
   const apiKey = process.env.RESEND_API_KEY;
@@ -80,9 +81,21 @@ export async function POST(req: NextRequest) {
       </div>`
     );
 
+    // Save to Supabase so you can view all inquiries in the dashboard
+    try {
+      const supabase = createAdminClient();
+      await supabase.from('service_inquiries').insert({
+        name, email, phone: phone || null, company: company || null,
+        industry: industry || null, services: serviceList,
+        goals: goalList, budget: budget || null,
+        message: message || null, created_at: new Date().toISOString(),
+      });
+    } catch (dbErr) {
+      console.error('[SERVICE INQUIRY DB SAVE ERROR]', dbErr);
+      // Non-fatal: emails already sent
+    }
+
     return NextResponse.json({ success: true });
-  } catch (err) {
-    console.error('[SERVICE INQUIRY ERROR]', err);
     return NextResponse.json({ error: 'Intern feil' }, { status: 500 });
   }
 }
