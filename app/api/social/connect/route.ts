@@ -5,7 +5,7 @@ import { authOptions } from '@/lib/auth';
 
 // Redirect user to social platform OAuth flow
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.redirect(new URL('/login', req.url));
 
   const { searchParams } = new URL(req.url);

@@ -6,7 +6,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { sendReviewRequest } from '@/lib/notifications';
 
 export async function GET(_req: NextRequest, { params }: { params: { jobId: string } }) {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const supabase = createAdminClient();
   const { jobId } = params;
@@ -40,7 +40,7 @@ export async function GET(_req: NextRequest, { params }: { params: { jobId: stri
 }
 
 export async function PATCH(request: NextRequest, { params }: { params: { jobId: string } }) {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const supabase = createAdminClient();
   const body = await request.json();
@@ -83,7 +83,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { jobId:
 
 // POST /api/jobs/[jobId] - Add expense
 export async function POST(request: NextRequest, { params }: { params: { jobId: string } }) {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const supabase = createAdminClient();
   const body = await request.json();

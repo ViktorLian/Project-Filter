@@ -79,7 +79,7 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest, { params }: { params: { formId: string } }) {
   try {
     // Try session auth first (dashboard embed/detail pages)
-    const session = await getServerSession(authOptions as any);
+    const session = await getServerSession(authOptions as any) as any;
     if (session) {
       const companyId = (session as any)?.user?.companyId;
       const supabase = createAdminClient();

@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
 
 // PATCH /api/testimonials — approve or reject a testimonial
 export async function PATCH(request: NextRequest) {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const supabase = createAdminClient();
 

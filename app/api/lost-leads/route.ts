@@ -7,7 +7,7 @@ import { sendEmail } from '@/lib/email';
 
 // GET /api/lost-leads — find dormant leads (no activity in X days)
 export async function GET(request: NextRequest) {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const supabase = createAdminClient();
   const sessAny = session as any;
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
 
 // POST /api/lost-leads — trigger re-engagement campaign for selected leads
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const supabase = createAdminClient();
   const sessAny = session as any;

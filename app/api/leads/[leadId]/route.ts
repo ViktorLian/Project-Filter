@@ -7,7 +7,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 type Params = { params: { leadId: string } };
 
 export async function GET(_req: NextRequest, { params }: Params) {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const companyId = (session.user as any).companyId;
   const supabase = createAdminClient();
@@ -27,7 +27,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
 }
 
 export async function PATCH(req: NextRequest, { params }: Params) {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const companyId = (session.user as any).companyId;
   const body = await req.json();
@@ -47,7 +47,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 }
 
 export async function DELETE(_req: NextRequest, { params }: Params) {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const companyId = (session.user as any).companyId;
   const supabase = createAdminClient();

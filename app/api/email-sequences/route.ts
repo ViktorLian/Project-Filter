@@ -6,7 +6,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 
 // GET: return saved sequence settings (active flags + custom bodies) for the company
 export async function GET() {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const userId = (session.user as any).id;
   const supabase = createAdminClient();
@@ -22,7 +22,7 @@ export async function GET() {
 
 // PATCH: save updated settings
 export async function PATCH(req: NextRequest) {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const userId = (session.user as any).id;
   const body = await req.json(); // { settings: { velkomst: { active: true, steps: [{...}] }, ... } }

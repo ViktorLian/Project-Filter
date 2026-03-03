@@ -7,7 +7,7 @@ import { sendEmail } from '@/lib/email';
 
 // GET — list contract reminders
 export async function GET(request: NextRequest) {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const supabase = createAdminClient();
   const sessAny = session as any;
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
 
 // POST — create contract reminder
 export async function POST(request: NextRequest) {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const supabase = createAdminClient();
   const sessAny = session as any;
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
 
 // PATCH — mark reminder as sent / update
 export async function PATCH(request: NextRequest) {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const supabase = createAdminClient();
 
@@ -121,7 +121,7 @@ export async function PATCH(request: NextRequest) {
 
 // DELETE
 export async function DELETE(request: NextRequest) {
-  const session = await getServerSession(authOptions as any);
+  const session = await getServerSession(authOptions as any) as any;
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   const supabase = createAdminClient();
   const { searchParams } = new URL(request.url);
