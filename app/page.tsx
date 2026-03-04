@@ -5,6 +5,7 @@ import { Features } from '@/components/landing/features'
 import { SignatureSystems } from '@/components/landing/SignatureSystems'
 import { DemoVideo } from '@/components/landing/DemoVideo'
 import { NicheSection } from '@/components/landing/NicheSection'
+import { Pricing } from '@/components/landing/pricing'
 import { FAQ } from '@/components/landing/faq'
 import { Contact } from '@/components/landing/contact'
 import { Footer } from '@/components/landing/footer'
@@ -21,6 +22,7 @@ export default function HomePage() {
       <Features />
       <DemoVideo />
       <NicheSection />
+      <Pricing />
       <FAQ />
       <Contact />
       <Footer />
