@@ -82,7 +82,7 @@ export default function ReviewGatekeeperPage() {
           <button key={t} onClick={() => setActiveView(t)}
             className={`text-sm font-medium px-4 py-1.5 rounded-lg transition ${activeView === t ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
           >
-            {t === 'dashboard' ? '📊 Oversikt' : t === 'requests' ? '📋 Forespørsler' : '✉️ Maler'}
+            {t === 'dashboard' ? 'Oversikt' : t === 'requests' ? 'Forspoersler' : 'Maler'}
           </button>
         ))}
       </div>
@@ -92,13 +92,15 @@ export default function ReviewGatekeeperPage() {
           {/* Stats */}
           <div className="grid grid-cols-4 gap-4">
             {[
-              { label: 'Sendt totalt', value: REQUESTS.length.toString(), icon: '📤', color: 'bg-blue-50 text-blue-700' },
-              { label: 'Google-videresend', value: `${redirected} (${Math.round(redirected / REQUESTS.length * 100)}%)`, icon: '✅', color: 'bg-emerald-50 text-emerald-700' },
-              { label: 'Blokkert (intern)', value: blocked.toString(), icon: '🛡️', color: 'bg-amber-50 text-amber-700' },
-              { label: 'Snittkarakter', value: `${avg.toFixed(1)} ⭐`, icon: '⭐', color: 'bg-yellow-50 text-yellow-700' },
+              { label: 'Sendt totalt', value: REQUESTS.length.toString(), icon: 'send', color: 'bg-blue-50 text-blue-700' },
+              { label: 'Google-videresend', value: `${redirected} (${Math.round(redirected / REQUESTS.length * 100)}%)`, icon: 'check', color: 'bg-emerald-50 text-emerald-700' },
+              { label: 'Blokkert (intern)', value: blocked.toString(), icon: 'shield', color: 'bg-amber-50 text-amber-700' },
+              { label: 'Snittkarakter', value: avg.toFixed(1), icon: 'star', color: 'bg-yellow-50 text-yellow-700' },
             ].map((s) => (
               <div key={s.label} className="bg-white rounded-2xl border border-slate-200 p-5">
-                <div className="text-2xl mb-2">{s.icon}</div>
+                <div className="h-8 w-8 rounded-lg bg-slate-100 flex items-center justify-center mb-2">
+                  <Star className="h-4 w-4 text-slate-500" />
+                </div>
                 <p className={`text-xl font-bold mb-0.5 ${s.color.split(' ')[1]}`}>{s.value}</p>
                 <p className="text-sm text-slate-500">{s.label}</p>
               </div>

@@ -244,13 +244,12 @@ export default function NervousSystemPage() {
         </div>
         <div className="grid sm:grid-cols-3 gap-4">
           {[
-            { rank: '#1', action: 'Ring lead "Bjørn Hansen" – score 94', roi: '+kr 42 000 estimert', icon: '📞' },
-            { rank: '#2', action: 'Send purring på faktura #1042 – forfalt', roi: '+kr 18 500 umiddelbart', icon: '📄' },
-            { rank: '#3', action: 'Aktiver sove-kampanje "Mars høysesong"', roi: '+kr 8 200 / uke est.', icon: '🚀' },
+            { rank: '#1', action: 'Ring lead "Bjørn Hansen" – score 94', roi: '+kr 42 000 estimert' },
+            { rank: '#2', action: 'Send purring pa faktura #1042 – forfalt', roi: '+kr 18 500 umiddelbart' },
+            { rank: '#3', action: 'Aktiver sove-kampanje "Mars hoysesong"', roi: '+kr 8 200 / uke est.' },
           ].map((p) => (
             <div key={p.rank} className="bg-blue-50 rounded-xl border border-blue-200 p-4">
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-2xl">{p.icon}</span>
                 <span className="text-xs font-bold text-blue-600 uppercase">{p.rank} Prioritet</span>
               </div>
               <p className="text-sm font-semibold text-slate-900 mb-2">{p.action}</p>

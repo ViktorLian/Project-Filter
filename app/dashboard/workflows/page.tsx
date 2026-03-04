@@ -283,18 +283,17 @@ export default function WorkflowsPage() {
         <p className="text-xs font-semibold text-slate-500 uppercase mb-3">Maler</p>
         <div className="space-y-2">
           {[
-            { name: 'Missed Call Text Back', cat: 'Salg', icon: '📞' },
-            { name: 'Ny Lead Velkomst', cat: 'Markedsføring', icon: '👋' },
-            { name: 'Google Anmeldelse', cat: 'Omdømme', icon: '⭐' },
-            { name: 'Fakturapur ring', cat: 'Økonomi', icon: '💰' },
-            { name: 'Fødselsdags-SMS', cat: 'Relasjoner', icon: '🎂' },
-            { name: 'Sesong-kampanje', cat: 'Markedsføring', icon: '📣' },
-            { name: 'Reaktivering', cat: 'Salg', icon: '🔁' },
-            { name: 'Ny jobb opprettet', cat: 'Drift', icon: '🔧' },
+            { name: 'Missed Call Text Back', cat: 'Salg' },
+            { name: 'Ny Lead Velkomst', cat: 'Markedsføring' },
+            { name: 'Google Anmeldelse', cat: 'Omdomme' },
+            { name: 'Fakturapurring', cat: 'Okonomi' },
+            { name: 'Fodselsdags-SMS', cat: 'Relasjoner' },
+            { name: 'Sesong-kampanje', cat: 'Markedsforing' },
+            { name: 'Reaktivering', cat: 'Salg' },
+            { name: 'Ny jobb opprettet', cat: 'Drift' },
           ].map((t) => (
             <button key={t.name} className="w-full text-left bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 p-3 rounded-xl transition">
               <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-base">{t.icon}</span>
                 <p className="text-xs font-semibold text-slate-800">{t.name}</p>
               </div>
               <p className="text-xs text-slate-400 pl-6">{t.cat}</p>

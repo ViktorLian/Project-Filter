@@ -14,7 +14,7 @@ const LEVERS = [
   {
     id: 'price',
     title: '+10% prisøkning',
-    icon: '💰',
+    icon: 'price',
     description: 'Hev snittprisen med 10% på alle jobber',
     gain: 38200,
     risk: 'Lav',
@@ -24,7 +24,7 @@ const LEVERS = [
   {
     id: 'volume',
     title: '+20% flere jobber / mnd',
-    icon: '📈',
+    icon: 'volume',
     description: 'Aktiver 3 nye salgskanaler + intensiver kampanje',
     gain: 54600,
     risk: 'Middels',
@@ -34,7 +34,7 @@ const LEVERS = [
   {
     id: 'cost',
     title: 'Kutt kostnader 8%',
-    icon: '✂️',
+    icon: 'cost',
     description: 'Reduser materiale- og transportkostnader',
     gain: 18700,
     risk: 'Lav',
@@ -44,7 +44,7 @@ const LEVERS = [
   {
     id: 'upsell',
     title: 'Upsell 15% av kunder',
-    icon: '🎯',
+    icon: 'upsell',
     description: 'Tilby serviceavtale / utvidet garantipakke',
     gain: 29400,
     risk: 'Lav',
@@ -54,7 +54,7 @@ const LEVERS = [
   {
     id: 'mix',
     title: 'Flytt jobbmiks mot høymargin',
-    icon: '🔀',
+    icon: 'mix',
     description: 'Prioriter "Tilsynsrunde" – høyest margin/time',
     gain: 22100,
     risk: 'Lav',
@@ -173,7 +173,9 @@ export default function ProfitIntelligencePage() {
                   ${activeLever === lever.id ? 'border-blue-500/50 bg-blue-50' : 'border-slate-200 hover:border-slate-300 bg-white'}`}
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-base">{lever.icon}</span>
+                  <div className="h-7 w-7 rounded-md bg-slate-100 flex items-center justify-center flex-shrink-0">
+                    <TrendingUp className="h-3.5 w-3.5 text-slate-500" />
+                  </div>
                   <div>
                     <p className="text-sm font-semibold text-slate-900">{lever.title}</p>
                     <p className="text-xs text-slate-500">{lever.description}</p>

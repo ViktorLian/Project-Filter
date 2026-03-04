@@ -8,7 +8,7 @@ import {
   LayoutDashboard, MessageSquare, Calendar, Users, GitBranch,
   Receipt, Megaphone, Zap, FileText, Star, CheckSquare, FileCheck,
   BarChart3, Bot, Settings, Package, Briefcase, Newspaper, Users2, Sparkles, Globe,
-  Search, LogOut, DollarSign, Map, ChevronRight, ChevronRight as ChevRight
+  Search, LogOut, DollarSign, Map, ChevronRight, ChevronRight as ChevRight, Layers
 } from 'lucide-react';
 const Globe2 = Globe;
 import { signOut, useSession } from 'next-auth/react';
@@ -237,7 +237,7 @@ export default function Sidebar() {
         {/* Niche badge */}
         {!collapsed && niche && (
           <div className="mb-2 flex items-center gap-2 px-1">
-            <span className="text-base">{niche.emoji}</span>
+            <Layers className="h-3.5 w-3.5 text-slate-500 flex-shrink-0" />
             <span className="text-[10px] text-slate-500 truncate">{niche.name}-pakken</span>
           </div>
         )}

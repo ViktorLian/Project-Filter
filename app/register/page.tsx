@@ -3,7 +3,7 @@
 import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Check, ChevronRight, ArrowLeft, Loader2, ArrowRight } from 'lucide-react';
+import { Check, ChevronRight, ArrowLeft, Loader2, ArrowRight, Layers } from 'lucide-react';
 import { NICHES, getNiche, NICHE_CATEGORIES } from '@/lib/niches';
 
 function RegisterFlow() {
@@ -128,7 +128,9 @@ function RegisterFlow() {
                     POPULÆR
                   </div>
                 )}
-                <div className="text-2xl mb-2">{niche.emoji}</div>
+                <div className="h-8 w-8 mb-2 rounded-lg bg-slate-700 border border-slate-600 flex items-center justify-center">
+                  <Layers className="h-4 w-4 text-slate-300" />
+                </div>
                 <p className="text-sm font-semibold text-white leading-tight">{niche.name}</p>
                 <p className="text-xs text-slate-400 mt-0.5">{niche.priceMonthly.toLocaleString('nb-NO')} kr/mnd</p>
                 <div className="mt-2 flex items-center gap-1 text-xs text-blue-400 font-medium">
@@ -161,7 +163,9 @@ function RegisterFlow() {
           ) : (
             <div className="rounded-xl border border-slate-700 bg-slate-900 px-4 py-3 mb-5 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <span className="text-2xl">{selectedNiche.emoji}</span>
+                <div className="h-8 w-8 rounded-lg bg-slate-700 border border-slate-600 flex items-center justify-center flex-shrink-0">
+                  <Layers className="h-4 w-4 text-slate-300" />
+                </div>
                 <div>
                   <p className="text-xs text-slate-500">Valgt nisje</p>
                   <p className="font-bold text-white text-sm">

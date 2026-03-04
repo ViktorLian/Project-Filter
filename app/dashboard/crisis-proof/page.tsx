@@ -63,10 +63,10 @@ const SCENARIOS = [
 ];
 
 const BUFFERS = [
-  { label: 'Likviditetsreserve', current: 112000, target: 200000, unit: 'kr', icon: '💰' },
-  { label: 'Buffer-tid (mnd kapasitet)', current: 1.8, target: 3, unit: 'mnd', icon: '⏱' },
-  { label: 'Backup-leverandører', current: 2, target: 3, unit: 'stk', icon: '🏭' },
-  { label: 'Dokumenterte nødprosedyrer', current: 7, target: 12, unit: 'stk', icon: '📋' },
+  { label: 'Likviditetsreserve', current: 112000, target: 200000, unit: 'kr' },
+  { label: 'Buffer-tid (mnd kapasitet)', current: 1.8, target: 3, unit: 'mnd' },
+  { label: 'Backup-leverandorer', current: 2, target: 3, unit: 'stk' },
+  { label: 'Dokumenterte nodprosedyrer', current: 7, target: 12, unit: 'stk' },
 ];
 
 const rehab = [
@@ -128,7 +128,6 @@ export default function CrisisProofPage() {
             return (
               <div key={buf.label} className="bg-slate-50 rounded-xl border border-slate-200 p-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xl">{buf.icon}</span>
                   <p className="text-xs font-semibold text-slate-700 leading-tight">{buf.label}</p>
                 </div>
                 <div className="flex items-end gap-1 mb-2">

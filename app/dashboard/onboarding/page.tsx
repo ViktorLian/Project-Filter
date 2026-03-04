@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { CheckCircle, ArrowRight, Zap, Star, Users, Bot, Bell, Loader2 } from 'lucide-react';
+import { CheckCircle, ArrowRight, Zap, Star, Users, Bot, Bell, Loader2, Layers } from 'lucide-react';
 import { QUIZ_QUESTIONS, NICHES, matchNiche, getNiche } from '@/lib/niches';
 
 type QuizAnswers = Record<string, string>;
@@ -156,7 +156,7 @@ export default function OnboardingPage() {
                   className="inline-flex h-20 w-20 items-center justify-center rounded-2xl mb-4 text-4xl"
                   style={{ backgroundColor: matchedNiche.color + '22', border: `1px solid ${matchedNiche.color}44` }}
                 >
-                  {matchedNiche.emoji}
+                  <Layers className="h-8 w-8 text-blue-400" />
                 </div>
                 <p className="text-xs font-semibold text-emerald-400 uppercase tracking-widest mb-1">Din nisje er klar</p>
                 <h2 className="text-2xl font-extrabold text-white">{matchedNiche.name}</h2>
@@ -210,10 +210,9 @@ export default function OnboardingPage() {
                     <button
                       key={n.id}
                       onClick={() => setMatchedNicheId(n.id)}
-                      className="rounded-lg bg-slate-800 border border-slate-700 hover:border-blue-500 px-3 py-1.5 text-xs text-slate-300 hover:text-white transition flex items-center gap-1.5"
+                      className="rounded-lg bg-slate-800 border border-slate-700 hover:border-blue-500 px-3 py-1.5 text-xs text-slate-300 hover:text-white transition"
                     >
-                      <span>{n.emoji}</span>
-                      <span>{n.name}</span>
+                      {n.name}
                     </button>
                   ))}
                 </div>

@@ -6,7 +6,7 @@ import {
   Calendar, Plus, Facebook, Instagram, Linkedin, Globe,
   Image, Clock, Send, ChevronLeft, ChevronRight, MoreHorizontal,
   Hash, Link, Smile, Repeat, Eye, ThumbsUp, MessageSquare, CheckCircle,
-  AlertCircle
+  AlertCircle, BarChart3
 } from 'lucide-react';
 
 type Channel = 'facebook' | 'instagram' | 'linkedin' | 'google';
@@ -360,13 +360,15 @@ export default function SocialPlannerPage() {
         <div className="space-y-6">
           <div className="grid grid-cols-4 gap-4">
             {[
-              { label: 'Total rekkevidde', value: totalReach.toLocaleString('nb'), icon: '👁', color: 'text-blue-600 bg-blue-50' },
-              { label: 'Engasjementer', value: totalEngagements.toLocaleString('nb'), icon: '💬', color: 'text-emerald-600 bg-emerald-50' },
-              { label: 'Publiserte innlegg', value: publishedPosts.length.toString(), icon: '✅', color: 'text-purple-600 bg-purple-50' },
-              { label: 'Engasjementsrate', value: totalReach > 0 ? `${((totalEngagements / totalReach) * 100).toFixed(1)}%` : '—', icon: '📈', color: 'text-amber-600 bg-amber-50' },
+              { label: 'Total rekkevidde', value: totalReach.toLocaleString('nb'), color: 'text-blue-600 bg-blue-50' },
+              { label: 'Engasjementer', value: totalEngagements.toLocaleString('nb'), color: 'text-emerald-600 bg-emerald-50' },
+              { label: 'Publiserte innlegg', value: publishedPosts.length.toString(), color: 'text-purple-600 bg-purple-50' },
+              { label: 'Engasjementsrate', value: totalReach > 0 ? `${((totalEngagements / totalReach) * 100).toFixed(1)}%` : '—', color: 'text-amber-600 bg-amber-50' },
             ].map((s) => (
               <div key={s.label} className="bg-white rounded-2xl border border-slate-200 p-5">
-                <div className={`h-10 w-10 rounded-xl flex items-center justify-center text-xl mb-3`}>{s.icon}</div>
+                <div className={`h-10 w-10 rounded-xl flex items-center justify-center mb-3 ${s.color.split(' ')[1]} ${s.color.split(' ')[0]}`}>
+                  <BarChart3 className="h-5 w-5" />
+                </div>
                 <p className="text-2xl font-bold text-slate-900 mb-0.5">{s.value}</p>
                 <p className="text-sm text-slate-500">{s.label}</p>
               </div>
