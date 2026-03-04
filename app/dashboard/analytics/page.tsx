@@ -2,6 +2,7 @@
 import { authOptions } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { TrendingUp, Users, CheckCircle, XCircle, BarChart2, Star } from 'lucide-react';
+import { LeadStatusDonut } from '@/components/analytics/LeadStatusDonut';
 
 export const dynamic = 'force-dynamic';
 
@@ -84,21 +85,13 @@ export default async function AnalyticsPage() {
             <BarChart2 className="h-5 w-5 text-blue-600" />
             <h2 className="font-semibold text-slate-800">Lead status fordeling</h2>
           </div>
-          <div className="space-y-3">
-            {statuses.map(status => {
-              const count = leads.filter(l => l.status === status).length;
-              const pct = totalLeads ? Math.round((count / totalLeads) * 100) : 0;
-              return (
-                <div key={status} className="flex items-center gap-3">
-                  <span className="text-xs text-slate-500 w-24 shrink-0">{STATUS_NO[status] ?? status}</span>
-                  <div className="flex-1 h-2 rounded-full bg-slate-200">
-                    <div className={`h-2 rounded-full transition-all ${STATUS_COLORS[status] ?? 'bg-slate-400'}`} style={{ width: `${pct}%` }} />
-                  </div>
-                  <span className="text-xs font-semibold text-slate-700 w-8 text-right">{count}</span>
-                </div>
-              );
-            })}
-          </div>
+          <LeadStatusDonut data={[
+            { name: 'Ny',         value: leads.filter(l => l.status === 'NEW').length,         color: '#3b82f6' },
+            { name: 'Akseptert',  value: leads.filter(l => l.status === 'ACCEPTED').length,    color: '#10b981' },
+            { name: 'Avvist',     value: leads.filter(l => l.status === 'REJECTED').length,    color: '#ef4444' },
+            { name: 'Pagaende',   value: leads.filter(l => l.status === 'IN_PROGRESS').length, color: '#8b5cf6' },
+            { name: 'Gjennomgatt',value: leads.filter(l => l.status === 'REVIEWED').length,    color: '#f59e0b' },
+          ]} />
         </div>
 
         <div className="rounded-xl border border-slate-200 bg-white p-5">

@@ -34,17 +34,15 @@ export function Manifesto() {
         </span>
 
         <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight mb-6">
-          Vi hører deg.{" "}
+          Bygget for{" "}
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
-            Vi ser deg.
+            norske bedrifter.
           </span>
         </h2>
 
         <p className="text-lg md:text-xl text-slate-400 max-w-3xl mx-auto mb-16 leading-relaxed">
-          Ingen bedrift er lik. Spesielt ikke SMB-bedrifter. Derfor er FlowPilot bygget
-          fra bunnen av for{" "}
-          <em className="text-slate-200 not-italic">din</em> bransje – ikke en generisk løsning du
-          må bøye deg etter.
+          Ingen bransje er lik, og systemet skal reflektere det. FlowPilot er bygget fra bunnen av for
+          spesifikke bransjer — ikke en generisk løsning tilpasset med innstillinger.
         </p>
 
         <div className="grid md:grid-cols-3 gap-8">

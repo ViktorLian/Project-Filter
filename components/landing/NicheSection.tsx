@@ -2,8 +2,22 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Search, ArrowRight, CheckCircle, Star } from 'lucide-react';
+import {
+  Search, ArrowRight, CheckCircle, Star, X,
+  Wrench, Zap, Hammer, Paintbrush, Sparkles, Scissors, Heart,
+  Dumbbell, BookOpen, Monitor, Home, Building2, Receipt,
+  Truck, Car, Megaphone, Smile, Scale, Leaf,
+} from 'lucide-react';
 import { NICHES, NICHE_CATEGORIES, type Niche } from '@/lib/niches';
+
+const NICHE_ICONS: Record<string, React.ElementType> = {
+  rorlegger: Wrench, elektriker: Zap, snekker: Hammer, maler: Paintbrush,
+  rengjoring: Sparkles, frisor: Scissors, hudpleie: Heart,
+  'personlig-trener': Dumbbell, regnskapsforer: BookOpen, 'it-konsulent': Monitor,
+  eiendomsmegler: Home, vaktmester: Building2, restaurant: Receipt,
+  transport: Truck, bilverksted: Car, markedsbyra: Megaphone,
+  tannlege: Smile, advokat: Scale, landbruk: Leaf,
+};
 
 const COLOR_MAP: Record<string, { bg: string; text: string; border: string; badge: string }> = {
   blue:    { bg: 'bg-blue-50',   text: 'text-blue-700',   border: 'border-blue-200',   badge: 'bg-blue-600' },
@@ -38,7 +52,9 @@ function NicheCard({ niche, onClick }: { niche: Niche; onClick: () => void }) {
         </span>
       )}
       <div className="flex items-start gap-3">
-        <span className="text-3xl leading-none">{niche.emoji}</span>
+        <div className={`h-9 w-9 rounded-lg ${c.badge} flex items-center justify-center flex-shrink-0`}>
+          {(() => { const I = NICHE_ICONS[niche.id] || Wrench; return <I className="h-4 w-4 text-white" />; })()}
+        </div>
         <div className="flex-1 min-w-0">
           <h3 className={`font-bold text-sm ${c.text} leading-tight`}>{niche.name}</h3>
           <p className="text-xs text-slate-500 mt-0.5 line-clamp-2">{niche.tagline}</p>
@@ -64,14 +80,16 @@ function NicheModal({ niche, onClose }: { niche: Niche; onClose: () => void }) {
         <div className={`${c.bg} rounded-t-3xl p-7 border-b ${c.border}`}>
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <span className="text-5xl">{niche.emoji}</span>
+              <div className={`h-14 w-14 rounded-2xl ${c.badge} flex items-center justify-center flex-shrink-0`}>
+                {(() => { const I = NICHE_ICONS[niche.id] || Wrench; return <I className="h-7 w-7 text-white" />; })()}
+              </div>
               <div>
                 <p className={`text-xs font-semibold ${c.text} uppercase tracking-widest`}>{niche.category}</p>
                 <h2 className="text-2xl font-black text-slate-900">{niche.name}</h2>
                 <p className="text-sm text-slate-600 mt-1">{niche.tagline}</p>
               </div>
             </div>
-            <button onClick={onClose} className="text-slate-400 hover:text-slate-700 text-2xl font-light leading-none shrink-0">✕</button>
+            <button onClick={onClose} className="h-8 w-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 flex-shrink-0 transition-colors"><X className="h-4 w-4" /></button>
           </div>
           <div className={`mt-4 inline-flex items-center gap-2 rounded-xl ${c.badge} text-white px-4 py-2`}>
             <span className="text-lg font-black">{niche.priceMonthly.toLocaleString('nb-NO')} kr</span>
@@ -86,7 +104,7 @@ function NicheModal({ niche, onClose }: { niche: Niche; onClose: () => void }) {
             <ul className="space-y-2">
               {niche.pains.map((p, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
-                  <span className="mt-0.5 text-red-400 shrink-0">✗</span> {p}
+                  <X className="h-3.5 w-3.5 mt-0.5 text-red-400 shrink-0" /> {p}
                 </li>
               ))}
             </ul>
@@ -101,7 +119,7 @@ function NicheModal({ niche, onClose }: { niche: Niche; onClose: () => void }) {
               {niche.nicheFeatures.map((f, i) => (
                 <div key={i} className={`rounded-xl border ${c.border} ${c.bg} p-3`}>
                   <div className="flex items-center gap-2 mb-1">
-                    <span>{f.icon}</span>
+                    <CheckCircle className={`h-3.5 w-3.5 ${c.text} shrink-0`} />
                     <span className={`text-xs font-bold ${c.text}`}>{f.name}</span>
                   </div>
                   <p className="text-xs text-slate-500 leading-relaxed">{f.desc}</p>

@@ -11,6 +11,10 @@ import {
   UserCheck, Bell, RefreshCw, Settings, PieChart, Layers, Heart,
   ListChecks, LayoutGrid, Mail, CheckCircle, Plus, Dumbbell,
 } from 'lucide-react';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  AreaChart, Area,
+} from 'recharts';
 import { getNiche, type Niche } from '@/lib/niches';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -182,6 +186,25 @@ export default function DashboardOverview() {
   const netProfit    = income - expense;
   const newThisWeek  = leads.filter(l => (Date.now() - new Date(l.created_at).getTime()) < 7 * 86400000);
 
+  // compute leads per week (last 4 weeks) for bar chart
+  const weeklyLeads = Array.from({ length: 4 }, (_, wi) => {
+    const end   = Date.now() - wi * 7 * 86400000;
+    const start = end - 7 * 86400000;
+    const count = leads.filter(l => {
+      const t = new Date(l.created_at).getTime();
+      return t >= start && t < end;
+    }).length;
+    const label = wi === 0 ? 'Denne uka' : wi === 1 ? 'Forrige' : `${wi + 1} uker siden`;
+    return { label, count };
+  }).reverse();
+
+  // income vs expense chart
+  const financeData = [
+    { label: 'Inntekter', value: income },
+    { label: 'Utgifter', value: expense },
+    { label: 'Resultat', value: Math.max(0, netProfit) },
+  ];
+
   const healthCfg = {
     GREEN:  { label: 'God okonomi',     color: 'text-emerald-600 bg-emerald-50 border-emerald-200', Icon: TrendingUp },
     YELLOW: { label: 'Sjekk okonomi',   color: 'text-yellow-600 bg-yellow-50 border-yellow-200',   Icon: AlertCircle },
@@ -189,13 +212,6 @@ export default function DashboardOverview() {
   };
   const hc = healthCfg[health];
   const HealthIcon = hc.Icon;
-
-  const stats = [
-    { label: 'Leads siste 30 dager',   value: loading ? '—' : String(leads.length),                           sub: `+${newThisWeek.length} denne uken`,           Icon: Users,      iconColor: 'text-blue-600',                                          iconBg: 'bg-blue-50',                               href: '/dashboard/leads' },
-    { label: 'Inntekter denne maneden', value: loading ? '—' : `${income.toLocaleString('nb-NO')} kr`,         sub: 'Registrert kontantstrom',                      Icon: TrendingUp, iconColor: 'text-emerald-600',                                       iconBg: 'bg-emerald-50',                            href: '/dashboard/cashflow' },
-    { label: 'Netto resultat',           value: loading ? '—' : `${netProfit.toLocaleString('nb-NO')} kr`,     sub: 'Inntekt minus utgifter',                       Icon: Activity,   iconColor: netProfit >= 0 ? 'text-emerald-600' : 'text-red-600',     iconBg: netProfit >= 0 ? 'bg-emerald-50' : 'bg-red-50', href: '/dashboard/cashflow' },
-    { label: 'Ubetalte fakturaer',       value: loading ? '—' : `${outstandingAmt.toLocaleString('nb-NO')} kr`,sub: `${outstanding.length} fakturaer venter`,       Icon: Receipt,    iconColor: outstanding.length > 0 ? 'text-orange-600' : 'text-slate-500', iconBg: outstanding.length > 0 ? 'bg-orange-50' : 'bg-slate-50', href: '/dashboard/invoices' },
-  ];
 
   const dateStr = new Date().toLocaleDateString('nb-NO', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -250,27 +266,96 @@ export default function DashboardOverview() {
         ))}
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map(({ label, value, sub, Icon, iconColor, iconBg, href }) => (
-          <Link key={label} href={href}
-            className="group rounded-xl border border-slate-200 bg-white p-5 hover:shadow-lg hover:border-slate-300 transition-all"
-          >
-            <div className="flex items-start justify-between mb-3">
-              <div className={`h-10 w-10 rounded-xl ${iconBg} flex items-center justify-center`}>
-                <Icon className={`h-5 w-5 ${iconColor}`} />
-              </div>
-              <ArrowUpRight className="h-4 w-4 text-slate-300 group-hover:text-slate-500 transition-colors" />
+      {/* KPI Cards + Charts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+
+        {/* KPI: Leads */}
+        <div className="rounded-xl border border-slate-200 bg-white p-5">
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Leads denne m&aring;neden</p>
+              {loading ? (
+                <div className="h-8 w-24 bg-slate-100 rounded animate-pulse mt-1" />
+              ) : (
+                <p className="text-3xl font-bold text-slate-900 mt-1">{leads.length}</p>
+              )}
+              <p className="text-xs text-slate-400 mt-1">
+                <span className={newThisWeek.length > 0 ? 'text-emerald-600 font-medium' : ''}>
+                  +{newThisWeek.length} denne uken
+                </span>
+              </p>
             </div>
+            <Link href="/dashboard/leads" className="h-9 w-9 rounded-lg bg-blue-50 flex items-center justify-center hover:bg-blue-100 transition-colors">
+              <Users className="h-4 w-4 text-blue-600" />
+            </Link>
+          </div>
+          <div className="h-28">
             {loading ? (
-              <div className="h-7 w-28 bg-slate-100 rounded animate-pulse mb-1" />
+              <div className="h-full w-full bg-slate-50 rounded-lg animate-pulse" />
             ) : (
-              <p className="text-2xl font-bold text-slate-900 leading-tight">{value}</p>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={weeklyLeads} barSize={18}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                  <XAxis dataKey="label" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} allowDecimals={false} width={20} />
+                  <Tooltip
+                    contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+                    cursor={{ fill: '#f8fafc' }}
+                  />
+                  <Bar dataKey="count" name="Leads" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
             )}
-            <p className="text-xs font-medium text-slate-500 mt-1.5">{label}</p>
-            <p className="text-xs text-slate-400 mt-0.5">{sub}</p>
-          </Link>
-        ))}
+          </div>
+        </div>
+
+        {/* KPI: Okonomi */}
+        <div className="rounded-xl border border-slate-200 bg-white p-5">
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">Inntekter denne m&aring;neden</p>
+              {loading ? (
+                <div className="h-8 w-32 bg-slate-100 rounded animate-pulse mt-1" />
+              ) : (
+                <p className="text-3xl font-bold text-slate-900 mt-1">{income.toLocaleString('nb-NO')} kr</p>
+              )}
+              <p className="text-xs mt-1">
+                <span className={netProfit >= 0 ? 'text-emerald-600 font-medium' : 'text-red-500 font-medium'}>
+                  {netProfit >= 0 ? '+' : ''}{netProfit.toLocaleString('nb-NO')} kr netto
+                </span>
+                {outstanding.length > 0 && (
+                  <span className="text-slate-400 ml-2">· {outstanding.length} fakturaer ubetalt</span>
+                )}
+              </p>
+            </div>
+            <Link href="/dashboard/cashflow" className="h-9 w-9 rounded-lg bg-emerald-50 flex items-center justify-center hover:bg-emerald-100 transition-colors">
+              <TrendingUp className="h-4 w-4 text-emerald-600" />
+            </Link>
+          </div>
+          <div className="h-28">
+            {loading ? (
+              <div className="h-full w-full bg-slate-50 rounded-lg animate-pulse" />
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={financeData} barSize={24}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                  <XAxis dataKey="label" tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} />
+                  <YAxis tick={{ fontSize: 10, fill: '#94a3b8' }} axisLine={false} tickLine={false} width={40}
+                    tickFormatter={(v: number) => v >= 1000 ? `${Math.round(v / 1000)}k` : String(v)} />
+                  <Tooltip
+                    contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}
+                    formatter={((v: number, name: string) => [`${v.toLocaleString('nb-NO')} kr`, name]) as any}
+                    cursor={{ fill: '#f8fafc' }}
+                  />
+                  <Bar dataKey="value" name="Beløp" radius={[4, 4, 0, 0]}
+                    fill="#10b981"
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </div>
+        </div>
+
       </div>
 
       {/* All niche modules grid */}
