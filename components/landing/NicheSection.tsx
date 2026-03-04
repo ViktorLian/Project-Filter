@@ -62,7 +62,13 @@ function NicheCard({ niche, onClick }: { niche: Niche; onClick: () => void }) {
       </div>
       <div className="mt-3 flex items-center justify-between">
         <span className={`text-xs font-bold ${c.text}`}>fra {niche.priceMonthly.toLocaleString('nb-NO')} kr/mnd</span>
-        <ArrowRight className={`h-4 w-4 ${c.text} opacity-0 group-hover:opacity-100 transition-opacity`} />
+        <Link
+          href={`/preview/${niche.id}`}
+          onClick={e => e.stopPropagation()}
+          className="text-[10px] font-semibold text-slate-500 hover:text-blue-400 transition-colors"
+        >
+          Se demo
+        </Link>
       </div>
     </button>
   );
@@ -142,18 +148,26 @@ function NicheModal({ niche, onClose }: { niche: Niche; onClose: () => void }) {
           </div>
 
           {/* CTA */}
-          <div className="flex gap-3 pt-2">
+          <div className="flex flex-col gap-2 pt-2">
+            <div className="flex gap-3">
+              <Link
+                href={`/register?niche=${niche.id}`}
+                className={`flex-1 text-center rounded-xl ${c.badge} text-white font-bold py-3 hover:opacity-90 transition`}
+              >
+                Start 14 dager gratis →
+              </Link>
+              <Link
+                href="/bli-kunde"
+                className="px-5 rounded-xl border-2 border-slate-200 text-slate-700 font-semibold py-3 hover:bg-slate-50 transition text-sm"
+              >
+                Snakk med oss
+              </Link>
+            </div>
             <Link
-              href={`/register?niche=${niche.id}`}
-              className={`flex-1 text-center rounded-xl ${c.badge} text-white font-bold py-3 hover:opacity-90 transition`}
+              href={`/preview/${niche.id}`}
+              className="w-full text-center rounded-xl border-2 border-slate-200 text-slate-600 font-semibold py-2.5 hover:bg-slate-50 hover:border-blue-300 hover:text-blue-600 transition text-sm flex items-center justify-center gap-2"
             >
-              Start 14 dager gratis →
-            </Link>
-            <Link
-              href="/bli-kunde"
-              className="px-5 rounded-xl border-2 border-slate-200 text-slate-700 font-semibold py-3 hover:bg-slate-50 transition text-sm"
-            >
-              Snakk med oss
+              <ArrowRight className="h-3.5 w-3.5" /> Se live dashboard-demo
             </Link>
           </div>
           <p className="text-center text-xs text-slate-400">Ingen binding. Ingen kredittkort.</p>
@@ -246,8 +260,20 @@ export function NicheSection() {
           </div>
         )}
 
+        {/* Demo CTA */}
+        <div className="mt-12 rounded-2xl border border-white/10 bg-white/5 p-8 text-center">
+          <p className="text-white font-bold text-lg mb-1">Vil du se plattformen i aksjon?</p>
+          <p className="text-slate-400 text-sm mb-5">Vi har laget en live demo for alle {NICHES.length} bransjer – uten innlogging.</p>
+          <Link
+            href="/preview"
+            className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-xl transition text-sm"
+          >
+            Se alle bransjedemoer <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+
         {/* Bottom CTA */}
-        <div className="mt-16 text-center">
+        <div className="mt-8 text-center">
           <p className="text-slate-400 text-sm mb-4">Finner du ikke din bransje? Vi tilpasser oss.</p>
           <Link
             href="/bli-kunde"
