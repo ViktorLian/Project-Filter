@@ -4,14 +4,11 @@ import { useEffect, useState } from 'react';
 import { Plus, ChevronRight, X, DollarSign, TrendingUp, CheckCircle, AlertCircle } from 'lucide-react';
 
 const STAGES = [
-  { key: 'lead',      label: 'Ny lead',          color: 'border-slate-300 bg-slate-50',    dot: 'bg-slate-400' },
-  { key: 'contacted', label: 'Kontaktet',         color: 'border-blue-300 bg-blue-50',     dot: 'bg-blue-500' },
-  { key: 'proposal',  label: 'Tilbud sendt',      color: 'border-yellow-300 bg-yellow-50', dot: 'bg-yellow-500' },
-  { key: 'contract',  label: 'Kontrakt signert',  color: 'border-purple-300 bg-purple-50', dot: 'bg-purple-500' },
-  { key: 'delivery',  label: 'Under levering',    color: 'border-orange-300 bg-orange-50', dot: 'bg-orange-500' },
-  { key: 'invoice',   label: 'Faktura sendt',     color: 'border-cyan-300 bg-cyan-50',     dot: 'bg-cyan-500' },
-  { key: 'won',       label: 'Fullfort',          color: 'border-emerald-300 bg-emerald-50',dot: 'bg-emerald-500' },
-  { key: 'lost',      label: 'Tapt',              color: 'border-red-300 bg-red-50',       dot: 'bg-red-400' },
+  { key: 'lead',      label: 'Ny lead',      color: 'border-slate-200 bg-slate-50',    dot: 'bg-slate-400' },
+  { key: 'proposal',  label: 'Tilbud sendt', color: 'border-blue-200 bg-blue-50',      dot: 'bg-blue-500' },
+  { key: 'contract',  label: 'Aktiv',        color: 'border-yellow-200 bg-yellow-50',  dot: 'bg-yellow-500' },
+  { key: 'won',       label: 'Fullfort',     color: 'border-emerald-200 bg-emerald-50',dot: 'bg-emerald-500' },
+  { key: 'lost',      label: 'Tapt',         color: 'border-red-200 bg-red-50',        dot: 'bg-red-400' },
 ];
 
 type Job = {
@@ -93,7 +90,7 @@ export default function PipelinePage() {
   const convRate = jobs.length > 0 ? Math.round((jobs.filter(j => j.stage === 'won').length / jobs.length) * 100) : 0;
 
   return (
-    <div className="p-6 min-h-screen bg-slate-50">
+    <div className="space-y-4 pb-6">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Jobbpipeline</h1>
@@ -134,12 +131,12 @@ export default function PipelinePage() {
         <div className="flex items-center justify-center h-64 text-slate-400">Laster pipeline...</div>
       ) : (
         <div className="overflow-x-auto pb-4">
-          <div className="flex gap-3 min-w-max">
+          <div className="flex gap-2 min-w-max">
             {STAGES.map(stage => {
               const stageJobs = jobs.filter(j => j.stage === stage.key);
               const stageValue = stageJobs.reduce((s, j) => s + (j.value ?? 0), 0);
               return (
-                <div key={stage.key} className={`w-64 rounded-xl border-2 ${stage.color} flex flex-col`}>
+                <div key={stage.key} className={`w-56 rounded-xl border ${stage.color} flex flex-col`}>
                   <div className="px-3 pt-3 pb-2">
                     <div className="flex items-center gap-1.5">
                       <div className={`w-2 h-2 rounded-full ${stage.dot}`} />
@@ -150,7 +147,7 @@ export default function PipelinePage() {
                       <p className="text-xs text-slate-500 mt-0.5 pl-3.5">{stageValue.toLocaleString('nb-NO')} kr</p>
                     )}
                   </div>
-                  <div className="flex-1 overflow-y-auto max-h-[60vh] px-2 pb-2 space-y-2">
+                  <div className="flex-1 overflow-y-auto max-h-[55vh] px-2 pb-2 space-y-1.5">
                     {stageJobs.map(job => (
                       <div key={job.id} className="bg-white rounded-lg border border-slate-200 p-3 shadow-sm hover:shadow-md transition cursor-pointer" onClick={() => openEdit(job)}>
                         <p className="font-semibold text-sm text-slate-900 leading-tight">{job.title}</p>
