@@ -313,6 +313,28 @@
     .cform-group input:focus,.cform-group textarea:focus{border-color:var(--p);box-shadow:0 0 0 3px var(--pl)}
     @media(max-width:680px){.contact-grid{grid-template-columns:1fr}}
 
+    /* DEMO MODAL */
+    .demo-overlay{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+    .demo-overlay.open{opacity:1;pointer-events:all}
+    .demo-modal{background:white;border-radius:24px;max-width:700px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto;position:relative;transform:translateY(16px);transition:transform .2s}
+    .demo-overlay.open .demo-modal{transform:translateY(0)}
+    .demo-header{padding:28px 32px 0;display:flex;justify-content:space-between;align-items:flex-start}
+    .demo-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--bg);cursor:pointer;font-size:18px;color:var(--muted);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .demo-close:hover{background:var(--border)}
+    .demo-tabs{display:flex;gap:4px;padding:20px 32px 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
+    .demo-tab{padding:8px 16px;font-size:13px;font-weight:600;color:var(--muted);border:none;background:none;cursor:pointer;border-radius:8px 8px 0 0;font-family:inherit;transition:all .15s;border-bottom:2px solid transparent;margin-bottom:-1px}
+    .demo-tab.active{color:var(--p);border-bottom-color:var(--p);background:var(--pll)}
+    .demo-body{padding:28px 32px 32px}
+    .demo-pane{display:none}.demo-pane.active{display:block}
+    .demo-mockup{background:var(--bg);border-radius:16px;border:1px solid var(--border);padding:24px;margin-bottom:20px}
+    .demo-mockup-bar{height:28px;background:white;border-radius:8px;border:1px solid var(--border);display:flex;align-items:center;padding:0 12px;gap:6px;margin-bottom:16px}
+    .demo-mockup-dot{width:8px;height:8px;border-radius:50%}
+    .demo-url{flex:1;font-size:10px;color:var(--muted);text-align:center}
+    .demo-desc{font-size:14px;color:var(--sub);line-height:1.65;margin-bottom:20px}
+    .demo-features-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+    .demo-feat{background:var(--pll);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--pd);font-weight:500}
+    @media(max-width:540px){.demo-features-row{grid-template-columns:1fr}.demo-body{padding:20px 20px 24px}.demo-tabs{padding:16px 20px 0}}
+
     /* PAYMENT MODAL */
     .pay-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;padding:24px}
     .pay-overlay.open{display:flex}
@@ -378,7 +400,6 @@
     </a>
     <div class="nav-links">
       <a href="#services">Tjenester</a>
-      <a href="#pricing">Tjenester &amp; Priser</a>
       <a href="#blogg">Blogg</a>
       <a href="#diagnose">Sjekk synlighet</a>
       <a href="#contact">Kontakt</a>
@@ -398,7 +419,7 @@
       <h1>Vi vokser<br/><span>bedriften din</span><br/>mens du sover</h1>
       <p class="hero-sub">FlowPilot publiserer ett s&#248;keoptimalisert blogginnlegg p&#229; nettsiden din hver dag, h&#229;ndterer utreach og holder deg synlig i s&#248;k. Du gj&#248;r ingenting.</p>
       <div class="hero-cta">
-        <a href="#pricing" class="btn btn-primary btn-lg">Se priser og start gratis</a>
+        <a href="#services" class="btn btn-primary btn-lg">Se tjenester og priser</a>
         <button class="btn btn-outline btn-lg" onclick="openBooking()">Book gratis m&#248;te</button>
       </div>
     </div>
@@ -462,7 +483,10 @@
           <li>M&#229;nedlig trafikkrapport med resultater</li>
         </ul>
         <div class="service-price"><span class="price-num">4&#8239;990</span><span class="price-per">kr/mnd</span></div>
-        <button class="btn btn-primary" style="justify-content:center;width:100%" onclick="openPayment('AutoSEO','4 990 kr/mnd','price_1SxRpVHTxh2T1zNz6jPfJtcD')">Kom i gang</button>
+        <div style="display:flex;gap:8px;margin-top:auto">
+          <button class="btn btn-primary" style="justify-content:center;flex:1" onclick="openPayment('AutoSEO','4 990 kr/mnd','price_1SxRpVHTxh2T1zNz6jPfJtcD')">Kom i gang</button>
+          <button class="btn btn-outline" style="padding:10px 16px;font-size:13px" onclick="openDemo('autoseo')">Se demo</button>
+        </div>
       </div>
 
       <div class="service-card">
@@ -478,7 +502,10 @@
           <li>Workflow-automatisering og varsler</li>
         </ul>
         <div class="service-price"><span class="price-num">4&#8239;490</span><span class="price-per">kr/mnd</span></div>
-        <button class="btn btn-outline" style="justify-content:center;width:100%" onclick="openPayment('FlowPilot CRM','4 490 kr/mnd','price_1SxRqIHTxh2T1zNz00HrfAlQ')">Start med CRM</button>
+        <div style="display:flex;gap:8px;margin-top:auto">
+          <button class="btn btn-outline" style="justify-content:center;flex:1" onclick="openPayment('FlowPilot CRM','4 490 kr/mnd','price_1SxRqIHTxh2T1zNz00HrfAlQ')">Start med CRM</button>
+          <button class="btn btn-outline" style="padding:10px 16px;font-size:13px" onclick="openDemo('crm')">Se demo</button>
+        </div>
       </div>
 
       <div class="service-card" style="border-color:#f59e0b">
@@ -495,7 +522,10 @@
           <li>Konkurranseanalyse i ditt omr&#229;de</li>
         </ul>
         <div class="service-price"><span class="price-num">5&#8239;490</span><span class="price-per">kr/mnd</span></div>
-        <button class="btn btn-outline" style="justify-content:center;width:100%;border-color:#f59e0b;color:#92400e" onclick="openPayment('Google Maps SEO','5 490 kr/mnd','price_1TOI0EHTxh2T1zNz8AKYI9Zi')">Kom i gang</button>
+        <div style="display:flex;gap:8px;margin-top:auto">
+          <button class="btn btn-outline" style="justify-content:center;flex:1;border-color:#f59e0b;color:#92400e" onclick="openPayment('Google Maps SEO','5 490 kr/mnd','price_1TOI0EHTxh2T1zNz8AKYI9Zi')">Kom i gang</button>
+          <button class="btn btn-outline" style="padding:10px 16px;font-size:13px;border-color:#f59e0b;color:#92400e" onclick="openDemo('maps')">Se demo</button>
+        </div>
       </div>
 
       <div class="service-card" style="border-color:#7c3aed">
@@ -510,7 +540,10 @@
           <li>Raskere merkevarebygging i nye kanaler</li>
         </ul>
         <div class="service-price"><span class="price-num">3&#8239;990</span><span class="price-per">kr/mnd</span></div>
-        <button class="btn btn-outline" style="justify-content:center;width:100%;border-color:#7c3aed;color:#7c3aed" onclick="openPayment('AI Merkevare Synlighet','3 990 kr/mnd','price_1SxRqeHTxh2T1zNzRYKM4DUl')">Kom i gang</button>
+        <div style="display:flex;gap:8px;margin-top:auto">
+          <button class="btn btn-outline" style="justify-content:center;flex:1;border-color:#7c3aed;color:#7c3aed" onclick="openPayment('AI Merkevare Synlighet','3 990 kr/mnd','price_1SxRqeHTxh2T1zNzRYKM4DUl')">Kom i gang</button>
+          <button class="btn btn-outline" style="padding:10px 16px;font-size:13px;border-color:#7c3aed;color:#7c3aed" onclick="openDemo('geo')">Se demo</button>
+        </div>
       </div>
 
       <div class="service-card" style="border-color:#ec4899">
@@ -530,6 +563,17 @@
       </div>
 
     </div>
+
+    <!-- Nettside CTA -->
+    <div style="max-width:600px;margin:48px auto 0;border:2px dashed #d1d5db;border-radius:20px;padding:36px;background:#fafafa;display:flex;align-items:center;gap:32px;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6b7280;margin-bottom:6px">Trenger du nettside?</div>
+        <div style="font-size:22px;font-weight:800;color:#111827;margin-bottom:6px">Nettside med chatbot &amp; blogg</div>
+        <p style="font-size:14px;color:#6b7280;line-height:1.6">Skreddersydd nettside med innebygd AI-chatbot, integrasjon mot AutoSEO-bloggen og kundeinnlogging. AI-chat kan ogs&aring; legges til p&aring; eksisterende nettside.</p>
+      </div>
+      <button class="btn btn-primary btn-lg" onclick="openBooking()" style="flex-shrink:0">F&aring; et tilbud</button>
+    </div>
+
   </div>
 </section>
 
@@ -688,8 +732,8 @@
   </div>
 </section>
 
-<!-- PRODUCT STUDIO -->
-<section id="studio">
+<!-- PRODUCT STUDIO (hidden from nav) -->
+<section id="studio" style="display:none">
   <div class="studio-inner">
     <div class="studio-label">Produktstudio</div>
     <h2 class="studio-title">Vi bygger verkt&#248;y som former fremtiden for arbeid</h2>
@@ -712,8 +756,8 @@
   </div>
 </section>
 
-<!-- PRICING -->
-<section id="pricing">
+<!-- PRICING (removed - service cards in #services handle this) -->
+<section id="pricing" style="display:none">
   <div class="container text-center">
     <div class="section-label">Tjenester &amp; Priser</div>
     <h2 class="section-title">Velg tjenestene du trenger</h2>
@@ -984,6 +1028,21 @@
   </div>
 </div>
 
+<!-- DEMO MODAL -->
+<div class="demo-overlay" id="demoOverlay" onclick="if(event.target===this)closeDemo()">
+  <div class="demo-modal">
+    <div class="demo-header">
+      <div>
+        <h3 id="demoTitle" style="font-size:20px;font-weight:800;color:var(--text);margin-bottom:4px">Demo</h3>
+        <p style="font-size:13px;color:var(--muted)">Se hvordan tjenesten fungerer</p>
+      </div>
+      <button class="demo-close" onclick="closeDemo()">&#x2715;</button>
+    </div>
+    <div class="demo-tabs" id="demoTabs"></div>
+    <div class="demo-body" id="demoBody"></div>
+  </div>
+</div>
+
 <!-- PAYMENT MODAL -->
 <div class="pay-overlay" id="pay-overlay" onclick="closePaymentOutside(event)">
   <div class="pay-modal">
@@ -1132,11 +1191,81 @@ function showResult(){
     +'<div class="quiz-score '+cls+'">'+pct+'%</div>'
     +'<h3 style="font-size:20px;font-weight:800;margin-bottom:10px">'+title+'</h3>'
     +'<p style="font-size:14px;color:var(--muted);line-height:1.65;margin-bottom:24px;max-width:440px;margin-left:auto;margin-right:auto">'+txt+'</p>'
-    +'<button class="btn btn-primary btn-lg" onclick="document.getElementById(\'pricing\').scrollIntoView({behavior:\'smooth\'})">'+cta+'</button>'
+    +'<button class="btn btn-primary btn-lg" onclick="document.getElementById(\'services\').scrollIntoView({behavior:\'smooth\'})">'+cta+'</button>'
     +'<div style="margin-top:14px"><button style="background:none;border:none;cursor:pointer;font-size:13px;color:var(--muted);font-family:inherit" onclick="qIdx=0;totalScore=0;renderQuiz()">Ta testen på nytt</button></div>'
     +'</div>';
 }
 renderQuiz();
+
+// ─── DEMO MODAL ──────────────────────────────────────────────
+const DEMO_DATA={
+  autoseo:{
+    title:'AutoSEO Demo',
+    desc:'AutoSEO analyserer nettsiden din og publiserer ett SEO-optimalisert blogginnlegg direkte til WordPress hver hverdag — helt automatisk.',
+    features:['1 innlegg/dag (man–fre)','WordPress-integrasjon','12 emnevinkler','Lokal- og bransjetilpasset','Månedlig trafikkrapport','Personlig kundeportal'],
+    mockup:`<div style="background:white;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden">
+      <div style="background:#f9fafb;padding:10px 16px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid #e5e7eb">Publiserte innlegg denne måneden</div>
+      <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
+        ${['I dag – 5 vanlige feil VVS-kunder gjør','I går – Hva koster rørlegger i Oslo 2026?','14. mai – Slik unngår du vannskader hjemme','13. mai – VVS-arbeid: Gjør-det-selv eller fagmann?','12. mai – Alt du må vite om baderomspåbygg'].map(t=>`<div style="display:flex;align-items:center;gap:10px;padding:8px;background:#f9fafb;border-radius:8px"><div style="width:20px;height:20px;border-radius:50%;background:#dcfce7;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div style="font-size:12px;color:#374151;font-weight:500">${t}</div></div>`).join('')}
+      </div>
+    </div>`
+  },
+  crm:{
+    title:'FlowPilot CRM Demo',
+    desc:'Et komplett CRM-system bygget for norske SMB-bedrifter. Samler kunder, leads og oppfølging på ett sted – enkelt og oversiktlig.',
+    features:['Kontaktregister','Visuell salgspipeline','E-postoppfølging','Leads fra Brønnøysund','Dashbord og rapporter','Ingen opplæring nødvendig'],
+    mockup:`<div style="background:white;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden">
+      <div style="background:#f9fafb;padding:10px 16px;border-bottom:1px solid #e5e7eb;display:flex;gap:12px">
+        ${['Alle leads','Aktive','Vunnet','Tapt'].map((s,i)=>`<span style="font-size:12px;font-weight:${i===0?'700':'500'};color:${i===0?'#6366f1':'#6b7280'};padding-bottom:6px;border-bottom:${i===0?'2px solid #6366f1':'none'}">${s}</span>`).join('')}
+      </div>
+      <div style="padding:16px;display:flex;flex-direction:column;gap:8px">
+        ${[['Rørlegger Bergen AS','Ny henvendelse','4990 kr','#dcfce7','#16a34a'],['Elektro Larsen','Tilbud sendt','14 900 kr','#fef3c7','#92400e'],['Bygg & Anlegg Lian','Forhandling','29 000 kr','#e0e7ff','#4338ca'],['VVS Service Nord','Møte booket','9 800 kr','#fdf2f8','#be185d']].map(([n,s,v,bg,col])=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid #e5e7eb;border-radius:8px"><div style="flex:1;font-size:13px;font-weight:600;color:#111827">${n}</div><span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:${bg};color:${col}">${s}</span><div style="font-size:13px;font-weight:700;color:#374151;min-width:72px;text-align:right">${v}</div></div>`).join('')}
+      </div>
+    </div>`
+  },
+  maps:{
+    title:'Google Maps SEO Demo',
+    desc:'Vi optimaliserer Google Business-profilen din slik at du vises i topp 3 på kartet når lokale kunder søker etter tjenestene du tilbyr.',
+    features:['Google Business-optimalisering','Topp 3 lokal synlighet','Anmeldelseshåndtering','Lokale nøkkelord','Ukentlig synlighetsrapport','Konkurranseanalyse'],
+    mockup:`<div style="background:white;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden">
+      <div style="background:#f9fafb;padding:10px 16px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid #e5e7eb">Google Maps – rørlegger Oslo</div>
+      <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
+        ${[[1,'Din bedrift','⭐ 4.9 (84)','#dcfce7','#16a34a','TOP 1'],
+           [2,'Nabofirma AS','⭐ 4.2 (31)','#fff','#374151',''],
+           [3,'VVS Service','⭐ 3.8 (12)','#fff','#374151','']].map(([n,nm,r,bg,col,badge])=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:${bg};border:1px solid ${bg==="#fff"?"#e5e7eb":"#86efac"};border-radius:8px"><div style="width:24px;height:24px;border-radius:50%;background:#6366f1;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">${n}</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:#111827">${nm}</div><div style="font-size:11px;color:${col}">${r}</div></div>${badge?`<span style="font-size:10px;font-weight:700;background:#6366f1;color:white;padding:2px 8px;border-radius:99px">${badge}</span>`:''}</div>`).join('')}
+        <div style="font-size:12px;color:#6b7280;padding:8px;background:#f9fafb;border-radius:8px;text-align:center">📈 Økte fra posisjon 12 → topp 3 på 6 uker</div>
+      </div>
+    </div>`
+  },
+  geo:{
+    title:'AI Merkevare Synlighet Demo',
+    desc:'Vi bygger tilstedeværelse i ChatGPT, Perplexity og Google AI slik at din bedrift nevnes når potensielle kunder stiller spørsmål i generative søkemotorer.',
+    features:['ChatGPT-synlighet','Perplexity-optimalisering','Google AI-svar','LLM-innholdsstrategi','Månedlig synlighetsrapport','Konkurrentanalyse'],
+    mockup:`<div style="background:#0f0f13;border-radius:12px;padding:20px">
+      <div style="font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.1em;margin-bottom:16px">Synlighet per AI-plattform</div>
+      ${[['ChatGPT','#6366f1',72],['Perplexity','#7c3aed',58],['Google AI','#4f46e5',44],['MS Copilot','#6366f1',31]].map(([name,col,pct])=>`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07)"><span style="font-size:13px;font-weight:600;color:white;width:120px;flex-shrink:0">${name}</span><div style="flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.1)"><div style="height:6px;border-radius:3px;background:${col};width:${pct}%"></div></div><span style="font-size:12px;font-weight:700;color:${col};width:32px;text-align:right">${pct}%</span></div>`).join('')}
+      <div style="margin-top:14px;font-size:11px;color:#4b5563">Illustrasjon – tallene oppdateres månedlig</div>
+    </div>`
+  }
+};
+function openDemo(key){
+  const d=DEMO_DATA[key];
+  if(!d)return;
+  document.getElementById('demoTitle').textContent=d.title;
+  document.getElementById('demoTabs').innerHTML='';
+  document.getElementById('demoBody').innerHTML=`
+    <div class="demo-pane active" id="demo-pane-overview">
+      <div class="demo-mockup">${d.mockup}</div>
+      <p class="demo-desc">${d.desc}</p>
+      <div class="demo-features-row">${d.features.map(f=>`<div class="demo-feat">✓ ${f}</div>`).join('')}</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn btn-primary" onclick="closeDemo();openBooking()" style="flex:1;justify-content:center;min-width:160px">Book gratis møte</button>
+        <button class="btn btn-outline" onclick="closeDemo()" style="flex:1;justify-content:center;min-width:120px">Lukk</button>
+      </div>
+    </div>`;
+  document.getElementById('demoOverlay').classList.add('open');
+}
+function closeDemo(){document.getElementById('demoOverlay').classList.remove('open')}
 
 // ─── BOOKING MODAL ──────────────────────────────────────────────
 let _selectedSlot=null;
