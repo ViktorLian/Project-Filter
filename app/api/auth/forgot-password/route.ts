@@ -2,13 +2,6 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 function getAppUrl(req: Request): string {
   const configured = process.env.NEXT_PUBLIC_APP_URL ?? '';
   if (configured && !configured.includes('localhost') && !configured.includes('127.0.0.1')) {
@@ -24,6 +17,11 @@ function getAppUrl(req: Request): string {
 }
 
 export async function POST(req: Request) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  );
+  const resend = new Resend(process.env.RESEND_API_KEY);
   try {
     const { email } = await req.json();
 

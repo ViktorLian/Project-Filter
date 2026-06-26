@@ -107,6 +107,7 @@
     .price-num{font-size:32px;font-weight:900;color:var(--p)}
     .price-per{font-size:14px;color:var(--muted)}
     @media(max-width:680px){.services-grid{grid-template-columns:1fr}}
+    @media(max-width:780px){.pro-grid{grid-template-columns:1fr!important}}
 
     /* RESULTS */
     #results{background:var(--bg)}
@@ -466,7 +467,17 @@
   <div class="container">
     <div class="section-label">Tjenester</div>
     <h2 class="section-title">Mer synlighet. Mer salg.</h2>
-    <p class="section-sub">Fire tjenester som jobber sammen for at bedriften din skal vokse.</p>
+    <p class="section-sub">Velg mellom <strong>Starter SaaS</strong> &mdash; der du styrer selv til fast pris &mdash; eller <strong>Pro Managed</strong> der vi gj&oslash;r alt for deg.</p>
+    <div style="display:flex;justify-content:center;gap:24px;margin:24px 0 40px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:10px;padding:14px 24px;background:#f0fdf4;border:2px solid #16a34a;border-radius:12px;max-width:300px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        <div><div style="font-size:13px;font-weight:700;color:#15803d">Starter SaaS</div><div style="font-size:12px;color:#4ade80;color:#166534">Fra 299 kr/mnd &mdash; plug &amp; play</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:14px 24px;background:#faf5ff;border:2px solid #7c3aed;border-radius:12px;max-width:300px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7c3aed" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        <div><div style="font-size:13px;font-weight:700;color:#6d28d9">Pro Managed</div><div style="font-size:12px;color:#7c3aed">Fra 4 590 kr/mnd &mdash; vi gj&oslash;r alt</div></div>
+      </div>
+    </div>
     <div class="services-grid">
 
       <div class="service-card featured">
@@ -482,9 +493,9 @@
           <li>Personlig kundeportal med kalender</li>
           <li>M&#229;nedlig trafikkrapport med resultater</li>
         </ul>
-        <div class="service-price"><span class="price-num">4&#8239;990</span><span class="price-per">kr/mnd</span></div>
+        <div class="service-price"><span class="price-num">2&#8239;490</span><span class="price-per">kr/mnd</span></div>
         <div style="display:flex;gap:8px;margin-top:auto">
-          <button class="btn btn-primary" style="justify-content:center;flex:1" onclick="openPayment('AutoSEO','4 990 kr/mnd','price_1SxRpVHTxh2T1zNz6jPfJtcD')">Kom i gang</button>
+          <button class="btn btn-primary" style="justify-content:center;flex:1" onclick="openPayment('AutoSEO','2 490 kr/mnd','price_1SxRpVHTxh2T1zNz6jPfJtcD')">Kom i gang</button>
           <button class="btn btn-outline" style="padding:10px 16px;font-size:13px" onclick="openDemo('autoseo')">Se demo</button>
         </div>
       </div>
@@ -501,9 +512,10 @@
           <li>Salgsprognoser, dashbord og rapporter</li>
           <li>Workflow-automatisering og varsler</li>
         </ul>
-        <div class="service-price"><span class="price-num">4&#8239;490</span><span class="price-per">kr/mnd</span></div>
+        <div class="service-price"><span class="price-num">1&#8239;490</span><span class="price-per">kr/mnd</span></div>
+        <div style="font-size:13px;color:#6366f1;font-weight:600;margin:-8px 0 12px">+ 120 kr per ekstra bruker/mnd</div>
         <div style="display:flex;gap:8px;margin-top:auto">
-          <button class="btn btn-outline" style="justify-content:center;flex:1" onclick="openPayment('FlowPilot CRM','4 490 kr/mnd','price_1SxRqIHTxh2T1zNz00HrfAlQ')">Start med CRM</button>
+          <button class="btn btn-outline" style="justify-content:center;flex:1" onclick="openPayment('FlowPilot CRM','1 490 kr/mnd','price_1SxRqIHTxh2T1zNz00HrfAlQ')">Start med CRM</button>
           <button class="btn btn-outline" style="padding:10px 16px;font-size:13px" onclick="openDemo('crm')">Se demo</button>
         </div>
       </div>
@@ -521,9 +533,9 @@
           <li>Ukentlig synlighetsrapport</li>
           <li>Konkurranseanalyse i ditt omr&#229;de</li>
         </ul>
-        <div class="service-price"><span class="price-num">5&#8239;490</span><span class="price-per">kr/mnd</span></div>
+        <div class="service-price"><span class="price-num">1&#8239;590</span><span class="price-per">kr/mnd</span></div>
         <div style="display:flex;gap:8px;margin-top:auto">
-          <button class="btn btn-outline" style="justify-content:center;flex:1;border-color:#f59e0b;color:#92400e" onclick="openPayment('Google Maps SEO','5 490 kr/mnd','price_1TOI0EHTxh2T1zNz8AKYI9Zi')">Kom i gang</button>
+          <button class="btn btn-outline" style="justify-content:center;flex:1;border-color:#f59e0b;color:#92400e" onclick="openPayment('Google Maps SEO','1 590 kr/mnd','price_1TOI0EHTxh2T1zNz8AKYI9Zi')">Kom i gang</button>
           <button class="btn btn-outline" style="padding:10px 16px;font-size:13px;border-color:#f59e0b;color:#92400e" onclick="openDemo('maps')">Se demo</button>
         </div>
       </div>
@@ -539,10 +551,29 @@
           <li>M&#229;nedlig synlighetsrapport</li>
           <li>Raskere merkevarebygging i nye kanaler</li>
         </ul>
-        <div class="service-price"><span class="price-num">3&#8239;990</span><span class="price-per">kr/mnd</span></div>
+        <div class="service-price"><span class="price-num">1&#8239;290</span><span class="price-per">kr/mnd</span></div>
         <div style="display:flex;gap:8px;margin-top:auto">
-          <button class="btn btn-outline" style="justify-content:center;flex:1;border-color:#7c3aed;color:#7c3aed" onclick="openPayment('AI Merkevare Synlighet','3 990 kr/mnd','price_1SxRqeHTxh2T1zNzRYKM4DUl')">Kom i gang</button>
+          <button class="btn btn-outline" style="justify-content:center;flex:1;border-color:#7c3aed;color:#7c3aed" onclick="openPayment('AI Merkevare Synlighet','1 290 kr/mnd','price_1SxRqeHTxh2T1zNzRYKM4DUl')">Kom i gang</button>
           <button class="btn btn-outline" style="padding:10px 16px;font-size:13px;border-color:#7c3aed;color:#7c3aed" onclick="openDemo('geo')">Se demo</button>
+        </div>
+      </div>
+
+      <div class="service-card" style="border-color:#06b6d4">
+        <div class="service-icon" style="background:#ecfeff;color:#0e7490"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3>AI Chat</h3>
+        <p>En smart chatbot p&aring; nettsiden din som svarer kunder, fanger leads og booker m&oslash;ter &mdash; d&oslash;gnet rundt uten at du trenger &aring; l&#248;fte en finger.</p>
+        <ul class="feature-list">
+          <li>Tilpasset din bedrift og bransje</li>
+          <li>Fanger kontaktinfo og kvalifiserer leads</li>
+          <li>Integrert med ditt CRM-system</li>
+          <li>Svar p&#229; FAQ automatisk</li>
+          <li>Fungerer p&#229; alle nettsider</li>
+        </ul>
+        <div class="service-price"><span class="price-num">299</span><span class="price-per">kr/mnd</span></div>
+        <div style="font-size:13px;color:#0e7490;font-weight:600;margin:-8px 0 12px">+ 899 kr engangs oppsettsfee</div>
+        <div style="display:flex;gap:8px;margin-top:auto">
+          <button class="btn btn-outline" style="justify-content:center;flex:1;border-color:#06b6d4;color:#0e7490" onclick="openPayment('AI Chat','299 kr/mnd + 899 kr oppsett','price_1SxRqeHTxh2T1zNzRYKM4DUl')">Legg til chatbot</button>
+          <button class="btn btn-outline" style="padding:10px 16px;font-size:13px;border-color:#06b6d4;color:#0e7490" onclick="openDemo('crm')">Se demo</button>
         </div>
       </div>
 
@@ -564,12 +595,94 @@
 
     </div>
 
+    <!-- Fullpakken -->
+    <div style="max-width:700px;margin:48px auto 32px;border:2px solid #6366f1;border-radius:20px;padding:36px;background:linear-gradient(135deg,#f5f3ff,#eef2ff);text-align:left">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:24px">
+        <div style="flex:1;min-width:260px">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#7c3aed;margin-bottom:6px">Beste verdi &mdash; spar 15&thinsp;%</div>
+          <div style="font-size:26px;font-weight:900;color:#3730a3;margin-bottom:4px">Fullpakken</div>
+          <p style="font-size:14px;color:#4338ca;margin:0 0 16px">Alle tjenester i&eacute;n pakke &mdash; du f&aring;r 15&thinsp;% rabatt og slipper &aring; tenke p&aring; digital markedsf&oslash;ring.</p>
+          <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;font-size:14px;color:#1e1b4b">
+            <li>&#10003; AutoSEO &mdash; 2&#8239;490 kr/mnd</li>
+            <li>&#10003; FlowPilot CRM &mdash; 1&#8239;490 kr/mnd</li>
+            <li>&#10003; Google Maps SEO &mdash; 1&#8239;590 kr/mnd</li>
+            <li>&#10003; AI Merkevare &mdash; 1&#8239;290 kr/mnd</li>
+            <li>&#10003; AI Chat &mdash; 299 kr/mnd</li>
+          </ul>
+        </div>
+        <div style="text-align:center;flex-shrink:0">
+          <div style="font-size:13px;text-decoration:line-through;color:#9ca3af;margin-bottom:2px">7&#8239;159 kr/mnd</div>
+          <div style="font-size:48px;font-weight:900;color:#4338ca;line-height:1">6&#8239;090</div>
+          <div style="font-size:16px;font-weight:600;color:#6366f1;margin-bottom:8px">kr/mnd</div>
+          <div style="font-size:13px;color:#7c3aed;font-weight:600;margin-bottom:20px">Du sparer 1&#8239;069 kr/mnd</div>
+          <button class="btn btn-primary" style="justify-content:center;width:100%;background:#6366f1;border-color:#6366f1;padding:14px 28px;font-size:16px" onclick="openBooking()">Start med Fullpakken</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pro Managed Service -->
+    <div style="max-width:900px;margin:32px auto;border:2px solid #7c3aed;border-radius:20px;overflow:hidden">
+      <div style="background:linear-gradient(135deg,#6d28d9,#4f46e5);padding:24px 36px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <div style="background:rgba(255,255,255,.15);border-radius:10px;padding:10px">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.7);margin-bottom:2px">Done For You &mdash; Pro Managed Service</div>
+          <div style="font-size:22px;font-weight:900;color:white">Vi bygger og driver bedriften din p&aring; nett &mdash; du gj&oslash;r ingenting</div>
+        </div>
+      </div>
+      <div class="pro-grid" style="background:#faf5ff;padding:32px 36px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px">
+        <div style="background:white;border:1px solid #e9d5ff;border-radius:14px;padding:22px">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#7c3aed;margin-bottom:8px">Starter Pro</div>
+          <div style="font-size:32px;font-weight:900;color:#1e1b4b;line-height:1">4&#8239;590</div>
+          <div style="font-size:14px;color:#6366f1;font-weight:600;margin-bottom:12px">kr/mnd</div>
+          <ul style="list-style:none;padding:0;margin:0 0 16px;font-size:13px;color:#374151;display:flex;flex-direction:column;gap:7px">
+            <li>&#10003; AutoSEO &mdash; daglig innhold</li>
+            <li>&#10003; Google Maps SEO</li>
+            <li>&#10003; M&aring;nedlig rapport</li>
+            <li>&#10003; Vi setter opp og driver alt</li>
+          </ul>
+          <button class="btn btn-outline" style="width:100%;justify-content:center;border-color:#7c3aed;color:#7c3aed;font-size:13px" onclick="openBooking()">Book gratis m&oslash;te</button>
+        </div>
+        <div style="background:white;border:2px solid #7c3aed;border-radius:14px;padding:22px;position:relative">
+          <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:#7c3aed;color:white;font-size:11px;font-weight:700;padding:4px 14px;border-radius:99px;white-space:nowrap">Mest populær</div>
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#7c3aed;margin-bottom:8px">Vekst Pro</div>
+          <div style="font-size:32px;font-weight:900;color:#1e1b4b;line-height:1">5&#8239;990</div>
+          <div style="font-size:14px;color:#6366f1;font-weight:600;margin-bottom:12px">kr/mnd</div>
+          <ul style="list-style:none;padding:0;margin:0 0 16px;font-size:13px;color:#374151;display:flex;flex-direction:column;gap:7px">
+            <li>&#10003; Alt i Starter Pro</li>
+            <li>&#10003; FlowPilot CRM</li>
+            <li>&#10003; AI Chat p&aring; nettsiden</li>
+            <li>&#10003; AI Merkevare Synlighet</li>
+            <li>&#10003; Dedikert kontaktperson</li>
+          </ul>
+          <button class="btn btn-primary" style="width:100%;justify-content:center;background:#7c3aed;border-color:#7c3aed;font-size:13px" onclick="openBooking()">Book gratis m&oslash;te</button>
+        </div>
+        <div style="background:white;border:1px solid #e9d5ff;border-radius:14px;padding:22px">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#7c3aed;margin-bottom:8px">Premium Pro</div>
+          <div style="font-size:32px;font-weight:900;color:#1e1b4b;line-height:1">7&#8239;990</div>
+          <div style="font-size:14px;color:#6366f1;font-weight:600;margin-bottom:12px">kr/mnd</div>
+          <ul style="list-style:none;padding:0;margin:0 0 16px;font-size:13px;color:#374151;display:flex;flex-direction:column;gap:7px">
+            <li>&#10003; Alt i Vekst Pro</li>
+            <li>&#10003; Sosiale medier (3 plattformer)</li>
+            <li>&#10003; Skreddersydd nettside</li>
+            <li>&#10003; Prioritert support</li>
+            <li>&#10003; Kvartalsmessig strategi&mdash;gjennomgang</li>
+          </ul>
+          <button class="btn btn-outline" style="width:100%;justify-content:center;border-color:#7c3aed;color:#7c3aed;font-size:13px" onclick="openBooking()">Book gratis m&oslash;te</button>
+        </div>
+      </div>
+      <div style="background:#f3e8ff;padding:14px 36px;font-size:13px;color:#6d28d9;text-align:center">
+        <strong>Ingen bindingstid de to f&oslash;rste m&aring;nedene</strong> &mdash; du betaler bare s&aring; lenge du er forn&oslash;yd. Gratis oppsett i gang innen 48 timer.
+      </div>
+    </div>
+
     <!-- Nettside CTA -->
-    <div style="max-width:600px;margin:48px auto 0;border:2px dashed #d1d5db;border-radius:20px;padding:36px;background:#fafafa;display:flex;align-items:center;gap:32px;flex-wrap:wrap">
+    <div style="max-width:600px;margin:0 auto 0;border:2px dashed #d1d5db;border-radius:20px;padding:36px;background:#fafafa;display:flex;align-items:center;gap:32px;flex-wrap:wrap">
       <div style="flex:1;min-width:200px">
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6b7280;margin-bottom:6px">Trenger du nettside?</div>
         <div style="font-size:22px;font-weight:800;color:#111827;margin-bottom:6px">Nettside med chatbot &amp; blogg</div>
-        <p style="font-size:14px;color:#6b7280;line-height:1.6">Skreddersydd nettside med innebygd AI-chatbot, integrasjon mot AutoSEO-bloggen og kundeinnlogging. AI-chat kan ogs&aring; legges til p&aring; eksisterende nettside.</p>
+        <p style="font-size:14px;color:#6b7280;line-height:1.6">Skreddersydd nettside med innebygd AI-chatbot, integrasjon mot AutoSEO-bloggen og kundeinnlogging.</p>
       </div>
       <button class="btn btn-primary btn-lg" onclick="openBooking()" style="flex-shrink:0">F&aring; et tilbud</button>
     </div>
@@ -756,118 +869,6 @@
   </div>
 </section>
 
-<!-- PRICING (removed - service cards in #services handle this) -->
-<section id="pricing" style="display:none">
-  <div class="container text-center">
-    <div class="section-label">Tjenester &amp; Priser</div>
-    <h2 class="section-title">Velg tjenestene du trenger</h2>
-    <p class="section-sub mx-auto">Ingen oppsettgebyr. Ingen bindingstid. Betal kun for det du bruker.</p>
-
-    <!-- Individual services grid -->
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin:40px 0 32px">
-
-      <div class="price-card" style="text-align:left">
-        <div class="price-plan">CRM</div>
-        <div class="price-amount">490 <span>kr/mnd</span></div>
-        <div style="font-size:13px;color:#6366f1;font-weight:600;margin:-8px 0 12px">+ 150 kr per p&aring;g&aring;ende medlem</div>
-        <div class="price-desc">Komplett CRM med salgspipeline, kontaktregister og automatisert oppf&#248;lging.</div>
-        <ul class="price-features">
-          <li>Kontaktregister og kundehistorikk</li>
-          <li>Visuell salgspipeline</li>
-          <li>Automatisert e-postoppf&#248;lging</li>
-          <li>Lead-generering fra Br&#248;nn&#248;ysund</li>
-          <li>150 kr per aktivt teammedlem/mnd</li>
-          <li>Ingen binding</li>
-        </ul>
-        <button class="btn btn-outline" style="justify-content:center;width:100%;margin-top:auto" onclick="openBooking()">Kom i gang</button>
-      </div>
-
-      <div class="price-card popular" style="text-align:left">
-        <div class="popular-badge">Mest popul&aelig;r</div>
-        <div class="price-plan">AutoSEO</div>
-        <div class="price-amount">790 <span>kr/mnd</span></div>
-        <div class="price-desc">Daglig s&#248;keoptimalisert blogginnlegg publisert rett p&#229; nettsiden din.</div>
-        <ul class="price-features">
-          <li>1 innlegg publisert per dag (man&ndash;fre)</li>
-          <li>WordPress-integrasjon inkludert</li>
-          <li>Bransje- og lokaltilpasset innhold</li>
-          <li>M&#229;nedlig trafikkrapport</li>
-          <li>Ingen binding</li>
-        </ul>
-        <button class="btn btn-primary" style="justify-content:center;width:100%;margin-top:auto" onclick="openBooking()">Kom i gang</button>
-      </div>
-
-      <div class="price-card" style="text-align:left">
-        <div class="price-plan">Google Maps SEO</div>
-        <div class="price-amount">390 <span>kr/mnd</span></div>
-        <div class="price-desc">Optimaliser Google Business-profilen din og dominer lokale s&#248;k og kart.</div>
-        <ul class="price-features">
-          <li>Optimalisert Google Business-profil</li>
-          <li>Lokal s&#248;kesynlighet</li>
-          <li>Anmeldelsesh&#229;ndtering</li>
-          <li>M&#229;nedlig lokaltrafikkrapport</li>
-          <li>Ingen binding</li>
-        </ul>
-        <button class="btn btn-outline" style="justify-content:center;width:100%;margin-top:auto" onclick="openBooking()">Kom i gang</button>
-      </div>
-
-      <div class="price-card" style="text-align:left">
-        <div class="price-plan">GEO / AI-synlighet</div>
-        <div class="price-amount">390 <span>kr/mnd</span></div>
-        <div class="price-desc">Optimaliser bedriften din for AI-s&#248;k som ChatGPT, Perplexity og Google AI.</div>
-        <ul class="price-features">
-          <li>Synlighet i AI-s&#248;k og LLM-er</li>
-          <li>Strukturerte data og schema</li>
-          <li>Innholdstilpasning for AI-svar</li>
-          <li>Ingen binding</li>
-        </ul>
-        <button class="btn btn-outline" style="justify-content:center;width:100%;margin-top:auto" onclick="openBooking()">Kom i gang</button>
-      </div>
-
-      <div class="price-card" style="text-align:left">
-        <div class="price-plan">AI Chat</div>
-        <div class="price-amount">490 <span>kr/mnd</span></div>
-        <div class="price-desc">Intelligent chatbot p&#229; nettsiden din som svarer kunder og fanger leads d&#248;gnet rundt.</div>
-        <ul class="price-features">
-          <li>Tilpasset AI-chatbot</li>
-          <li>Automatisk lead-fangst</li>
-          <li>Integrert med ditt CRM</li>
-          <li>Ingen binding</li>
-        </ul>
-        <button class="btn btn-outline" style="justify-content:center;width:100%;margin-top:auto" onclick="openBooking()">Kom i gang</button>
-      </div>
-
-    </div>
-
-    <!-- Fullpakken -->
-    <div style="max-width:500px;margin:0 auto 24px;border:2px solid #6366f1;border-radius:16px;padding:32px;background:#f5f3ff;text-align:left" id="fullpakke-card">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#7c3aed;margin-bottom:6px">Beste verdi</div>
-      <div style="font-size:22px;font-weight:800;color:#3730a3;margin-bottom:4px">Fullpakken &mdash; alt unntatt nettside</div>
-      <div style="font-size:36px;font-weight:900;color:#4338ca;margin-bottom:2px">2&#8239;295 <span style="font-size:16px;font-weight:600;color:#6366f1">kr/mnd</span></div>
-      <div style="font-size:13px;color:#6b7280;margin-bottom:16px">Enkeltvis: 2&#8239;550 kr/mnd &mdash; du sparer 10&thinsp;%</div>
-      <ul class="price-features" style="color:#1e1b4b;margin-bottom:20px">
-        <li>CRM &ndash; 490 kr/mnd</li>
-        <li>AutoSEO &ndash; 790 kr/mnd</li>
-        <li>Google Maps SEO &ndash; 390 kr/mnd</li>
-        <li>GEO / AI-synlighet &ndash; 390 kr/mnd</li>
-        <li>AI Chat &ndash; 490 kr/mnd</li>
-        <li>10&thinsp;% rabatt &mdash; alt samlet</li>
-        <li>Ingen binding</li>
-      </ul>
-      <button class="btn btn-primary" style="justify-content:center;width:100%;background:#6366f1;border-color:#6366f1" onclick="openBooking()">Kom i gang med Fullpakken</button>
-    </div>
-
-    <!-- Nettside -->
-    <div style="max-width:500px;margin:0 auto;border:2px dashed #d1d5db;border-radius:16px;padding:32px;background:#fafafa;text-align:left">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6b7280;margin-bottom:6px">Tilleggstjeneste</div>
-      <div style="font-size:22px;font-weight:800;color:#111827;margin-bottom:4px">Nettside</div>
-      <div style="font-size:28px;font-weight:900;color:#374151;margin-bottom:12px">F&#229; et tilbud</div>
-      <p style="font-size:14px;color:#6b7280;margin-bottom:20px">Skreddersydd profesjonell nettside med chatbot, blogg og kundeinnlogging. Pris avhenger av omfang &mdash; ta kontakt for et gratis tilbud.</p>
-      <button class="btn btn-outline" style="justify-content:center;width:100%" onclick="openBooking()">Book gratis m&#248;te</button>
-    </div>
-
-  </div>
-</section>
 
 <!-- BLOGG -->
 <section id="blogg" style="background:#f8fafc;padding:80px 0">
