@@ -21,7 +21,7 @@ FROM_NAME  = "Viktor Lian | FlowPilot"
 SIGNATUR   = "Med vennlig hilsen,\nViktor Lian\nFlowPilot | flowpilot.no | Tlf: 414 26 005"
 
 SENT_FILE  = os.path.join(os.path.dirname(__file__), "sent_emails.json")
-MAX_SEND   = 50
+MAX_SEND   = 100
 
 # ── Kategorier å søke i BRREG ────────────────────────────────────────────────
 BRANSJER = [
@@ -203,7 +203,7 @@ def main():
     log.info(f"Tidligere sendt: {len(sent)} emails")
 
     log.info("Henter leads fra BRREG...")
-    leads = _brreg_leads(max_leads=400)
+    leads = _brreg_leads(max_leads=600)
     random.shuffle(leads)
     log.info(f"Fant {len(leads)} potensielle leads")
 
