@@ -21,15 +21,39 @@ FROM_NAME  = "Viktor Lian | FlowPilot"
 SIGNATUR   = "Med vennlig hilsen,\nViktor Lian\nFlowPilot | flowpilot.no | Tlf: 414 26 005"
 
 SENT_FILE  = os.path.join(os.path.dirname(__file__), "sent_emails.json")
-MAX_SEND   = 100
+MAX_SEND   = 200
 
-# ── Kategorier å søke i BRREG ────────────────────────────────────────────────
+# ── Alle SMB-nisjer som trenger Google-synlighet ─────────────────────────────
 BRANSJER = [
-    "tannlege", "rørlegger", "elektriker", "bilmekaniker", "bilverksted",
-    "advokat", "regnskapsfører", "snekker", "tømrer", "maler", "frisør",
-    "fysioterapeut", "kiropraktor", "optiker", "hudpleie", "personlig trener",
-    "eiendomsmegler", "renholdsfirma", "byggmester", "glassmester",
-    "låsesmed", "taklegger", "vvs", "revisorfirma", "psykolog", "logoped",
+    # Håndverk og bygg
+    "rørlegger", "elektriker", "snekker", "tømrer", "maler", "taklegger",
+    "glassmester", "låsesmed", "byggmester", "vvs firma", "murermester",
+    "flislegger", "gulvlegger", "taktekker", "isolatør", "stillasbygger",
+    # Bil og transport
+    "bilmekaniker", "bilverksted", "bilskade", "dekkskift", "biltilbehør",
+    "budbil", "flyttebyrå", "taxiselskap",
+    # Helse og velvære
+    "tannlege", "fysioterapeut", "kiropraktor", "optiker", "hudpleie",
+    "psykolog", "logoped", "ergoterapeut", "naprapat", "akupunktør",
+    "fotterapeut", "personlig trener", "treningssenter", "yogastudio",
+    # Profesjonelle tjenester
+    "advokat", "regnskapsfører", "revisor", "eiendomsmegler",
+    "forsikringsmegler", "finansrådgiver", "inkassoselskap",
+    # Skjønnhet og velvære
+    "frisør", "negledesigner", "tatoveringsstudio", "barberer",
+    "massasjeterapeut", "solstudio",
+    # Renholds og vedlikehold
+    "renholdsfirma", "vaktmesterservice", "skadedyrkontroll",
+    "vinduspussing", "snørydding",
+    # Mat og drikke
+    "cateringselskap", "matlevering", "kafé",
+    # Teknologi og media
+    "it-support", "nettsteddesign", "fotograf", "videoproduksjon",
+    # Utdanning og omsorg
+    "barnehage privat", "logopedtjeneste", "musikklærer", "kjøreskole",
+    # Nisjer med sterk lokal konkurranse
+    "hundefrisør", "veterinær", "dyreklinikk", "blomsterbutikk luksus",
+    "låsesmed", "alarminstallasjon", "solcelleinstallatør",
 ]
 
 NORSKE_BYER = [
@@ -37,6 +61,9 @@ NORSKE_BYER = [
     "Fredrikstad", "Tromsø", "Sandnes", "Kristiansand", "Bodø",
     "Ålesund", "Tønsberg", "Moss", "Haugesund", "Porsgrunn",
     "Skien", "Sarpsborg", "Arendal", "Lillestrøm", "Hamar",
+    "Gjøvik", "Kongsberg", "Molde", "Harstad", "Narvik",
+    "Askøy", "Ringerike", "Ski", "Ås", "Elverum",
+    "Lillehammer", "Halden", "Larvik", "Sandefjord", "Horten",
 ]
 
 _FAKE_LOCAL = {
@@ -137,36 +164,60 @@ def _is_valid_email(email: str) -> bool:
         return False
     return True
 
-# ── E-post templates (3 varianter) ───────────────────────────────────────────
+# ── E-post templates (5 varianter – SEO, Maps, AI/GEO, nettside) ─────────────
 def _build_email(company: str, branch: str, city: str) -> tuple[str, str]:
     sokeord = f"{branch} {city}".strip()
     templates = [
         (
-            f"Slik finner flere kunder {company} på nett",
+            f"Søkte etter {branch} i {city} – fant ikke {company} øverst",
             f"Hei,\n\n"
-            f"En rask observasjon: når folk søker på '{sokeord}' er det lett å drukne i konkurransen. "
-            f"Vi hjelper lokale {branch}-bedrifter med å komme øverst i Google – gjennom daglig innholdspublisering "
-            f"og Google Maps-optimalisering. Alt på autopilot, du gjør ingenting.\n\n"
-            f"Mange av kundene våre ser tydelig økning i henvendelser innen de første ukene.\n\n"
-            f"Ville det passet med 15 minutter på Zoom? Første måned er gratis.\n\n{SIGNATUR}"
+            f"Jeg søkte på '{sokeord}' i dag og la merke til at {company} ikke dukker opp blant de tre øverste resultatene. "
+            f"De fleste kunder klikker aldri lenger ned enn topp 3.\n\n"
+            f"FlowPilot publiserer ett SEO-optimalisert innlegg på nettsiden din hver eneste dag – automatisk. "
+            f"Over tid bygger dette en Google-tilstedeværelse konkurrentene dine sliter med å matche.\n\n"
+            f"Vi setter alt opp og driver det for deg. Du gjør ingenting.\n\n"
+            f"Første 30 dager gratis. Book et kvarters prat på flowpilot.no, eller svar direkte hit.\n\n{SIGNATUR}"
         ),
         (
-            f"{company} – én konkurrent tar kundene dine nå",
+            f"{company} – én konkurrent i {city} tar kundene dine akkurat nå",
             f"Hei,\n\n"
-            f"Jeg søkte på '{sokeord}' i dag. De fleste som søker klikker på en av de tre øverste – "
-            f"så det er en del potensielle kunder som aldri finner frem til deg.\n\n"
-            f"FlowPilot er et norsk system som publiserer innhold daglig og optimaliserer Google Maps-profilen "
-            f"din automatisk. Vi setter alt opp og driver det – ingen tid nødvendig fra din side.\n\n"
-            f"Første måned gratis. Har du 15 minutter til en rask Zoom-prat?\n\n{SIGNATUR}"
+            f"Bedrifter som ligger øverst på Google Maps for '{sokeord}' får 3 av 4 klikk. "
+            f"De som ikke er synlige der, eksisterer ikke for de fleste kunder.\n\n"
+            f"Vi optimaliserer Google Maps-profilen din, henter inn anmeldelser og sørger for at du ligger øverst lokalt. "
+            f"Alt skjer automatisk – ingen tid nødvendig fra din side.\n\n"
+            f"Første måned er gratis. Svar på denne e-posten eller book direkte på flowpilot.no.\n\n{SIGNATUR}"
         ),
         (
-            f"Automatisk Google-synlighet for {company}",
+            f"Stadig flere finner {branch} via ChatGPT – er {company} synlig der?",
             f"Hei,\n\n"
-            f"Bedrifter med jevnlig innhold på nett får 7 ganger mer organisk trafikk.\n\n"
-            f"Vi hjelper {branch}-bedrifter i {city} med å komme øverst i Google – "
-            f"systemet publiserer innhold daglig og optimaliserer profilen kontinuerlig. "
-            f"Du gjør absolutt ingenting – vi tar oss av hele jobben.\n\n"
-            f"Gratis prøvemåned – ingen risiko. Kan vi ta 15 minutter på Zoom?\n\n{SIGNATUR}"
+            f"En ny trend endrer hvordan kunder finner lokale bedrifter: de spør ChatGPT, Perplexity og Google AI "
+            f"i stedet for å søke tradisjonelt.\n\n"
+            f"Vi bygger AI-synlighet for {company} – slik at når noen spør 'hvem er best på {branch} i {city}', "
+            f"er det dere som nevnes. Dette er noe svært få norske bedrifter gjør ennå.\n\n"
+            f"Kombiner dette med daglig SEO-innhold og Google Maps-optimalisering, og du har en markedsmotor "
+            f"som jobber 24 timer i døgnet.\n\n"
+            f"30 dager gratis. Book 15 minutter på flowpilot.no eller svar hit.\n\n{SIGNATUR}"
+        ),
+        (
+            f"Hvordan {branch}-bedrifter i {city} vokser 7× raskere på nett",
+            f"Hei,\n\n"
+            f"HubSpot-data viser at bedrifter med aktiv blogg får 7 ganger mer organisk trafikk. "
+            f"FlowPilot gjør dette automatisk – ett SEO-innlegg publisert daglig, tilpasset {branch} og {city}.\n\n"
+            f"I tillegg: Google Maps-optimalisering, AI-merkevaresynlighet og CRM for å følge opp leads. "
+            f"Alt i én pakke, vi driver alt – du fokuserer på jobben.\n\n"
+            f"Første 30 dager er gratis, ingen binding.\n\n"
+            f"Svar på denne e-posten eller book et møte på flowpilot.no.\n\n{SIGNATUR}"
+        ),
+        (
+            f"Nettside + SEO + Maps for {company} – alt på autopilot",
+            f"Hei,\n\n"
+            f"Tre ting avgjør om en lokal {branch}-bedrift vinner på nett:\n"
+            f"1. En rask nettside med daglig innhold\n"
+            f"2. Topp plassering på Google Maps\n"
+            f"3. Synlighet i AI-søk (ChatGPT, Perplexity)\n\n"
+            f"FlowPilot leverer alt tre – vi setter det opp og driver det for deg. "
+            f"{company} kan ha dette på plass innen 48 timer.\n\n"
+            f"Første måned gratis. Book et møte på flowpilot.no eller svar direkte.\n\n{SIGNATUR}"
         ),
     ]
     return random.choice(templates)
