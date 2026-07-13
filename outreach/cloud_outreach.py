@@ -407,19 +407,41 @@ def send_email(to_email: str, subject: str, body: str) -> tuple[bool, str]:
     if not FROM_EMAIL or not FROM_PASS:
         return False, "Ingen SMTP-legitimasjon"
     try:
+        import imaplib, email.utils as _eu
         msg = MIMEMultipart("alternative")
         msg["From"]    = formataddr((FROM_NAME, FROM_EMAIL))
         msg["To"]      = to_email
         msg["Subject"] = subject
         msg["Date"]    = formatdate(localtime=True)
+        msg["Message-ID"] = _eu.make_msgid()
         footer = "\n\n---\nFor å avmelde deg svar med 'avmeld'."
         msg.attach(MIMEText(body + footer, "plain", "utf-8"))
+        raw = msg.as_bytes()
+
+        # Send via SMTP
         ctx = ssl.create_default_context()
         with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=25) as s:
             s.ehlo()
             s.starttls(context=ctx)
             s.login(FROM_EMAIL, FROM_PASS)
-            s.sendmail(FROM_EMAIL, to_email, msg.as_bytes())
+            s.sendmail(FROM_EMAIL, to_email, raw)
+
+        # Lagre i Gmail Sendt-mappen så Viktor ser den
+        try:
+            imap = imaplib.IMAP4_SSL("imap.gmail.com", timeout=10)
+            imap.login(FROM_EMAIL, FROM_PASS)
+            imap.append("[Gmail]/Sendt post", "\\Seen", None, raw)
+            imap.logout()
+        except Exception:
+            # Prøv engelsk mappenavn som fallback
+            try:
+                imap2 = imaplib.IMAP4_SSL("imap.gmail.com", timeout=10)
+                imap2.login(FROM_EMAIL, FROM_PASS)
+                imap2.append("[Gmail]/Sent Mail", "\\Seen", None, raw)
+                imap2.logout()
+            except Exception:
+                pass  # Sending OK uansett, bare ikke synlig i Sendt
+
         return True, "ok"
     except Exception as e:
         return False, str(e)
