@@ -8,6 +8,7 @@ on:
 jobs:
   send-outreach:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     permissions:
       contents: write         # trenger write for å committe sent_emails.json
 
