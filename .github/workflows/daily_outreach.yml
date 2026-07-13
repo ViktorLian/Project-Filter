@@ -34,6 +34,7 @@ jobs:
           EMAIL_FLOWPILOT_PASS: ${{ secrets.EMAIL_FLOWPILOT_PASS }}
           EMAIL_SMTP_HOST:      smtp.gmail.com
           EMAIL_SMTP_PORT:      "587"
+          GOOGLE_MAPS_API_KEY:  ${{ secrets.GOOGLE_MAPS_API_KEY }}
         run: python outreach/cloud_outreach.py
 
       - name: Save sent emails log

@@ -140,6 +140,102 @@ def _proff_email(name: str, orgnr: str) -> str:
     html = _fetch(f"https://www.proff.no/selskap/{slug}/{orgnr}/")
     return _best_email(html) if html else ""
 
+# ── Google Maps lead-finder ──────────────────────────────────────────────────
+GMAPS_KEY = os.environ.get("GOOGLE_MAPS_API_KEY", "")
+
+def _gmaps_leads(max_leads: int = 400) -> list[dict]:
+    """
+    Søker Google Maps etter bedrifter per bransje/by.
+    Bedrifter på plass 4+ er primærmål (de ranker dårlig og trenger hjelp).
+    Henter nettside via Place Details og skraper den for e-post.
+    """
+    if not GMAPS_KEY:
+        log.warning("GOOGLE_MAPS_API_KEY ikke satt – hopper over Maps-søk")
+        return []
+
+    leads   = []
+    seen    = set()
+    bransjer = BRANSJER[:]
+    random.shuffle(bransjer)
+
+    for bransje in bransjer:
+        if len(leads) >= max_leads:
+            break
+        byer = random.sample(NORSKE_BYER, min(4, len(NORSKE_BYER)))
+        for by in byer:
+            if len(leads) >= max_leads:
+                break
+            query = urllib.parse.quote(f"{bransje} i {by}")
+            url   = (
+                f"https://maps.googleapis.com/maps/api/place/textsearch/json"
+                f"?query={query}&language=no&region=no&key={GMAPS_KEY}"
+            )
+            try:
+                req = urllib.request.Request(url, headers={"User-Agent": "FlowPilot/1.0"})
+                with urllib.request.urlopen(req, timeout=10) as r:
+                    data = json.loads(r.read().decode())
+            except Exception as e:
+                log.debug(f"Maps API feil ({bransje}/{by}): {e}")
+                continue
+
+            results = data.get("results", [])
+            for rank_0, place in enumerate(results):
+                rank = rank_0 + 1  # 1-indeksert
+                name = place.get("name", "").strip()
+                pid  = place.get("place_id", "")
+                rating      = place.get("rating", 0)
+                review_cnt  = place.get("user_ratings_total", 0)
+
+                if not name or not pid or pid in seen:
+                    continue
+                # Mål: rangerer dårlig ELLER har få anmeldelser
+                is_poor = rank >= 4 or review_cnt < 15 or (rating and rating < 3.8)
+                if not is_poor:
+                    continue
+                seen.add(pid)
+
+                # Hent nettside via Place Details
+                site  = ""
+                email = ""
+                det_url = (
+                    f"https://maps.googleapis.com/maps/api/place/details/json"
+                    f"?place_id={pid}&fields=website&key={GMAPS_KEY}"
+                )
+                try:
+                    req2 = urllib.request.Request(det_url, headers={"User-Agent": "FlowPilot/1.0"})
+                    with urllib.request.urlopen(req2, timeout=8) as r2:
+                        det = json.loads(r2.read().decode())
+                    site = det.get("result", {}).get("website", "")
+                except Exception:
+                    pass
+
+                if site:
+                    email = _scrape_site_email(site)
+                if not email:
+                    email = _proff_email(name, "")
+                # Konstruer fra domenet som siste utvei
+                if not email and site:
+                    dom = urllib.parse.urlparse(site).netloc.lstrip("www.")
+                    if dom and "." in dom:
+                        email = f"post@{dom}"
+
+                if email and "@" in email:
+                    leads.append({
+                        "company": name,
+                        "email":   email.lower(),
+                        "branch":  bransje,
+                        "city":    by,
+                        "rank":    rank,
+                        "reviews": review_cnt,
+                        "source":  "gmaps",
+                    })
+                    log.debug(f"Maps lead (plass {rank}): {name} <{email}>")
+
+                time.sleep(0.3)
+
+    log.info(f"Google Maps-søk ferdig: {len(leads)} leads funnet")
+    return leads
+
 # ── BRREG lead-finder ────────────────────────────────────────────────────────
 def _brreg_leads(max_leads: int = 600) -> list[dict]:
     leads   = []
@@ -227,9 +323,29 @@ def is_blocked(email: str, sent: dict) -> bool:
 def already_sent(email: str, sent: dict) -> bool:
     return email.lower() in sent
 
-# ── E-post templates (5 varianter – SEO, Maps, AI/GEO, nettside) ─────────────
-def _build_email(company: str, branch: str, city: str) -> tuple[str, str]:
+# ── E-post templates ─────────────────────────────────────────────────────────
+def _build_email(company: str, branch: str, city: str,
+                 rank: int = 0, reviews: int = 0) -> tuple[str, str]:
     sokeord = f"{branch} {city}".strip()
+
+    # Spesialtilpasset Maps-pitch når vi vet eksakt rangering
+    if rank >= 4:
+        rank_str = str(rank)
+        maps_template = (
+            f"Søkte etter {branch} i {city} – {company} ligger på plass {rank_str}",
+            f"Hei,\n\n"
+            f"Jeg søkte på '{sokeord}' på Google Maps i dag og så at {company} dukker opp "
+            f"på plass {rank_str}. De tre øverste bedriftene tar rundt 75 % av alle klikk – "
+            f"så de fleste som leter etter {branch} i {city} finner aldri frem til dere.\n\n"
+            f"FlowPilot optimaliserer Google Maps-profilen din og sørger for at du klatrer "
+            f"til topp 3. Vi henter inn anmeldelser, oppdaterer profilen kontinuerlig og "
+            f"publiserer daglig SEO-innhold som styrker plasseringen.\n\n"
+            f"Alt skjer automatisk – du gjør ingenting.\n\n"
+            f"Første 30 dager gratis, ingen binding. "
+            f"Svar direkte hit eller book 15 minutter på flowpilot.no.\n\n{SIGNATUR}"
+        )
+        return maps_template
+
     templates = [
         (
             f"Søkte etter {branch} i {city} – fant ikke {company} øverst",
@@ -318,8 +434,23 @@ def main():
     sent = load_sent()
     log.info(f"Tidligere sendt: {len(sent)} emails")
 
+    log.info("Henter leads fra Google Maps (dårlig rangerte bedrifter)...")
+    maps_leads = _gmaps_leads(max_leads=400)
+
     log.info("Henter leads fra BRREG (inkl. nettsider)...")
-    leads = _brreg_leads(max_leads=800)
+    brreg_leads = _brreg_leads(max_leads=600)
+
+    # Maps-leads først (mer målrettet pitch), deretter BRREG
+    leads = maps_leads + brreg_leads
+    # Fjern duplikater på email
+    seen_emails: set[str] = set()
+    unique: list[dict] = []
+    for l in leads:
+        e = l.get("email","").lower()
+        if e and e not in seen_emails:
+            seen_emails.add(e)
+            unique.append(l)
+    leads = unique
     random.shuffle(leads)
 
     if not leads:
@@ -344,7 +475,11 @@ def main():
             stats["skipped"] += 1
             continue
 
-        subject, body = _build_email(company, branch, city)
+        subject, body = _build_email(
+            company, branch, city,
+            rank=lead.get("rank", 0),
+            reviews=lead.get("reviews", 0),
+        )
         ok, msg_out = send_email(email, subject, body)
 
         if ok:
