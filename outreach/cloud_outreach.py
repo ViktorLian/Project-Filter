@@ -402,12 +402,35 @@ def _build_email(company: str, branch: str, city: str,
     ]
     return random.choice(templates)
 
+# ── IMAP Sendt-mappe (cache folder, gi opp etter 5 feil) ─────────────────────
+import imaplib, email.utils as _eu
+_imap_folder: str = ""
+_imap_failures: int = 0
+_IMAP_MAX_FAIL = 5
+
+def _append_to_sent(raw: bytes) -> None:
+    global _imap_folder, _imap_failures
+    if _imap_failures >= _IMAP_MAX_FAIL:
+        return
+    folders = [_imap_folder] if _imap_folder else ["[Gmail]/Sendt post", "[Gmail]/Sent Mail"]
+    for folder in folders:
+        try:
+            imap = imaplib.IMAP4_SSL("imap.gmail.com", timeout=4)
+            imap.login(FROM_EMAIL, FROM_PASS)
+            imap.append(folder, "\\Seen", None, raw)
+            imap.logout()
+            _imap_folder = folder
+            _imap_failures = 0
+            return
+        except Exception:
+            continue
+    _imap_failures += 1
+
 # ── Send e-post via SMTP ──────────────────────────────────────────────────────
 def send_email(to_email: str, subject: str, body: str) -> tuple[bool, str]:
     if not FROM_EMAIL or not FROM_PASS:
         return False, "Ingen SMTP-legitimasjon"
     try:
-        import imaplib, email.utils as _eu
         msg = MIMEMultipart("alternative")
         msg["From"]    = formataddr((FROM_NAME, FROM_EMAIL))
         msg["To"]      = to_email
@@ -418,7 +441,6 @@ def send_email(to_email: str, subject: str, body: str) -> tuple[bool, str]:
         msg.attach(MIMEText(body + footer, "plain", "utf-8"))
         raw = msg.as_bytes()
 
-        # Send via SMTP
         ctx = ssl.create_default_context()
         with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=25) as s:
             s.ehlo()
@@ -426,22 +448,7 @@ def send_email(to_email: str, subject: str, body: str) -> tuple[bool, str]:
             s.login(FROM_EMAIL, FROM_PASS)
             s.sendmail(FROM_EMAIL, to_email, raw)
 
-        # Lagre i Gmail Sendt-mappen så Viktor ser den
-        try:
-            imap = imaplib.IMAP4_SSL("imap.gmail.com", timeout=10)
-            imap.login(FROM_EMAIL, FROM_PASS)
-            imap.append("[Gmail]/Sendt post", "\\Seen", None, raw)
-            imap.logout()
-        except Exception:
-            # Prøv engelsk mappenavn som fallback
-            try:
-                imap2 = imaplib.IMAP4_SSL("imap.gmail.com", timeout=10)
-                imap2.login(FROM_EMAIL, FROM_PASS)
-                imap2.append("[Gmail]/Sent Mail", "\\Seen", None, raw)
-                imap2.logout()
-            except Exception:
-                pass  # Sending OK uansett, bare ikke synlig i Sendt
-
+        _append_to_sent(raw)
         return True, "ok"
     except Exception as e:
         return False, str(e)
