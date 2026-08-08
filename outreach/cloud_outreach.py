@@ -56,10 +56,14 @@ _FAKE_LOCAL = {
     "kundeservice", "customer", "support", "hjelp", "kontaktskjema",
     "booking", "post", "firmapost", "kontor", "webmaster", "admin",
     "privacy", "legal", "media", "press", "sales", "marketing",
+    # Norske placeholder-tekster fra kontaktskjemaer
+    "din", "epost", "your", "demo", "eksempel", "example", "placeholder",
+    "skriv", "fyll", "fornavn", "etternavn", "firma", "bedrift",
 }
 _EMAIL_RX  = re.compile(r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}", re.I)
 _SKIP_DOMS = {"sentry.io","facebook.com","example.com","test.com","wix.com",
-              "wordpress.com","google.com","instagram.com","linkedin.com"}
+              "wordpress.com","google.com","instagram.com","linkedin.com",
+              "navn.no","epost.no","domain.no","domene.no","yoursite.no"}
 
 HEADERS = {
     "User-Agent": (
@@ -109,9 +113,10 @@ def _emails_from_html(html: str, own_domain: str = "") -> list[str]:
 
 def _best_email(html: str, domain: str = "") -> str:
     emails = _emails_from_html(html, domain)
-    # Foretrekk spesifikke lokale deler over generiske
-    preferred = ["post","kontakt","hei","daglig","leder","eier","marius","jon",
-                 "ole","per","lars","anders","erik","thomas","henrik"]
+    # Foretrekk person-navn eller spesifikke roller over generiske bokser
+    preferred = ["daglig", "leder", "eier", "kontakt", "hei",
+                 "ole", "per", "lars", "anders", "erik", "thomas",
+                 "henrik", "marius", "jon", "knut", "tor", "jan"]
     for e in emails:
         local = e.split("@")[0]
         if any(p in local for p in preferred):
@@ -213,11 +218,7 @@ def _gmaps_leads(max_leads: int = 400) -> list[dict]:
                     email = _scrape_site_email(site)
                 if not email:
                     email = _proff_email(name, "")
-                # Konstruer fra domenet som siste utvei
-                if not email and site:
-                    dom = urllib.parse.urlparse(site).netloc.lstrip("www.")
-                    if dom and "." in dom:
-                        email = f"post@{dom}"
+                # Ingen fallback-konstruksjon – sender kun til skrapede adresser
 
                 if email and "@" in email:
                     leads.append({
@@ -282,14 +283,7 @@ def _brreg_leads(max_leads: int = 600) -> list[dict]:
                 # 2. Proff.no
                 if not email:
                     email = _proff_email(name, org)
-                # 3. Konstruer vanlige adresser fra nettsteddomenet
-                if not email and site:
-                    dom = urllib.parse.urlparse(site).netloc.lstrip("www.")
-                    if dom and "." in dom:
-                        for prefix in ("post", "kontakt", "hei"):
-                            candidate = f"{prefix}@{dom}"
-                            email = candidate
-                            break  # ta første, verifisering skjer i SMTP
+                # Ingen fallback-konstruksjon – sender kun til skrapede adresser
 
                 if email and _EMAIL_RX.match(email):
                     leads.append({
@@ -330,12 +324,11 @@ def _build_email(company: str, branch: str, city: str,
 
     # Spesialtilpasset Maps-pitch når vi vet eksakt rangering
     if rank >= 4:
-        rank_str = str(rank)
         maps_template = (
-            f"Søkte etter {branch} i {city} – {company} ligger på plass {rank_str}",
+            f"Søkte etter {branch} i {city} – {company} er ikke blant topp 3",
             f"Hei,\n\n"
-            f"Jeg søkte på '{sokeord}' på Google Maps i dag og så at {company} dukker opp "
-            f"på plass {rank_str}. De tre øverste bedriftene tar rundt 75 % av alle klikk – "
+            f"Jeg søkte på '{sokeord}' på Google Maps akkurat nå og så at {company} "
+            f"ikke er blant de tre øverste. De tre øverste bedriftene tar rundt 75 % av alle klikk – "
             f"så de fleste som leter etter {branch} i {city} finner aldri frem til dere.\n\n"
             f"FlowPilot optimaliserer Google Maps-profilen din og sørger for at du klatrer "
             f"til topp 3. Vi henter inn anmeldelser, oppdaterer profilen kontinuerlig og "
