@@ -1,1 +1,512 @@
-{}
+{
+  "hei@horselsforbundet.no": {
+    "company": "HØRSELSFORBUNDET SKIEN",
+    "branch": "psykolog",
+    "city": "SKIEN",
+    "sent_at": "2026-08-20T09:32:16.948933",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "user@domain.com": {
+    "company": "ACA TØNSBERG",
+    "branch": "hundepasser",
+    "city": "Tønsberg",
+    "sent_at": "2026-08-20T09:32:38.546432",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "christian@digimaker.no": {
+    "company": "ASKØY BRIDGEKLUBB",
+    "branch": "bilskade",
+    "city": "KLEPPESTØ",
+    "sent_at": "2026-08-20T09:32:56.303747",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "g.bergjohansen@gmail.com": {
+    "company": "FOTOGRAF G. BERG JOHANSEN",
+    "branch": "fotograf",
+    "city": "TROMSDALEN",
+    "sent_at": "2026-08-20T09:33:18.315875",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "ola@nordmann.no": {
+    "company": "LILLESTRØM ARBEIDERPARTI",
+    "branch": "bilmekaniker",
+    "city": "LILLESTRØM",
+    "sent_at": "2026-08-20T09:33:35.377973",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "wikimaster@nani.no": {
+    "company": "ANIMEAFTEN OSLO",
+    "branch": "taklegger",
+    "city": "OSLO",
+    "sent_at": "2026-08-20T09:33:48.884038",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "service@lisykehusbolig.no": {
+    "company": "LILLEHAMMER BOLIGSTIFTELSE",
+    "branch": "tannlege",
+    "city": "LILLEHAMMER",
+    "sent_at": "2026-08-20T09:34:04.547577",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "lillehammer@dnt.no": {
+    "company": "DNT LILLEHAMMER",
+    "branch": "murermester",
+    "city": "LILLEHAMMER",
+    "sent_at": "2026-08-20T09:34:26.195413",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "liverbirdsskien@live.no": {
+    "company": "LIVERBIRDS SKIEN",
+    "branch": "psykolog",
+    "city": "SKIEN",
+    "sent_at": "2026-08-20T09:34:39.580531",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "kjell-erik.kallset@fagforbundet.no": {
+    "company": "FAGFORBUNDET LILLESTRØM",
+    "branch": "bilmekaniker",
+    "city": "LILLESTRØM",
+    "sent_at": "2026-08-20T09:34:56.416149",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "sandefjord@dnt.no": {
+    "company": "DNT SANDEFJORD",
+    "branch": "eiendomsmegler",
+    "city": "SANDEFJORD",
+    "sent_at": "2026-08-20T09:35:16.726631",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "knut.brobakken@fagforbundet.no": {
+    "company": "FAGFORBUNDET TROMSØ",
+    "branch": "psykolog",
+    "city": "TROMSØ",
+    "sent_at": "2026-08-20T09:35:38.479880",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "sven@dinel.no": {
+    "company": "DIN-ELEKTRIKER AS",
+    "branch": "elektriker",
+    "city": "MOSS",
+    "sent_at": "2026-08-20T09:35:54.430243",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "sjur@tomrer.no": {
+    "company": "TØMRER AS",
+    "branch": "tømrer",
+    "city": "OSLO",
+    "sent_at": "2026-08-20T09:36:10.547227",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "lhl.molde@lhl.no": {
+    "company": "LHL MOLDE",
+    "branch": "bilmekaniker",
+    "city": "MOLDE",
+    "sent_at": "2026-08-20T09:36:53.475980",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "eldreakademiet.halden@gmail.com": {
+    "company": "ELDREAKADEMIET HALDEN",
+    "branch": "maler",
+    "city": "Halden",
+    "sent_at": "2026-08-20T09:37:41.961340",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "toralf@dhn.no": {
+    "company": "KIROPRAKTOR GRIMSRUD",
+    "branch": "kiropraktor",
+    "city": "OSLO",
+    "sent_at": "2026-08-20T09:38:02.194696",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "dyrktromso@gmail.com": {
+    "company": "DYRK TROMSØ",
+    "branch": "psykolog",
+    "city": "TROMSØ",
+    "sent_at": "2026-08-20T09:38:18.164851",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "arnejohnny@live.no": {
+    "company": "ALF OSLO",
+    "branch": "taklegger",
+    "city": "HYLKJE",
+    "sent_at": "2026-08-20T09:38:37.115489",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "morten@arendalchamber.no": {
+    "company": "ARENDAL NÆRINGSFORENING - ARENDAL HANDELSKAMMER",
+    "branch": "murermester",
+    "city": "ARENDAL",
+    "sent_at": "2026-08-20T09:38:53.978256",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "kontakt@eksempel.no": {
+    "company": "DRAMMEN BANDY",
+    "branch": "taklegger",
+    "city": "DRAMMEN",
+    "sent_at": "2026-08-20T09:39:16.015766",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "kontakt@bergpsykologer.no": {
+    "company": "BERG PSYKOLOGER AS",
+    "branch": "psykolog",
+    "city": "OSLO",
+    "sent_at": "2026-08-20T09:39:35.760182",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "krik@krik.no": {
+    "company": "KRIK SKI",
+    "branch": "dekkskift",
+    "city": "OSLO",
+    "sent_at": "2026-08-20T09:39:58.103595",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "klyve.bibliotek@skien.kommune.no": {
+    "company": "SKIEN KOMMUNE - SKIEN INTERKOMMUNALE LEGEVAKT",
+    "branch": "psykolog",
+    "city": "SKIEN",
+    "sent_at": "2026-08-20T09:40:19.125411",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "kirobugge@outlook.com": {
+    "company": "KIROPRAKTOR BUGGE",
+    "branch": "kiropraktor",
+    "city": "GJØVIK",
+    "sent_at": "2026-08-20T09:40:34.769447",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "heimdal.ski.styret@gmail.com": {
+    "company": "HEIMDAL-SKI",
+    "branch": "låsesmed",
+    "city": "HEIMDAL",
+    "sent_at": "2026-08-20T09:40:49.877624",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "thomas@angstforeningen.no": {
+    "company": "ANGSTFORENINGEN OSLO",
+    "branch": "taklegger",
+    "city": "OSLO",
+    "sent_at": "2026-08-20T09:41:10.272950",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "bergen@akks.no": {
+    "company": "AKKS BERGEN",
+    "branch": "murermester",
+    "city": "BERGEN",
+    "sent_at": "2026-08-20T09:41:24.486057",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "kontakt@bcc.no": {
+    "company": "BCC STAVANGER",
+    "branch": "låsesmed",
+    "city": "STAVANGER",
+    "sent_at": "2026-08-20T09:41:42.598268",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "skogenerik@hotmail.com": {
+    "company": "HERKULES SKI",
+    "branch": "dekkskift",
+    "city": "Ski",
+    "sent_at": "2026-08-20T09:42:04.750883",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "kjersti@credokirken.no": {
+    "company": "CREDOKIRKEN STORD",
+    "branch": "bilmekaniker",
+    "city": "STORD",
+    "sent_at": "2026-08-20T09:42:19.366695",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "bergen@autoin.no": {
+    "company": "AUTOIN BILSKADE AS",
+    "branch": "bilskade",
+    "city": "OSLO",
+    "sent_at": "2026-08-20T09:42:36.591670",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "kunnskapsbyen@kunnskapsbyen.no": {
+    "company": "KUNNSKAPSBYEN LILLESTRØM",
+    "branch": "bilmekaniker",
+    "city": "LILLESTRØM",
+    "sent_at": "2026-08-20T09:42:56.955287",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "sigrid.wirgenes@elogitoa.no": {
+    "company": "EL OG IT OSLO OG AKERSHUS",
+    "branch": "it-support",
+    "city": "OSLO",
+    "sent_at": "2026-08-20T09:43:10.831394",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "kristian@bergeninstallasjon.no": {
+    "company": "HANESETH BERGEN INSTALLASJON AS",
+    "branch": "alarm installasjon",
+    "city": "LODDEFJORD",
+    "sent_at": "2026-08-20T09:43:28.444792",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "kontakt@bergenaikido.no": {
+    "company": "BERGEN AIKIDOKLUBB",
+    "branch": "stillasbygger",
+    "city": "BERGEN",
+    "sent_at": "2026-08-20T09:43:44.411339",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "annik@lynski.no": {
+    "company": "LYN SKI",
+    "branch": "tannlege",
+    "city": "OSLO",
+    "sent_at": "2026-08-20T09:44:05.181864",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "jonols1969@gmail.com": {
+    "company": "SARPSBORG - FRP",
+    "branch": "advokat",
+    "city": "SARPSBORG",
+    "sent_at": "2026-08-20T09:44:24.907409",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "kontakt@viltost.no": {
+    "company": "AUD SANDNES",
+    "branch": "fotograf",
+    "city": "SNÅSA",
+    "sent_at": "2026-08-20T09:44:42.920111",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "kontakt@amcarfredrikstad.com": {
+    "company": "AMCAR FREDRIKSTAD",
+    "branch": "ergoterapeut",
+    "city": "TORP",
+    "sent_at": "2026-08-20T09:44:57.131407",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "caritas@caritas.no": {
+    "company": "CARITAS DRAMMEN",
+    "branch": "taklegger",
+    "city": "DRAMMEN",
+    "sent_at": "2026-08-20T09:45:19.703128",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "marius.sjo@gmail.com": {
+    "company": "FRP STORD",
+    "branch": "bilmekaniker",
+    "city": "SAGVÅG",
+    "sent_at": "2026-08-20T09:45:40.355621",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "tor@revcirk.no": {
+    "company": "REVISOR CIRKELEN TØNSBERG AS",
+    "branch": "revisor",
+    "city": "HUSØYSUND",
+    "sent_at": "2026-08-20T09:45:59.951033",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "utleie@porsgrunnboligstiftelse.no": {
+    "company": "PORSGRUNN BOLIGSTIFTELSE",
+    "branch": "snekker",
+    "city": "PORSGRUNN",
+    "sent_at": "2026-08-20T09:46:21.768494",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "erlendberge@me.com": {
+    "company": "FOTOGRAF ERLEND BERGE",
+    "branch": "fotograf",
+    "city": "OSLO",
+    "sent_at": "2026-08-20T09:46:37.348521",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "turne@folkeakademiet.no": {
+    "company": "FOLKEAKADEMIET STAVANGER",
+    "branch": "solcelleinstallatør",
+    "city": "Stavanger",
+    "sent_at": "2026-08-20T09:46:56.919452",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "molde@ffgroup.no": {
+    "company": "FEEL MOLDE",
+    "branch": "bilmekaniker",
+    "city": "MOLDE",
+    "sent_at": "2026-08-20T09:47:16.917847",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "habo@habo.no": {
+    "company": "HALDEN BOLIGBYGGELAG",
+    "branch": "maler",
+    "city": "HALDEN",
+    "sent_at": "2026-08-20T09:47:33.982253",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "hei@byggmesterforbundet.no": {
+    "company": "BYGGMESTERFORBUNDET HAUGESUND",
+    "branch": "bilverksted",
+    "city": "HAUGESUND",
+    "sent_at": "2026-08-20T09:47:48.448508",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "pia@jellow.no": {
+    "company": "FOLLO ALARM AS",
+    "branch": "alarm installasjon",
+    "city": "FREDRIKSTAD",
+    "sent_at": "2026-08-20T09:48:07.796882",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "jo@revisorvest.no": {
+    "company": "REVISOR VEST AS",
+    "branch": "revisor",
+    "city": "STRAUME",
+    "sent_at": "2026-08-20T09:48:30.493212",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  }
+}
