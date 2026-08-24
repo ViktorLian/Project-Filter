@@ -758,5 +758,75 @@
     "replied": false,
     "bounced": false,
     "negative_reply": false
+  },
+  "haakonsen@advokathaakonsen.no": {
+    "company": "ADVOKAT HÅKONSEN",
+    "branch": "advokat",
+    "city": "BERGEN",
+    "sent_at": "2026-08-24T09:14:53.398550",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "odropp@gmail.com": {
+    "company": "KVERNELAND SKI",
+    "branch": "psykolog",
+    "city": "Ski",
+    "sent_at": "2026-08-24T09:15:22.325519",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "tore.karlsen@mapei.no": {
+    "company": "HALDEN ATLETKLUBB",
+    "branch": "barberer",
+    "city": "HALDEN",
+    "sent_at": "2026-08-24T09:15:48.130027",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "tonsberg@seniornett.no": {
+    "company": "SENIORNETT TØNSBERG",
+    "branch": "byggmester",
+    "city": "TØNSBERG",
+    "sent_at": "2026-08-24T09:16:10.999999",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "contact@handyman.com": {
+    "company": "OSLO RØRLEGGER & ENTREPRENØRBEDRIFT AS",
+    "branch": "rørlegger",
+    "city": "LØRENSKOG",
+    "sent_at": "2026-08-24T09:16:37.043567",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "arild@vvsbergen.com": {
+    "company": "VVS BERGEN AS",
+    "branch": "vvs",
+    "city": "HYLKJE",
+    "sent_at": "2026-08-24T09:16:54.202263",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "bergen@arkitektforening.no": {
+    "company": "BERGEN ARKITEKTFORENING",
+    "branch": "solcelleinstallatør",
+    "city": "BERGEN",
+    "sent_at": "2026-08-24T09:17:14.074018",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
   }
 }
