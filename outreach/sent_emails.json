@@ -828,5 +828,45 @@
     "replied": false,
     "bounced": false,
     "negative_reply": false
+  },
+  "mr@larsenco.no": {
+    "company": "ADVOKAT ANDREAS BERG FEVANG",
+    "branch": "advokat",
+    "city": "OSLO",
+    "sent_at": "2026-08-25T09:03:58.323492",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "peg@bergenlegal.no": {
+    "company": "ADVOKAT PER-ERIK GÅSKJENN - BERGEN LEGAL",
+    "branch": "advokat",
+    "city": "BERGEN",
+    "sent_at": "2026-08-25T09:04:26.174159",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "mail@bergenadvokat.no": {
+    "company": "BERGEN FAMILIE ADVOKAT AS",
+    "branch": "advokat",
+    "city": "BERGEN",
+    "sent_at": "2026-08-25T09:04:50.323154",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "elverumatletklubb@gmail.com": {
+    "company": "ELVERUM ATLETKLUBB",
+    "branch": "alarm installasjon",
+    "city": "ELVERUM",
+    "sent_at": "2026-08-25T09:05:18.122170",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
   }
 }
