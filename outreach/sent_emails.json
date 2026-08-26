@@ -868,5 +868,25 @@
     "replied": false,
     "bounced": false,
     "negative_reply": false
+  },
+  "aasrun_gustavsen@psykologlillehammer.com": {
+    "company": "PSYKOLOG LILLEHAMMER GUSTAVSEN",
+    "branch": "psykolog",
+    "city": "LILLEHAMMER",
+    "sent_at": "2026-08-26T09:11:54.949652",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
+  },
+  "taleksander@skienbilskade.no": {
+    "company": "SKIEN BILSKADE & VERKSTED AS",
+    "branch": "bilskade",
+    "city": "SKIEN",
+    "sent_at": "2026-08-26T09:12:16.867926",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
   }
 }
