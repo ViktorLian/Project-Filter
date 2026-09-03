@@ -88,6 +88,7 @@ export async function POST(request: Request) {
         trial_period_days: TRIAL_DAYS,
         metadata: { user_id: userData.id, plan_id: planId },
       },
+      metadata: { companyId: userData.id, plan: planId },
       success_url: `${origin}/dashboard/settings?subscription=success&plan=${planId}`,
       cancel_url: `${origin}/pricing?cancelled=true`,
       allow_promotion_codes: true,

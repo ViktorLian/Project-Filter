@@ -38,6 +38,7 @@ const MODULE_HREFS: Record<string, string[]> = {
   'ai-assistant':     ['/dashboard/ai-assistant'],
   'chatbot-widget':   ['/dashboard/chatbot-widget'],
   'google-maps':      ['/dashboard/google-maps'],
+  'auto-seo':         ['/dashboard/auto-seo'],
   'creative-generator':['/dashboard/creative-generator'],
   'client-portal':    ['/dashboard/client-portal'],
   settings:           ['/dashboard/settings'],
@@ -82,6 +83,7 @@ const NAV: NavEntry[] = [
   { href: '/dashboard/ai-assistant', label: 'AI Assistent', icon: Bot },
   { href: '/dashboard/chatbot-widget', label: 'Chatbot Widget', icon: Globe2 },
   { href: '/dashboard/google-maps', label: 'Google / SEO', icon: Map },
+  { href: '/dashboard/auto-seo', label: 'AutoSEO', icon: Search },
   { href: '/dashboard/creative-generator', label: 'Kreativ Gen.', icon: Sparkles },
 
   { section: 'System' },
@@ -271,5 +273,4 @@ export default function Sidebar() {
     </aside>
   );
 }
-
 

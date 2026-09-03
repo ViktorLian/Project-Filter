@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions as any) as any;
     if (!session?.user?.email) {
-      return NextResponse.json({ plan: 'starter', status: 'trialing' });
+      return NextResponse.json({ error: 'Ikke innlogget' }, { status: 401 });
     }
 
     const supabase = createAdminClient();
@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
       .eq('email', session.user.email)
       .single();
 
-    if (!user) return NextResponse.json({ plan: 'starter', status: 'trialing' });
+    if (!user) return NextResponse.json({ error: 'Bruker ikke funnet' }, { status: 404 });
 
     const { data: company } = await supabase
       .from('leads_companies')
@@ -33,6 +33,6 @@ export async function GET(req: NextRequest) {
       trialEndsAt: company?.trial_ends_at ?? null,
     });
   } catch {
-    return NextResponse.json({ plan: 'starter', status: 'trialing' });
+    return NextResponse.json({ error: 'Kunne ikke hente abonnement' }, { status: 500 });
   }
 }
