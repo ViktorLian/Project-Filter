@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import { useState, Suspense } from 'react';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Check, ChevronRight, ArrowLeft, Loader2, ArrowRight, Layers } from 'lucide-react';
@@ -51,7 +52,9 @@ function RegisterFlow() {
       return;
     }
 
-    const res = await fetch('/api/stripe/register-checkout', {
+    // Create the account in Supabase first. Passwords must never be sent to
+    // Stripe metadata or any third-party billing system.
+    const res = await fetch('/api/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -60,14 +63,27 @@ function RegisterFlow() {
         email: form.email,
         password: form.password,
         phone: form.phone,
-        plan: selectedNicheId,
         nicheId: selectedNicheId,
       }),
     });
     const data = await res.json();
+    if (!res.ok) {
+      setLoading(false);
+      setError(data.error || 'Klarte ikke opprette konto.');
+      return;
+    }
+
+    const login = await signIn('credentials', {
+      redirect: false,
+      email: form.email,
+      password: form.password,
+    });
     setLoading(false);
-    if (!res.ok || !data.url) { setError(data.error || 'Klarte ikke starte registrering.'); return; }
-    window.location.href = data.url;
+    if (login?.error) {
+      router.push('/login?registered=1');
+      return;
+    }
+    router.push('/dashboard');
   }
 
   return (

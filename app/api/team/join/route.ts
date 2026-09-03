@@ -5,7 +5,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 export async function POST(req: NextRequest) {
   try {
     const { token, userId, email } = await req.json();
-    if (!token || !userId) return NextResponse.json({ error: 'Mangler token eller brukerId' }, { status: 400 });
+    if (!token || !userId || !email) return NextResponse.json({ error: 'Mangler token, brukerId eller e-post' }, { status: 400 });
 
     const supabase = createAdminClient();
 
@@ -15,10 +15,22 @@ export async function POST(req: NextRequest) {
       .select('*')
       .eq('invite_token', token)
       .eq('status', 'pending')
+      .eq('email', String(email).toLowerCase().trim())
       .single();
 
     if (error || !invite) {
       return NextResponse.json({ error: 'Ugyldig eller utløpt invitasjon' }, { status: 404 });
+    }
+
+    const { data: user } = await supabase
+      .from('users')
+      .select('id, email')
+      .eq('id', userId)
+      .eq('email', String(email).toLowerCase().trim())
+      .single();
+
+    if (!user) {
+      return NextResponse.json({ error: 'Brukeren samsvarer ikke med invitasjonen' }, { status: 403 });
     }
 
     // Mark as accepted and link user_id

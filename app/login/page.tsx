@@ -30,11 +30,12 @@ function LoginForm() {
     setLoading(false);
 
     if (res?.error) {
-      setError('Invalid email or password');
+      setError('Feil e-post eller passord');
       return;
     }
 
-    router.push('/dashboard');
+    const callbackUrl = params.get('callbackUrl');
+    router.push(callbackUrl?.startsWith('/') ? callbackUrl : '/dashboard');
   }
 
   return (
@@ -60,7 +61,7 @@ function LoginForm() {
           <form onSubmit={handleSubmit} className="space-y-4">
             {params.get('registered') && (
               <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm p-3 rounded-md">
-                ✅ Konto opprettet! Du kan nå logge inn.
+                Kontoen er opprettet. Du kan nå logge inn.
               </div>
             )}
             {error && (
@@ -112,7 +113,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>Laster...</div>}>
       <LoginForm />
     </Suspense>
   );

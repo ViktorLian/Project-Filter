@@ -1,13 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseBrowser = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 
 export default function ResetPasswordPage() {
   const router = useRouter();
+  const supabaseBrowser = useRef<SupabaseClient | null>(null);
 
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -26,9 +22,21 @@ export default function ResetPasswordPage() {
   const [checkingToken, setCheckingToken] = useState(true);
 
   useEffect(() => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl || !supabaseAnonKey) {
+      setError('Passordtjenesten er ikke konfigurert. Kontakt kundestøtte.');
+      setCheckingToken(false);
+      return;
+    }
+
+    const client = createClient(supabaseUrl, supabaseAnonKey);
+    supabaseBrowser.current = client;
+
     // Supabase puts the recovery token in the URL hash as #access_token=...&type=recovery
     // auth-helpers-nextjs handles exchanging the hash token automatically
-    const { data: { subscription } } = supabaseBrowser.auth.onAuthStateChange((event) => {
+    const { data: { subscription } } = client.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY') {
         setValidToken(true);
         setCheckingToken(false);
@@ -43,6 +51,7 @@ export default function ResetPasswordPage() {
 
     return () => {
       subscription.unsubscribe();
+      supabaseBrowser.current = null;
       clearTimeout(timer);
     };
   }, []);
@@ -62,7 +71,14 @@ export default function ResetPasswordPage() {
 
     setLoading(true);
 
-    const { error: updateError } = await supabaseBrowser.auth.updateUser({ password });
+    const client = supabaseBrowser.current;
+    if (!client) {
+      setError('Passordtjenesten er ikke tilgjengelig. Prøv igjen senere.');
+      setLoading(false);
+      return;
+    }
+
+    const { error: updateError } = await client.auth.updateUser({ password });
 
     if (updateError) {
       setError(updateError.message || 'Kunne ikke oppdatere passordet. Prøv lenken på nytt.');

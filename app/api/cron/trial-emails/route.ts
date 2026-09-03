@@ -7,16 +7,11 @@ import {
   sendTrialDay7,
   sendTrialDay14,
 } from '@/lib/notifications';
+import { isAuthorizedCron } from '@/lib/cron-auth';
 
 // Called by Vercel Cron every day at 09:00 CET
-// Also callable manually: GET /api/cron/trial-emails?secret=CRON_SECRET
 export async function GET(req: NextRequest) {
-  const secret = req.nextUrl.searchParams.get('secret');
-  if (
-    process.env.CRON_SECRET &&
-    secret !== process.env.CRON_SECRET &&
-    req.headers.get('authorization') !== `Bearer ${process.env.CRON_SECRET}`
-  ) {
+  if (!isAuthorizedCron(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -26,7 +21,7 @@ export async function GET(req: NextRequest) {
   const { data: companies } = await supabase
     .from('leads_companies')
     .select('id, name, created_at, subscription_status, trial_email_day1, trial_email_day3, trial_email_day7, trial_email_day14')
-    .in('subscription_status', ['trial', 'active']);
+    .eq('subscription_status', 'trialing');
 
   if (!companies || companies.length === 0) {
     return NextResponse.json({ sent: 0, message: 'No companies found' });

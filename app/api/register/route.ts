@@ -6,7 +6,7 @@ import { sendTrialWelcomeEmail } from '@/lib/email';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { companyName, name, email, password, inviteToken } = body;
+    const { companyName, name, email, password, inviteToken, nicheId } = body;
 
     if (!name || !email || !password || (!companyName && !inviteToken)) {
       return NextResponse.json(
@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
       user_metadata: {
         name,
         business_name: companyName,
+        niche_id: nicheId || null,
       },
     });
 
@@ -112,6 +113,7 @@ export async function POST(req: NextRequest) {
         id: newUser.id,          // ← same as user profile id – this is the companyId
         user_id: newUser.id,
         name: companyName,
+        niche_id: nicheId || null,
         subscription_status: 'trialing',
         subscription_plan: 'starter',
         trial_ends_at: trialEndsAt,
@@ -124,6 +126,13 @@ export async function POST(req: NextRequest) {
     if (companyError) {
       console.error('[COMPANY CREATE ERROR]', companyError);
       // Continue - company can be created later
+    }
+
+    if (company) {
+      await supabase
+        .from('users')
+        .update({ company_id: company.id })
+        .eq('id', newUser.id);
     }
 
     // Send welcome/trial email (non-blocking)

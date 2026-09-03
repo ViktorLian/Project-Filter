@@ -16,7 +16,11 @@ export async function getSubscriptionStatus(companyId: string) {
   
   // Check if trial is still valid
   const trialEndsAt = company.trial_ends_at ? new Date(company.trial_ends_at) : null
-  const trialActive = trialEndsAt && trialEndsAt > new Date()
+  const trialActive = Boolean(
+    company.subscription_status === 'trialing' &&
+    trialEndsAt &&
+    trialEndsAt > new Date()
+  )
   
   const hasAccess = 
     company.subscription_status === 'active' || 

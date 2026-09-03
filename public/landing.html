@@ -407,7 +407,7 @@
     </div>
     <div style="display:flex;align-items:center;gap:10px">
       <button class="btn btn-outline" style="font-size:13px;padding:9px 18px" onclick="openBooking()">Book m&#248;te</button>
-      <a href="#portal" class="btn btn-primary" style="font-size:13px;padding:9px 18px">Logg inn</a>
+      <a href="/login" class="btn btn-primary" style="font-size:13px;padding:9px 18px">Logg inn</a>
     </div>
   </div>
 </nav>
@@ -418,7 +418,7 @@
     <div class="hero">
       <div class="hero-eyebrow">SEO, CRM og synlighet &mdash; alt automatisk</div>
       <h1>Bedriften din<br/><span>vokser</span><br/>mens du sover</h1>
-      <p class="hero-sub">FlowPilot publiserer ett s&#248;keoptimalisert blogginnlegg p&#229; nettsiden din hver dag, h&#229;ndterer utreach og holder deg synlig i s&#248;k. Du gj&#248;r ingenting.</p>
+      <p class="hero-sub">FlowPilot hjelper norske bedrifter med l&#248;pende SEO, kundeoppf&#248;lging og lokal synlighet fra ett system.</p>
       <div class="hero-cta">
         <a href="#services" class="btn btn-primary btn-lg">Se tjenester og priser</a>
         <button class="btn btn-outline btn-lg" onclick="openBooking()">Book gratis m&#248;te</button>
@@ -452,12 +452,12 @@
 <section id="how">
   <div class="container text-center">
     <div class="section-label">Enkelt og automatisk</div>
-    <h2 class="section-title">Kom i gang p&#229; under 5 minutter</h2>
-    <p class="section-sub mx-auto">Koble til nettsiden din &#233;n gang. Resten skjer automatisk &mdash; hver hele dag.</p>
+    <h2 class="section-title">En ryddig oppstart</h2>
+    <p class="section-sub mx-auto">Koble til nettsiden din, velg arbeidsflyt og f&#248;lg resultatene fra kundeportalen.</p>
     <div class="steps">
       <div class="step"><div class="step-num">1</div><h3>Koble til</h3><p>Del nettsideadressen din. Systemet analyserer bransjen og setter opp en innholdsplan tilpasset dine tjenester.</p></div>
-      <div class="step"><div class="step-num">2</div><h3>Innhold publiseres daglig</h3><p>FlowPilot lager og publiserer ett blogginnlegg direkte p&#229; nettsiden din hver hverdag &mdash; bransjetilpasset og s&#248;keoptimalisert.</p></div>
-      <div class="step"><div class="step-num">3</div><h3>Google-rangering stiger</h3><p>Regelmessig nytt innhold gir bedre synlighet p&#229; Google over tid. Mer trafikk uten ekstra arbeid fra din side.</p></div>
+      <div class="step"><div class="step-num">2</div><h3>Innhold planlegges og publiseres</h3><p>FlowPilot kan lage utkast og publisere godkjent innhold direkte til en tilkoblet nettside.</p></div>
+      <div class="step"><div class="step-num">3</div><h3>Resultatene m&#229;les</h3><p>Synlighet og trafikk f&#248;lges over tid. Ingen seri&#248;s leverand&#248;r kan garantere en bestemt plassering i Google.</p></div>
     </div>
   </div>
 </section>
@@ -486,7 +486,7 @@
         <h3>AutoSEO</h3>
         <p>Automatisk publisering av ett s&#248;keoptimalisert blogginnlegg per dag. Systemet velger emner, skriver og publiserer direkte til WordPress.</p>
         <ul class="feature-list">
-          <li>1 innlegg publisert daglig (man&ndash;fre)</li>
+          <li>Publiseringsfrekvens avtales per kunde</li>
           <li>Lokaltilpasset innhold med dine n&#248;kkelord</li>
           <li>Direkte publisering til WordPress</li>
           <li>12 varierte emnevinkler per runde</li>
@@ -495,7 +495,7 @@
         </ul>
         <div class="service-price"><span class="price-num">1&#8239;990</span><span class="price-per">kr/mnd</span></div>
         <div style="display:flex;gap:8px;margin-top:auto">
-          <button class="btn btn-primary" style="justify-content:center;flex:1" onclick="openPayment('AutoSEO','1 990 kr/mnd','price_1SxRpVHTxh2T1zNz6jPfJtcD')">Kom i gang</button>
+          <button class="btn btn-primary" style="justify-content:center;flex:1" onclick="openBooking()">Kom i gang</button>
           <button class="btn btn-outline" style="padding:10px 16px;font-size:13px" onclick="openDemo('autoseo')">Se demo</button>
         </div>
       </div>
@@ -515,7 +515,7 @@
         <div class="service-price"><span class="price-num">1&#8239;490</span><span class="price-per">kr/mnd</span></div>
         <div style="font-size:13px;color:#6366f1;font-weight:600;margin:-8px 0 12px">+ 120 kr per ekstra bruker/mnd</div>
         <div style="display:flex;gap:8px;margin-top:auto">
-          <button class="btn btn-outline" style="justify-content:center;flex:1" onclick="openPayment('FlowPilot CRM','1 490 kr/mnd','price_1SxRqIHTxh2T1zNz00HrfAlQ')">Start med CRM</button>
+          <button class="btn btn-outline" style="justify-content:center;flex:1" onclick="openBooking()">Start med CRM</button>
           <button class="btn btn-outline" style="padding:10px 16px;font-size:13px" onclick="openDemo('crm')">Se demo</button>
         </div>
       </div>
@@ -524,10 +524,10 @@
         <div class="featured-badge" style="background:#f59e0b">Google Maps</div>
         <div class="service-icon" style="background:#fef3c7;color:#92400e"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
         <h3>Google Maps SEO</h3>
-        <p>70% av lokale s&#248;k f&#248;rer til et butikkbes&#248;k innen 24 timer. Vi s&#248;rger for at det er deg de finner &mdash; ikke naboen.</p>
+        <p>En administrert tjeneste for en mer komplett og oppdatert Google Business-profil, bedre lokal relevans og tydelig rapportering.</p>
         <ul class="feature-list">
           <li>Optimalisert Google Business-profil</li>
-          <li>Topp 3 i lokalt kartresultat</li>
+          <li>Arbeid mot bedre lokal synlighet</li>
           <li>Administrasjon og svar p&#229; anmeldelser</li>
           <li>Lokale n&#248;kkelord og kategorier</li>
           <li>Ukentlig synlighetsrapport</li>
@@ -535,7 +535,7 @@
         </ul>
         <div class="service-price"><span class="price-num">2&#8239;490</span><span class="price-per">kr/mnd</span></div>
         <div style="display:flex;gap:8px;margin-top:auto">
-          <button class="btn btn-outline" style="justify-content:center;flex:1;border-color:#f59e0b;color:#92400e" onclick="openPayment('Google Maps SEO','2 490 kr/mnd','price_1TOI0EHTxh2T1zNz8AKYI9Zi')">Kom i gang</button>
+          <button class="btn btn-outline" style="justify-content:center;flex:1;border-color:#f59e0b;color:#92400e" onclick="openBooking()">Kom i gang</button>
           <button class="btn btn-outline" style="padding:10px 16px;font-size:13px;border-color:#f59e0b;color:#92400e" onclick="openDemo('maps')">Se demo</button>
         </div>
       </div>
@@ -553,7 +553,7 @@
         </ul>
         <div class="service-price"><span class="price-num">1&#8239;290</span><span class="price-per">kr/mnd</span></div>
         <div style="display:flex;gap:8px;margin-top:auto">
-          <button class="btn btn-outline" style="justify-content:center;flex:1;border-color:#7c3aed;color:#7c3aed" onclick="openPayment('AI Merkevare Synlighet','1 290 kr/mnd','price_1SxRqeHTxh2T1zNzRYKM4DUl')">Kom i gang</button>
+          <button class="btn btn-outline" style="justify-content:center;flex:1;border-color:#7c3aed;color:#7c3aed" onclick="openBooking()">Kom i gang</button>
           <button class="btn btn-outline" style="padding:10px 16px;font-size:13px;border-color:#7c3aed;color:#7c3aed" onclick="openDemo('geo')">Se demo</button>
         </div>
       </div>
@@ -572,7 +572,7 @@
         <div class="service-price"><span class="price-num">299</span><span class="price-per">kr/mnd</span></div>
         <div style="font-size:13px;color:#0e7490;font-weight:600;margin:-8px 0 12px">+ 899 kr engangs oppsettsfee</div>
         <div style="display:flex;gap:8px;margin-top:auto">
-          <button class="btn btn-outline" style="justify-content:center;flex:1;border-color:#06b6d4;color:#0e7490" onclick="openPayment('AI Chat','299 kr/mnd + 899 kr oppsett','price_1SxRqeHTxh2T1zNzRYKM4DUl')">Legg til chatbot</button>
+          <button class="btn btn-outline" style="justify-content:center;flex:1;border-color:#06b6d4;color:#0e7490" onclick="openBooking()">Legg til chatbot</button>
           <button class="btn btn-outline" style="padding:10px 16px;font-size:13px;border-color:#06b6d4;color:#0e7490" onclick="openDemo('crm')">Se demo</button>
         </div>
       </div>
@@ -655,7 +655,7 @@
           <div style="font-size:12px;color:#9ca3af;margin-bottom:16px">Inkl. Google Maps &mdash; maksimal lokal synlighet</div>
           <ul style="list-style:none;padding:0;margin:0 0 20px;font-size:13px;color:#374151;display:flex;flex-direction:column;gap:9px">
             <li><strong>&#10003; Alt i Vekst Pro</strong> &mdash; komplett digital markedsf&oslash;ring p&aring; autopilot</li>
-            <li><strong>&#10003; Google Maps SEO</strong> &mdash; vi kjemper for at du ligger i topp 3 i lokalt kartresultat, og administrerer anmeldelser fortl&oslash;pende</li>
+            <li><strong>&#10003; Google Maps SEO</strong> &mdash; vi forbedrer bedriftsprofilen, lokal relevans og oppf&#248;lging av anmeldelser</li>
             <li><strong>&#10003; Lokal konkurrentanalyse</strong> &mdash; vi holder &oslash;ye med hva naboen gj&oslash;r og holder deg foran</li>
             <li><strong>&#10003; Prioritert support</strong> &mdash; respons innen &eacute;n time p&aring; hverdager</li>
             <li><strong>&#10003; Strategim&oslash;te hvert kvartal</strong> &mdash; gjennomgang og finjustering av alle kampanjer</li>
@@ -690,42 +690,30 @@
       <div>
         <div class="result-item">
           <div class="result-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
-          <div><h4>Bedrifter med jevnlig innhold vokser 7&times; raskere</h4><p>HubSpot-data viser at bedrifter med aktiv bedriftsblogg f&#229;r 7 ganger mer organisk trafikk enn de uten. AutoSEO gir deg dette p&#229; autopilot.</p></div>
+          <div><h4>Bygg relevant temasynlighet over tid</h4><p>Jevnlig, nyttig innhold kan gjøre det enklere for søkemotorer og kunder å forstå hvilke tjenester bedriften tilbyr.</p></div>
         </div>
         <div class="result-item">
           <div class="result-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg></div>
-          <div><h4>92% av s&#248;k starter p&#229; Google</h4><p>Hele 92% av alle online s&#248;k begynner p&#229; Google. Uten innhold som rangerer, er du usynlig for n&#230;rmere 10 av 10 potensielle kunder.</p></div>
+          <div><h4>Møt kundens søkeintensjon</h4><p>Innholdet planlegges rundt faktiske spørsmål om tjenester, produkter, priser og geografiske områder.</p></div>
         </div>
         <div class="result-item">
           <div class="result-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-          <div><h4>Topp 3 f&#229;r 75% av alle klikk</h4><p>De tre &#248;verste Google-resultatene tar tre av fire klikk. Long-tail artikler er den raskeste veien inn &mdash; AutoSEO publiserer dem daglig.</p></div>
+          <div><h4>Kvalitet før publiseringsmengde</h4><p>Faglig presisjon, tydelig struktur og intern lenking prioriteres fremfor å publisere mest mulig innhold.</p></div>
         </div>
         <div class="result-item">
           <div class="result-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg></div>
-          <div><h4>Trenger 3&ndash;6 m&#229;neder for synlig vekst</h4><p>SEO er langsiktig og konsistent. Bedrifter ser typisk m&#229;lbar trafikkvekst etter 90 dager. Jo lenger systemet kj&#248;rer, desto mer synlighet akkumuleres.</p></div>
+          <div><h4>SEO er langsiktig arbeid</h4><p>Utviklingen avhenger blant annet av nettsted, konkurranse, teknisk kvalitet og eksisterende autoritet. Resultater kan derfor ikke garanteres.</p></div>
         </div>
       </div>
       <div class="results-stats">
         <div class="rs-title">Hva AutoSEO leverer</div>
-        <div class="rs-item"><span class="rs-label">Publiseringsfrekvens</span><span class="rs-value">Daglig (man&ndash;fre)</span></div>
-        <div class="rs-item"><span class="rs-label">Innlegg per m&#229;ned</span><span class="rs-value">ca. 20 innlegg</span></div>
-        <div class="rs-item"><span class="rs-label">Tid til f&#248;rste resultater</span><span class="rs-value">3&ndash;6 m&#229;neder</span></div>
-        <div class="rs-item"><span class="rs-label">Publisering til WordPress</span><span class="rs-value">Automatisk</span></div>
-        <div class="rs-item"><span class="rs-label">Oppsett krever</span><span class="rs-value">Under 5 min</span></div>
+        <div class="rs-item"><span class="rs-label">Publiseringsfrekvens</span><span class="rs-value">Avtales per kunde</span></div>
+        <div class="rs-item"><span class="rs-label">Innholdsplan</span><span class="rs-value">Tjenester og søkeintensjon</span></div>
+        <div class="rs-item"><span class="rs-label">Resultatmåling</span><span class="rs-value">Trafikk og henvendelser</span></div>
+        <div class="rs-item"><span class="rs-label">WordPress</span><span class="rs-value">Støttet integrasjon</span></div>
+        <div class="rs-item"><span class="rs-label">Andre plattformer</span><span class="rs-value">Avklares før oppstart</span></div>
         <div class="rs-item"><span class="rs-label">Bindingstid</span><span class="rs-value">Ingen</span></div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- STATS FAKTA RAD -->
-<section style="padding:56px 24px;background:var(--p)">
-  <div class="container">
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:32px;text-align:center">
-      <div><div style="font-size:40px;font-weight:900;color:white">70%</div><div style="font-size:14px;color:rgba(255,255,255,.8);margin-top:6px">av lokale s&#248;k f&#248;rer til et besøk innen 24 timer (Google)</div></div>
-      <div><div style="font-size:40px;font-weight:900;color:white">7&times;</div><div style="font-size:14px;color:rgba(255,255,255,.8);margin-top:6px">mer organisk trafikk for bedrifter med aktiv bedriftsblogg</div></div>
-      <div><div style="font-size:40px;font-weight:900;color:white">400%</div><div style="font-size:14px;color:rgba(255,255,255,.8);margin-top:6px">mer klikk for bedrifter i Topp 3 p&#229; Google Maps lokalt</div></div>
-      <div><div style="font-size:40px;font-weight:900;color:white">92%</div><div style="font-size:14px;color:rgba(255,255,255,.8);margin-top:6px">av alle online-kj&#248;p starter med et Google-s&#248;k</div></div>
     </div>
   </div>
 </section>
@@ -845,13 +833,13 @@
     <div class="studio-products">
       <div class="studio-card"><span class="studio-card-badge badge-live">Live</span><h4>AutoSEO</h4><p>Fullautomatisert SEO-blogg som bygger organisk trafikk. Publiserer daglig til din WordPress-side.</p></div>
       <div class="studio-card"><span class="studio-card-badge badge-live">Live</span><h4>FlowPilot CRM</h4><p>CRM og B2B-leads-system for norske SMB-bedrifter. Kontaktregister, pipeline, oppf&#248;lging og automatisering.</p></div>
-      <div class="studio-card"><span class="studio-card-badge badge-coming">Kommer</span><h4>LLM Synlighetssystem</h4><p>Sporer og &#248;ker merkevares tilstedev&#230;relse i generative s&#248;kemotorer. Under produksjon.</p></div>
-      <div class="studio-card"><span class="studio-card-badge badge-coming">Kommer</span><h4>Google Maps SEO</h4><p>Automatisert optimalisering av Google Business-profiler for maksimal lokal synlighet.</p></div>
+      <div class="studio-card"><span class="studio-card-badge badge-coming">Pilot</span><h4>LLM-synlighet</h4><p>M&#229;ling og innholdsarbeid for synlighet i generative s&#248;k. Ingen plasseringer eller omtaler kan garanteres.</p></div>
+      <div class="studio-card"><span class="studio-card-badge badge-custom">Administrert</span><h4>Google Maps SEO</h4><p>Manuell og datadrevet oppf&#248;lging av Google Business-profiler. Automatisert integrasjon er under utvikling.</p></div>
       <div class="studio-card"><span class="studio-card-badge badge-coming">Kommer</span><h4>Lead Generator</h4><p>Automatisert B2B-leadsgenerering med fokus p&#229; norske SMB-er via Br&#248;nn&#248;ysundregisteret.</p></div>
       <div class="studio-card"><span class="studio-card-badge badge-custom">P&#229; bestilling</span><h4>Skreddersydde l&#248;sninger</h4><p>Vi bygger spesialtilpassede digitale produkter for din bedrift &mdash; fra id&#233; til lansering og drift.</p></div>
     </div>
     <div class="studio-features">
-      <div class="studio-feat"><div class="studio-feat-dot"></div><p>Hostet sikkert i EU &mdash; fullt GDPR-kompatibelt</p></div>
+      <div class="studio-feat"><div class="studio-feat-dot"></div><p>Databehandling og tilgang dokumenteres ved oppsett</p></div>
       <div class="studio-feat"><div class="studio-feat-dot"></div><p>Ingen langtidskontrakter eller skjulte kostnader</p></div>
       <div class="studio-feat"><div class="studio-feat-dot"></div><p>Rask implementering og tett oppf&#248;lging</p></div>
       <div class="studio-feat"><div class="studio-feat-dot"></div><p>Kontinuerlig videreutvikling og support</p></div>
@@ -907,17 +895,6 @@
   </div>
 </section>
 
-<!-- GUARANTEE -->
-<div class="guarantee-wrap">
-  <div class="guarantee-band">
-    <div class="guarantee-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-    <div>
-      <h3>90-dagers SEO-vekstgaranti</h3>
-      <p>Ser du ikke &#248;kt organisk trafikk innen 90 dager med daglig publisering, jobber vi gratis i 30 dager til &mdash; ingen sp&#248;rsm&#229;l stilt. Vi er trygge p&#229; at konsistent innhold alltid gir resultater p&#229; Google.</p>
-    </div>
-  </div>
-</div>
-
 <!-- FAQ -->
 <section id="faq">
   <div class="container text-center">
@@ -929,7 +906,7 @@
       <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Kan jeg lese og godkjenne innleggene f&#248;r de publiseres?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a"><div class="faq-a-inner">De fleste kunder lar systemet publisere direkte for &#229; sikre daglig rytme. Du kan se alle innlegg i kundeportalen, og &#248;nsker du &#229; lese f&#248;rst kan vi skru p&#229; godkjenningsmodus.</div></div></div>
       <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Hva betyr 12 varierte emnevinkler?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a"><div class="faq-a-inner">For &#229; unng&#229; at alle innlegg er like, roterer systemet mellom 12 ulike vinkler: f.eks. vanlige feil, prisguide, slik velger du, fordeler og ulemper, steg for steg osv. Det gir variert innhold som er mer naturlig for Google.</div></div></div>
       <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Hvor fort ser man resultater p&#229; Google?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a"><div class="faq-a-inner">SEO er langsiktig. Typisk ser bedrifter de f&#248;rste resultatene etter 3&ndash;6 m&#229;neder, med tydelig vekst etter 6&ndash;12 m&#229;neder. Jo eldre domenet er og jo mer innhold som akkumuleres, desto raskere bygges synligheten.</div></div></div>
-      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Hva er inkludert i Fullpakken?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a"><div class="faq-a-inner">Fullpakken (2&#8239;295 kr/mnd) inkluderer alle fem tjenester unntatt nettside: CRM, AutoSEO, Google Maps SEO, GEO/AI-synlighet og AI Chat. Det er 10&thinsp;% rabatt mot &aring; kj&oslash;pe enkeltvis. Ingen binding &mdash; avslutt n&aring;r som helst.</div></div></div>
+      <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Hva er inkludert i Fullpakken?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a"><div class="faq-a-inner">Fullpakken koster 6&#8239;425 kr/mnd og inkluderer CRM, AutoSEO, administrert Google Maps SEO, GEO/AI-synlighet og AI Chat. Det tilsvarer 15&thinsp;% rabatt mot oppgitte enkeltpriser. Nettside er ikke inkludert.</div></div></div>
       <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Hva gj&#248;r FlowPilot CRM annerledes enn andre CRM-systemer?<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a"><div class="faq-a-inner">FlowPilot CRM er bygget spesifikt for norske SMB-bedrifter &mdash; enkelt &#229; komme i gang med, ingen lang oppl&#230;ring, og kobler seg mot norske datakilder for lead-generering fra Br&#248;nn&#248;ysundregisteret.</div></div></div>
     </div>
   </div>
@@ -947,7 +924,7 @@
           <div style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,.85);font-size:14px"><div style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:12px">1</div>Se alle publiserte innlegg og planlagte datoer</div>
           <div style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,.85);font-size:14px"><div style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:12px">2</div>Full kalender med daglig publiseringsplan</div>
           <div style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,.85);font-size:14px"><div style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:12px">3</div>Statistikk og oversikt over publisert innhold</div>
-          <div style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,.85);font-size:14px"><div style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:12px">4</div>90-dagers SEO-vekstgaranti &mdash; ingen binding</div>
+          <div style="display:flex;align-items:center;gap:12px;color:rgba(255,255,255,.85);font-size:14px"><div style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:12px">4</div>Rapportering p&#229; utf&#248;rt arbeid og utvikling</div>
         </div>
       </div>
       <div class="portal-card">
@@ -1193,8 +1170,8 @@ renderQuiz();
 const DEMO_DATA={
   autoseo:{
     title:'AutoSEO Demo',
-    desc:'AutoSEO analyserer nettsiden din og publiserer ett SEO-optimalisert blogginnlegg direkte til WordPress hver hverdag — helt automatisk.',
-    features:['1 innlegg/dag (man–fre)','WordPress-integrasjon','12 emnevinkler','Lokal- og bransjetilpasset','Månedlig trafikkrapport','Personlig kundeportal'],
+    desc:'AutoSEO lager en innholdsplan og kan publisere kvalitetssikret innhold til WordPress etter avtalt oppsett.',
+    features:['Avtalt publiseringsplan','WordPress-integrasjon','Varierte emnevinkler','Lokal- og bransjetilpasset','Månedlig trafikkrapport','Personlig kundeportal'],
     mockup:`<div style="background:white;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden">
       <div style="background:#f9fafb;padding:10px 16px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid #e5e7eb">Publiserte innlegg denne måneden</div>
       <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
@@ -1217,15 +1194,15 @@ const DEMO_DATA={
   },
   maps:{
     title:'Google Maps SEO Demo',
-    desc:'Vi optimaliserer Google Business-profilen din slik at du vises i topp 3 på kartet når lokale kunder søker etter tjenestene du tilbyr.',
-    features:['Google Business-optimalisering','Topp 3 lokal synlighet','Anmeldelseshåndtering','Lokale nøkkelord','Ukentlig synlighetsrapport','Konkurranseanalyse'],
+    desc:'Vi arbeider systematisk med Google Business-profilen for bedre lokal synlighet. Ingen bestemt kartplassering kan garanteres.',
+    features:['Google Business-optimalisering','Lokal synlighet','Anmeldelseshåndtering','Lokale nøkkelord','Synlighetsrapport','Konkurranseanalyse'],
     mockup:`<div style="background:white;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden">
       <div style="background:#f9fafb;padding:10px 16px;font-size:11px;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid #e5e7eb">Google Maps – rørlegger Oslo</div>
       <div style="padding:16px;display:flex;flex-direction:column;gap:10px">
         ${[[1,'Din bedrift','⭐ 4.9 (84)','#dcfce7','#16a34a','TOP 1'],
            [2,'Nabofirma AS','⭐ 4.2 (31)','#fff','#374151',''],
            [3,'VVS Service','⭐ 3.8 (12)','#fff','#374151','']].map(([n,nm,r,bg,col,badge])=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:${bg};border:1px solid ${bg==="#fff"?"#e5e7eb":"#86efac"};border-radius:8px"><div style="width:24px;height:24px;border-radius:50%;background:#6366f1;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">${n}</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:#111827">${nm}</div><div style="font-size:11px;color:${col}">${r}</div></div>${badge?`<span style="font-size:10px;font-weight:700;background:#6366f1;color:white;padding:2px 8px;border-radius:99px">${badge}</span>`:''}</div>`).join('')}
-        <div style="font-size:12px;color:#6b7280;padding:8px;background:#f9fafb;border-radius:8px;text-align:center">📈 Økte fra posisjon 12 → topp 3 på 6 uker</div>
+        <div style="font-size:12px;color:#6b7280;padding:8px;background:#f9fafb;border-radius:8px;text-align:center">Illustrasjon av lokal rangeringsrapport</div>
       </div>
     </div>`
   },
