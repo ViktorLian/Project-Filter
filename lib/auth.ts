@@ -38,7 +38,7 @@ export const authOptions: NextAuthOptions = {
               .single();
 
             if (userData) {
-              const companyId = userData.id; // companyId == user.id in FlowPilot
+              const companyId = userData.company_id || userData.id;
               return {
                 id: userData.id,
                 email: userData.email,
