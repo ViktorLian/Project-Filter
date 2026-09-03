@@ -40,7 +40,7 @@ export default function BillingPage() {
       <div className="mb-8 text-center">
         <h1 className="text-3xl font-bold">Velg din plan</h1>
         <p className="mt-2 text-slate-600">
-          Start med 14 dagers gratis prøveperiode
+          Administrer eller aktiver abonnementet ditt
         </p>
       </div>
 
@@ -89,7 +89,7 @@ export default function BillingPage() {
                 >
                   {isLoading && selectedPlan === key
                     ? 'Starter...'
-                    : 'Start gratis prøveperiode'}
+                    : 'Aktiver abonnement'}
                 </Button>
               </CardContent>
             </Card>

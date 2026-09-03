@@ -5,7 +5,7 @@ import { DemoBanner } from '@/components/ui/DemoBanner';
 import {
   Users, Plus, MessageSquare, ThumbsUp, Pin, Lock,
   Globe, Search, Bell, Heart, Share2, MoreHorizontal,
-  Crown, Star, ChevronRight, Edit2, Image, Send
+  Crown, Star, ChevronRight, Edit2, Image as ImageIcon, Send
 } from 'lucide-react';
 
 interface Group {
@@ -153,7 +153,7 @@ export default function CommunitiesPage() {
                 />
                 <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-100">
                   <div className="flex gap-2">
-                    <button className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"><Image className="h-4 w-4" /></button>
+                    <button aria-label="Legg til bilde" className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"><ImageIcon className="h-4 w-4" /></button>
                     <button className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"><Pin className="h-4 w-4" /></button>
                   </div>
                   <button disabled={!newPost.trim()}

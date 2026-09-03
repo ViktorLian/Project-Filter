@@ -1,6 +1,6 @@
-# ProjectFilter
+# FlowPilot
 
-**B2B SaaS for Construction Companies** - Pre-qualify project leads with custom intake forms, automated scoring, and lead management.
+FlowPilot er en Next.js-basert plattform for kundehenvendelser, arbeidsflyt og administrerte synlighetstjenester. Ikke alle moduler er produksjonsklare eller automatiserte; se status i den enkelte modul.
 
 ## 🚀 Quick Start
 
@@ -14,8 +14,7 @@ npm install
 # Copy environment variables
 cp .env.example .env
 
-# Edit .env and add your PostgreSQL database URL
-# DATABASE_URL="postgresql://user:password@localhost:5432/projectfilter"
+# Fyll inn testverdier. Bruk aldri produksjonshemmeligheter i Git.
 
 # Generate Prisma client
 npx prisma generate
@@ -38,7 +37,15 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000)
 
-## 📦 Features
+## Viktig før produksjon
+
+- Registrering og innlogging krever Supabase.
+- Betaling krever Stripe test-/produksjonsnøkler og én konfigurert webhook til `/api/webhooks/stripe`.
+- `CRON_SECRET` er obligatorisk for alle planlagte jobber.
+- Google Maps og AutoSEO er administrerte oppsett inntil sikre plattformintegrasjoner er konfigurert.
+- Kunde-, Google- og publiseringstilgang skal gis av kunden; ikke lagre slike nøkler i repoet.
+
+## Kjernefunksjoner
 
 ✅ **Authentication** - Secure email/password login with NextAuth  
 ✅ **Custom Intake Forms** - Build forms with 9+ field types  

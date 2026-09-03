@@ -2,15 +2,11 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendReviewRequest } from '@/lib/notifications';
+import { isAuthorizedCron } from '@/lib/cron-auth';
 
 // Runs daily – finds jobs completed 2 days ago and sends review request to customer
 export async function GET(req: NextRequest) {
-  const secret = req.nextUrl.searchParams.get('secret');
-  if (
-    process.env.CRON_SECRET &&
-    secret !== process.env.CRON_SECRET &&
-    req.headers.get('authorization') !== `Bearer ${process.env.CRON_SECRET}`
-  ) {
+  if (!isAuthorizedCron(req)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

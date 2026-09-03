@@ -128,6 +128,13 @@ export async function POST(req: NextRequest) {
       // Continue - company can be created later
     }
 
+    if (company) {
+      await supabase
+        .from('users')
+        .update({ company_id: company.id })
+        .eq('id', newUser.id);
+    }
+
     // Send welcome/trial email (non-blocking)
     sendTrialWelcomeEmail(email, name, companyName).catch(e =>
       console.error('[WELCOME EMAIL ERROR]', e)

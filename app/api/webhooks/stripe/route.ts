@@ -59,6 +59,9 @@ export async function POST(request: Request) {
             .update({
               subscription_status: stripeSubscription?.status || 'inactive',
               subscription_plan: plan || 'starter',
+              trial_ends_at: stripeSubscription?.trial_end
+                ? new Date(stripeSubscription.trial_end * 1000).toISOString()
+                : null,
               stripe_customer_id: session.customer as string,
               stripe_subscription_id: session.subscription as string,
               updated_at: new Date().toISOString()
@@ -75,6 +78,9 @@ export async function POST(request: Request) {
           .from('leads_companies')
           .update({
             subscription_status: subscription.status,
+            trial_ends_at: subscription.trial_end
+              ? new Date(subscription.trial_end * 1000).toISOString()
+              : null,
             updated_at: new Date().toISOString()
           })
           .eq('stripe_subscription_id', subscription.id)

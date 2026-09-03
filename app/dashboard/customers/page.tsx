@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Users, Star, Activity, Clock, Plus, Search, Phone, Mail } from 'lucide-react';
 
 interface Customer {
@@ -24,11 +24,7 @@ export default function CustomersPage() {
   const [newCustomer, setNewCustomer] = useState({ name: '', email: '', phone: '', notes: '' });
   const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    fetchCustomers();
-  }, [filter]);
-
-  const fetchCustomers = async () => {
+  const fetchCustomers = useCallback(async () => {
     setLoading(true);
     try {
       const res = await fetch(`/api/customers?filter=${filter}`);
@@ -39,7 +35,11 @@ export default function CustomersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filter]);
+
+  useEffect(() => {
+    fetchCustomers();
+  }, [fetchCustomers]);
 
   const createCustomer = async () => {
     if (!newCustomer.name) return;

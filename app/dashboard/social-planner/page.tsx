@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { DemoBanner } from '@/components/ui/DemoBanner';
 import {
   Calendar, Plus, Facebook, Instagram, Linkedin, Globe,
-  Image, Clock, Send, ChevronLeft, ChevronRight, MoreHorizontal,
+  Image as ImageIcon, Clock, Send, ChevronLeft, ChevronRight, MoreHorizontal,
   Hash, Link, Smile, Repeat, Eye, ThumbsUp, MessageSquare, CheckCircle,
   AlertCircle, BarChart3
 } from 'lucide-react';
@@ -293,7 +293,7 @@ export default function SocialPlannerPage() {
               />
               <div className="flex items-center gap-2 mt-2">
                 <button className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700 px-2 py-1.5 rounded-lg hover:bg-slate-50 transition">
-                  <Image className="h-3.5 w-3.5" /> Legg til bilde
+                  <ImageIcon className="h-3.5 w-3.5" /> Legg til bilde
                 </button>
                 <button className="flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700 px-2 py-1.5 rounded-lg hover:bg-slate-50 transition">
                   <Link className="h-3.5 w-3.5" /> Lenke
@@ -344,7 +344,7 @@ export default function SocialPlannerPage() {
               </div>
               <p className="text-sm text-slate-800 mb-3">{postText || 'Teksten din vil vises her...'}</p>
               <div className="h-32 bg-slate-100 rounded-lg flex items-center justify-center mb-3">
-                <Image className="h-8 w-8 text-slate-300" />
+                <ImageIcon className="h-8 w-8 text-slate-300" />
               </div>
               <div className="flex items-center gap-4 pt-2 border-t border-slate-100">
                 <span className="flex items-center gap-1 text-xs text-slate-400"><ThumbsUp className="h-3.5 w-3.5" /> Liker</span>

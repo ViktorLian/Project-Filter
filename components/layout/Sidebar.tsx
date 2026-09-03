@@ -94,18 +94,19 @@ const NAV: NavEntry[] = [
 export default function Sidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const sessionUserId = (session?.user as any)?.id as string | undefined;
   const [search, setSearch] = useState('');
   const [collapsed, setCollapsed] = useState(false);
   const [nicheId, setNicheId] = useState<string | null>(null);
 
   // Fetch niche once per session
   useEffect(() => {
-    if (!(session?.user as any)?.id) return;
+    if (!sessionUserId) return;
     fetch('/api/onboarding/niche')
       .then(r => r.json())
       .then(d => setNicheId(d.nicheId || null))
       .catch(() => {});
-  }, [(session?.user as any)?.id]);
+  }, [sessionUserId]);
 
   const niche = nicheId ? getNiche(nicheId) : null;
   // Build set of enabled hrefs: if niche defined, filter; otherwise show all
@@ -273,4 +274,3 @@ export default function Sidebar() {
     </aside>
   );
 }
-
