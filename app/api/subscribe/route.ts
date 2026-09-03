@@ -48,13 +48,15 @@ export async function POST(request: Request) {
     // Get user info
     const { data: userData } = await supabase
       .from('users')
-      .select('id, email, business_name')
+      .select('id, email, business_name, company_id')
       .eq('id', userId)
       .single();
 
     if (!userData) {
       return NextResponse.json({ error: 'Bruker ikke funnet' }, { status: 404 });
     }
+
+    const companyId = userData.company_id || userData.id;
 
     const stripe = getStripe();
     const origin = process.env.NEXTAUTH_URL || 'http://localhost:3000';
@@ -84,9 +86,9 @@ export async function POST(request: Request) {
       mode: 'subscription',
       line_items: [{ price: priceId, quantity: 1 }],
       subscription_data: {
-        metadata: { user_id: userData.id, plan_id: planId },
+        metadata: { user_id: userData.id, company_id: companyId, plan_id: planId },
       },
-      metadata: { companyId: userData.id, plan: planId },
+      metadata: { companyId, plan: planId },
       success_url: `${origin}/dashboard/settings?subscription=success&plan=${planId}`,
       cancel_url: `${origin}/pricing?cancelled=true`,
       allow_promotion_codes: true,
