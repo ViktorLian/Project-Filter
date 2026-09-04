@@ -13,42 +13,51 @@ export function getStripe(): Stripe {
 
 export type SubscriptionPlan = 'starter' | 'pro' | 'enterprise'
 
+/**
+ * Én autoritativ priskilde for hele FlowPilot.
+ * De tekniske nøklene beholdes for kompatibilitet med eksisterende kunder og
+ * Stripe-webhooks. Navnene som vises til kunden er Basis, Vekst og Pro.
+ */
 export const SUBSCRIPTION_PLANS = {
   starter: {
-    name: 'Starter',
-    price: 499,
+    name: 'Basis',
+    price: 899,
     limits: { leads: 100, forms: 2 },
     features: [
       'Inntil 100 henvendelser per måned',
+      'Kontakter, innboks og enkel salgspipeline',
       'Opptil 2 kontaktskjemaer',
-      'E-postvarsler',
-      'Grunnleggende oversikt og rapportering',
+      'Varsel om nye henvendelser',
+      'Automatisk mottaksbekreftelse',
+      'Månedlig resultatrapport',
     ],
   },
   pro: {
-    name: 'Pro',
-    price: 1499,
+    name: 'Vekst',
+    price: 1990,
     limits: { leads: 500, forms: 20 },
     features: [
+      'Alt i Basis',
       'Inntil 500 henvendelser per måned',
-      'Opptil 20 kontaktskjemaer',
-      'AI-assistert prioritering',
-      'Oppfølgingsflyter og kampanjer',
-      'Anmeldelsesforespørsler',
-      'Prioritert support',
+      'Automatisk oppfølging av ubesvarte leads og tilbud',
+      'Kundeanmeldelser og Google-anmeldelsesflyt',
+      'Google-bedriftsprofil og lokal synlighet',
+      'Servicepåminnelser og gjenaktivering av kunder',
+      'AI-chat og SEO-oversikt',
     ],
   },
   enterprise: {
-    name: 'Enterprise',
-    price: 2499,
+    name: 'Pro',
+    price: 3990,
     limits: { leads: 999999, forms: 999999 },
     features: [
-      'Alt i Pro',
+      'Alt i Vekst',
       'Ubegrensede henvendelser og skjemaer',
-      'API og webhooks',
-      'Avansert rapportering',
-      'Tilpasset oppsett etter avtale',
-      'Prioritert support',
+      'AutoSEO og planlagt faginnhold',
+      'Synlighet i Google og AI-baserte søk',
+      'Avanserte automatiseringer, API og webhooks',
+      'Utvidet rapportering og prioriterte varsler',
+      'Prioritert onboarding og support',
     ],
   },
 } as const
