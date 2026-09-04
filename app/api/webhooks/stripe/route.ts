@@ -3,10 +3,10 @@ import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
-import { requireEnv } from '@/lib/env'
+import { requireEnv, requireStripeSecretKey } from '@/lib/env'
 
 function getStripe() {
-  return new Stripe(requireEnv('STRIPE_SECRET_KEY'), {
+  return new Stripe(requireStripeSecretKey(), {
     apiVersion: '2023-10-16',
   })
 }
