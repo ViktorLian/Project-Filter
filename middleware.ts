@@ -42,6 +42,7 @@ export async function middleware(request: NextRequest) {
     '/api/subscribe',
     '/api/subscription',
     '/api/team/join',
+    '/api/integrations/orders/completed',
   ]
   const isPublicFormSubmission = /^\/api\/forms\/[^/]+\/submit$/.test(path)
   const isProtectedApi = path.startsWith('/api/') &&
