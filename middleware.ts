@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { getToken } from 'next-auth/jwt'
+import { readEnv } from '@/lib/env'
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname
 
   const token = await getToken({ 
     req: request,
-    secret: process.env.NEXTAUTH_SECRET 
+    secret: readEnv('NEXTAUTH_SECRET') 
   })
 
   // Logged-in users should go straight to dashboard from public pages
@@ -55,8 +56,8 @@ export async function middleware(request: NextRequest) {
     }
 
     const companyId = token.companyId || token.id
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    const supabaseUrl = readEnv('NEXT_PUBLIC_SUPABASE_URL')
+    const serviceKey = readEnv('SUPABASE_SERVICE_ROLE_KEY')
     if (!companyId || !supabaseUrl || !serviceKey) {
       return NextResponse.json({ error: 'Abonnementskontroll er ikke konfigurert' }, { status: 503 })
     }
