@@ -8,7 +8,8 @@ export async function middleware(request: NextRequest) {
 
   const token = await getToken({ 
     req: request,
-    secret: readEnv('NEXTAUTH_SECRET') 
+    secret: readEnv('NEXTAUTH_SECRET'),
+    secureCookie: request.nextUrl.protocol === 'https:',
   })
 
   // Logged-in users should go straight to dashboard from public pages
