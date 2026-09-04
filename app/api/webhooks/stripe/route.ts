@@ -3,17 +3,18 @@ import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
+import { requireEnv } from '@/lib/env'
 
 function getStripe() {
-  return new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  return new Stripe(requireEnv('STRIPE_SECRET_KEY'), {
     apiVersion: '2023-10-16',
   })
 }
 
 function getSupabaseAdmin() {
   return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!
+    requireEnv('NEXT_PUBLIC_SUPABASE_URL'),
+    requireEnv('SUPABASE_SERVICE_ROLE_KEY')
   )
 }
 
@@ -30,7 +31,7 @@ export async function POST(request: Request) {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
+      requireEnv('STRIPE_WEBHOOK_SECRET')
     )
   } catch (err) {
     console.error('Webhook signature verification failed:', err)
