@@ -1,101 +1,12 @@
 ﻿"use client";
-import { useEffect, useState } from "react";
 import { CheckCircle, Zap } from "lucide-react";
 const PLANS = [
-  {
-    key: "starter",
-    title: "Starter",
-    subtitle: "Perfekt for nystartede bedrifter",
-    limits: "50 leads / mnd · 2 skjemaer",
-    badge: null,
-    features: [
-      "Opptil 50 leads per måned",
-      "2 tilpassede lead-skjemaer",
-      "AI lead-scoring (0–100)",
-      "Automatiske e-postsvar",
-      "Faktura-generator (10/mnd)",
-      "Kontantstrøm-oversikt",
-      "E-postsupport",
-    ],
-    highlight: false,
-  },
-  {
-    key: "pro",
-    title: "Pro",
-    subtitle: "For voksende bedrifter",
-    limits: "300 leads / mnd · 10 skjemaer",
-    badge: "MEST POPULÆR",
-    features: [
-      "Opptil 300 leads per måned",
-      "10 tilpassede lead-skjemaer",
-      "AI lead-scoring og kategorisering",
-      "Profit Intelligence Layer",
-      "Market Domination Engine",
-      "Automatiske e-postkampanjer (maks 3 aktive)",
-      "Bookingsystem med Google Kalender",
-      "Digital Tvilling simulator",
-      "Finansierings-hub",
-      "Omdømme-sentral",
-      "Ubegrensede fakturaer",
-      "Prioritert support",
-    ],
-    highlight: true,
-  },
-  {
-    key: "enterprise",
-    title: "Enterprise",
-    subtitle: "For seriøse vekstbedrifter",
-    limits: "Ubegrenset · Alt inkludert",
-    badge: null,
-    features: [
-      "Ubegrenset antall leads og skjemaer",
-      "Business Nervous System",
-      "Self-Healing Company",
-      "Crisis-Proof Architecture",
-      "Business Genome analyse",
-      "Autonom Backoffice (8 automatiseringsregler)",
-      "FlowPilot Score™ + Digital Tvilling",
-      "Ubegrensede chatboter på nettsider",
-      "AI kundeservice-bot med egen trening",
-      "White-label – ditt eget merkenavn",
-      "Full API-tilgang og webhooks",
-      "Dedikert onboarding og support",
-      "SLA-garanti og 1-times responstid",
-    ],
-    highlight: false,
-  },
+  { key: "starter", title: "Basis", subtitle: "For små bedrifter som vil samle og følge opp henvendelser", limits: "100 henvendelser / mnd · 2 skjemaer", badge: null, price: "899", features: ["Kontakter, innboks og enkel salgspipeline", "Varsel om nye henvendelser", "Automatisk mottaksbekreftelse", "Opptil 2 kontaktskjemaer", "Månedlig resultatrapport"], highlight: false },
+  { key: "pro", title: "Vekst", subtitle: "For bedrifter som vil automatisere kundeoppfølging og synlighet", limits: "500 henvendelser / mnd · 20 skjemaer", badge: "MEST POPULÆR", price: "1 990", features: ["Alt i Basis", "Oppfølging av ubesvarte leads og tilbud", "Google-anmeldelsesflyt og omdømme", "Google-bedriftsprofil og lokal synlighet", "Servicepåminnelser og gjenaktivering", "AI-chat og SEO-oversikt"], highlight: true },
+  { key: "enterprise", title: "Pro", subtitle: "Hele plattformen for bedrifter med større ambisjoner", limits: "Ubegrenset · alle moduler", badge: null, price: "3 990", features: ["Alt i Vekst", "Ubegrensede henvendelser og skjemaer", "AutoSEO og planlagt faginnhold", "Synlighet i Google og AI-baserte søk", "Avanserte automatiseringer, API og webhooks", "Prioritert onboarding og support"], highlight: false },
 ];
 
-// Hardcoded Stripe price IDs from lib/stripe.ts  fallback if env prices unavailable
-const HARDCODED_PRICE_IDS: Record<string, string> = {
-  starter:    "price_1SxRpVHTxh2T1zNz6jPfJtcD",
-  pro:        "price_1SxRqIHTxh2T1zNz00HrfAlQ",
-  enterprise: "price_1SxRqeHTxh2T1zNzRYKM4DUl",
-};
-
-const FALLBACK: Record<string, { display: string; amount: number; id: string | null }> = {
-  starter:    { display: "1 290", amount: 129000, id: HARDCODED_PRICE_IDS.starter },
-  pro:        { display: "2 590", amount: 259000, id: HARDCODED_PRICE_IDS.pro },
-  enterprise: { display: "3 990", amount: 399000, id: HARDCODED_PRICE_IDS.enterprise },
-};
-
 export function Pricing() {
-  const [prices, setPrices] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("/api/stripe/prices")
-      .then((r) => r.json())
-      .then((json) => setPrices(json || {}))
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
-
-  const getPrice = (key: string) => {
-    const live = prices?.[key];
-    if (live && live.id) return live;
-    return FALLBACK[key];
-  };
 
   return (
     <section id="pricing" className="bg-white py-24">
@@ -113,9 +24,7 @@ export function Pricing() {
           </div>
         </div>
         <div className="grid gap-8 md:grid-cols-3">
-          {PLANS.map((plan) => {
-            const price = getPrice(plan.key);
-            return (
+          {PLANS.map((plan) => (
               <div
                 key={plan.key}
                 className={`relative rounded-3xl border-2 p-8 flex flex-col transition-all hover:shadow-xl ${
@@ -133,16 +42,7 @@ export function Pricing() {
                   <h3 className="text-2xl font-bold text-slate-900">{plan.title}</h3>
                   <p className="mt-1 text-sm text-slate-500">{plan.subtitle}</p>
                   <div className="mt-5">
-                    {loading ? (
-                      <div className="h-12 w-32 rounded-lg bg-slate-100 animate-pulse" />
-                    ) : (
-                      <div>
-                        <span className="text-5xl font-extrabold text-slate-900">
-                          {getPrice(plan.key)?.display ?? ""}
-                        </span>
-                        <span className="ml-1 text-slate-500 text-base"> kr/mnd</span>
-                      </div>
-                    )}
+                    <div><span className="text-5xl font-extrabold text-slate-900">{plan.price}</span><span className="ml-1 text-slate-500 text-base"> kr/mnd</span></div>
                   </div>
                   <div className="mt-2 inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
                     {plan.limits}
@@ -159,14 +59,12 @@ export function Pricing() {
                 <div className="mt-8 space-y-3">
                   <StripeCheckoutButton
                     plan={plan.key}
-                    priceId={price?.id ?? null}
                     highlighted={plan.highlight}
                     billingTerm="monthly"
                     label="Start gratis (månedlig)"
                   />
                   <StripeCheckoutButton
                     plan={plan.key}
-                    priceId={price?.id ?? null}
                     highlighted={false}
                     billingTerm="prepaid6"
                     label="Betal 6 mnd  spar 20 %"
@@ -174,8 +72,7 @@ export function Pricing() {
                   />
                 </div>
               </div>
-            );
-          })}
+          ))}
         </div>
         <p className="mt-10 text-center text-sm text-slate-500">
           Alle planer inkluderer SSL-sikkerhet, daglig backup og 99.9% oppetid.
@@ -187,14 +84,12 @@ export function Pricing() {
 
 function StripeCheckoutButton({
   plan,
-  priceId,
   highlighted,
   billingTerm = "monthly",
   label,
   green = false,
 }: {
   plan: string;
-  priceId?: string | null;
   highlighted?: boolean;
   billingTerm?: string;
   label: string;
