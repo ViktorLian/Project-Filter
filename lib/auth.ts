@@ -2,6 +2,7 @@ import { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { createAdminClient } from '@/lib/supabase/admin';
 import bcrypt from 'bcryptjs';
+import { readEnv } from '@/lib/env';
 
 export const authOptions: NextAuthOptions = {
   session: {
@@ -112,5 +113,5 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: readEnv('NEXTAUTH_SECRET'),
 };
