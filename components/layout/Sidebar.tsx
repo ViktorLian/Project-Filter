@@ -54,40 +54,27 @@ type NavItem = { href: string; label: string; icon: React.ElementType; badge?: s
 type NavEntry = NavSection | NavItem;
 
 const NAV: NavEntry[] = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, active: (p) => p === '/dashboard' },
+  { href: '/dashboard', label: 'Oversikt', icon: LayoutDashboard, active: (p) => p === '/dashboard' },
 
-  { section: 'Operasjon', hub: '/dashboard/hub/operasjon' },
-  { href: '/dashboard/inbox', label: 'Innboks', icon: MessageSquare, badge: 'NY' },
-  { href: '/dashboard/calendar', label: 'Kalender', icon: Calendar },
+  { section: 'Kunder' },
+  { href: '/dashboard/inbox', label: 'Innboks', icon: MessageSquare },
   { href: '/dashboard/customers', label: 'Kontakter', icon: Users },
-  { href: '/dashboard/pipeline', label: 'Muligheter', icon: GitBranch },
-  { href: '/dashboard/jobs', label: 'Jobber', icon: Briefcase },
-  { href: '/dashboard/tasks', label: 'Oppgaver', icon: CheckSquare },
+  { href: '/dashboard/pipeline', label: 'Salgsmuligheter', icon: GitBranch },
 
-  { section: 'Økonomi', hub: '/dashboard/hub/okonomi' },
-  { href: '/dashboard/invoices', label: 'Fakturaer', icon: Receipt },
-  { href: '/dashboard/cashflow', label: 'Økonomi', icon: DollarSign },
-  { href: '/dashboard/inventory', label: 'Lager', icon: Package },
-  { href: '/dashboard/proposals', label: 'Tilbud', icon: FileCheck },
+  { section: 'Synlighet' },
+  { href: '/dashboard/google-maps', label: 'Google-profil', icon: Map },
+  { href: '/dashboard/auto-seo', label: 'SEO og innhold', icon: Search },
+  { href: '/dashboard/review-gatekeeper', label: 'Anmeldelser', icon: Star },
+  { href: '/dashboard/chatbot-widget', label: 'AI-chat', icon: Globe2 },
 
-  { section: 'Vekst', hub: '/dashboard/hub/vekst' },
-  { href: '/dashboard/campaigns', label: 'Markedsføring', icon: Megaphone },
-  { href: '/dashboard/workflows', label: 'Automatisering', icon: Zap },
+  { section: 'Automatisering' },
+  { href: '/dashboard/workflows', label: 'Automatiseringer', icon: Zap },
   { href: '/dashboard/forms', label: 'Skjemaer', icon: FileText },
-  { href: '/dashboard/review-gatekeeper', label: 'Omdømme', icon: Star },
-  { href: '/dashboard/social-planner', label: 'Sosiale medier', icon: Newspaper },
-  { href: '/dashboard/affiliates', label: 'Affiliates', icon: Users2 },
 
-  { section: 'Innsikt', hub: '/dashboard/hub/innsikt' },
-  { href: '/dashboard/analytics', label: 'Analyse', icon: BarChart3 },
-  { href: '/dashboard/ai-assistant', label: 'AI Assistent', icon: Bot },
-  { href: '/dashboard/chatbot-widget', label: 'Chatbot Widget', icon: Globe2 },
-  { href: '/dashboard/google-maps', label: 'Google / SEO', icon: Map },
-  { href: '/dashboard/auto-seo', label: 'AutoSEO', icon: Search },
-  { href: '/dashboard/creative-generator', label: 'Kreativ Gen.', icon: Sparkles },
+  { section: 'Resultater' },
+  { href: '/dashboard/analytics', label: 'Rapporter', icon: BarChart3 },
 
   { section: 'System' },
-  { href: '/dashboard/client-portal', label: 'Kundeportal', icon: Globe2 },
   { href: '/dashboard/settings', label: 'Innstillinger', icon: Settings },
 ];
 
