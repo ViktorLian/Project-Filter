@@ -1,14 +1,13 @@
 export const dynamic = 'force-dynamic';
 import { createClient } from '@supabase/supabase-js'
-import { requireEnv } from '@/lib/env';
+import { requireEnv, requireStripeSecretKey } from '@/lib/env';
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { NextResponse } from 'next/server'
 
 function getStripe() {
   const Stripe = require('stripe');
-  const key = process.env.STRIPE_SECRET_KEY;
-  if (!key) throw new Error('STRIPE_SECRET_KEY er ikke konfigurert');
+  const key = requireStripeSecretKey();
   return new Stripe(key, { apiVersion: '2023-10-16' });
 }
 
@@ -51,7 +50,7 @@ export async function POST(request: Request) {
     const companyId = userData.company_id || userData.id;
 
     const stripe = getStripe();
-    const origin = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    const origin = new URL(request.url).origin;
 
     // Create or get Stripe customer
     let customerId = '';
