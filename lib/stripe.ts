@@ -1,10 +1,11 @@
 import Stripe from 'stripe'
+import { readEnv } from '@/lib/env'
 
 let stripeClient: Stripe | null = null
 
 export function getStripe(): Stripe {
   if (!stripeClient) {
-    const key = process.env.STRIPE_SECRET_KEY
+    const key = readEnv('STRIPE_SECRET_KEY')
     if (!key) throw new Error('Missing STRIPE_SECRET_KEY')
     stripeClient = new Stripe(key, { apiVersion: '2023-10-16' })
   }
