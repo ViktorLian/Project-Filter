@@ -2,50 +2,32 @@ export const dynamic = 'force-dynamic';
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 
-// GET /api/feedback-surveys/[token] — load survey for public survey page
 export async function GET(_req: NextRequest, { params }: { params: { token: string } }) {
-  const supabase = createAdminClient();
-  const { data, error } = await supabase
-    .from('feedback_surveys')
-    .select('*, job:jobs(job_title), customer:customers(name)')
-    .eq('survey_token', params.token)
-    .single();
-
-  if (error || !data) return NextResponse.json({ error: 'Undersøkelse ikke funnet' }, { status: 404 });
-  if ((data as any).completed_at) return NextResponse.json({ alreadyCompleted: true });
-
-  return NextResponse.json({ survey: data });
+  const { data, error } = await createAdminClient().from('feedback_surveys')
+    .select('id,completed_at,customer:customers(name),job:jobs(job_title),company:leads_companies(name),google_review_url')
+    .eq('survey_token', params.token).maybeSingle();
+  if (error || !data) return NextResponse.json({ error: 'Undersøkelsen ble ikke funnet' }, { status: 404 });
+  return NextResponse.json({ alreadyCompleted: Boolean(data.completed_at), survey: data });
 }
 
-// POST /api/feedback-surveys/[token] — submit answers
 export async function POST(request: NextRequest, { params }: { params: { token: string } }) {
-  const supabase = createAdminClient();
   const body = await request.json();
-  const { rating, wentWell, improvements, wouldRecommend, additionalComments } = body;
-
-  if (!rating) return NextResponse.json({ error: 'Vurdering er påkrevd' }, { status: 400 });
-
-  const npsScore = rating >= 9 ? 1 : rating >= 7 ? 0 : -1;
-  const isPositive = rating >= 8;
-  const testimonialText = isPositive
-    ? (wentWell || additionalComments || '')
-    : null;
-
-  const { error } = await supabase
-    .from('feedback_surveys')
-    .update({
-      question_1_rating: rating,
-      question_2_text: wentWell,
-      question_3_text: improvements,
-      question_4_text: wouldRecommend,
-      question_5_text: additionalComments,
-      nps_score: npsScore,
-      testimonial_display_text: testimonialText,
-      testimonial_approved: false, // admin must approve
-      completed_at: new Date().toISOString(),
-    })
-    .eq('survey_token', params.token);
-
+  const rating = Number(body.rating);
+  if (!Number.isInteger(rating) || rating < 1 || rating > 10) return NextResponse.json({ error: 'Vurdering må være fra 1 til 10' }, { status: 400 });
+  const text = String(body.wentWell || body.additionalComments || '').trim().slice(0, 2000);
+  const improvements = String(body.improvements || '').trim().slice(0, 2000);
+  const supabase = createAdminClient();
+  const { data: existing } = await supabase.from('feedback_surveys').select('id,completed_at,google_review_url').eq('survey_token', params.token).maybeSingle();
+  if (!existing) return NextResponse.json({ error: 'Undersøkelsen ble ikke funnet' }, { status: 404 });
+  if (existing.completed_at) return NextResponse.json({ error: 'Undersøkelsen er allerede besvart' }, { status: 409 });
+  const { error } = await supabase.from('feedback_surveys').update({
+    question_1_rating: rating, question_2_text: text, question_3_text: improvements,
+    question_4_text: String(body.wouldRecommend || '').slice(0, 100),
+    question_5_text: String(body.additionalComments || '').slice(0, 2000),
+    nps_score: rating >= 9 ? 1 : rating >= 7 ? 0 : -1,
+    testimonial_display_text: text || null, testimonial_approved: false,
+    completed_at: new Date().toISOString(), delivery_status: 'completed',
+  }).eq('id', existing.id).is('completed_at', null);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json({ success: true, eligible_for_testimonial: isPositive });
+  return NextResponse.json({ success: true, googleReviewUrl: existing.google_review_url || null });
 }
