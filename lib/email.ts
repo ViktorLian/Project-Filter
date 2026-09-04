@@ -1,9 +1,10 @@
 import { Resend } from 'resend';
-function getResend(){ return new Resend(process.env.RESEND_API_KEY); }
-const FROM = process.env.EMAIL_FROM || 'FlowPilot <onboarding@resend.dev>';
+import { readEnv } from '@/lib/env';
+function getResend(){ return new Resend(readEnv('RESEND_API_KEY')); }
+const FROM = readEnv('EMAIL_FROM') || 'FlowPilot <onboarding@resend.dev>';
 export type DeliveryResult = { sent: true; id?: string } | { sent: false; reason: string };
 export async function sendEmail(to:string,subject:string,html:string):Promise<DeliveryResult>{
-  if(!process.env.RESEND_API_KEY) return { sent:false, reason:'RESEND_API_KEY mangler' };
+  if(!readEnv('RESEND_API_KEY')) return { sent:false, reason:'RESEND_API_KEY mangler' };
   try {
     const {data,error}=await getResend().emails.send({from:FROM,to,subject,html});
     if(error) return { sent:false, reason:error.message };
