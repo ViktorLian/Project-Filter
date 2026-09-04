@@ -27,13 +27,13 @@ FLOWPILOT LØSER:
 ✓ Lead-gruppering og e-postkampanjer
 
 PRISING (NOK per måned):
-- Starter: 799 kr/mnd → 100 leads, 2 forms, basic analytics
-- Pro: 1999 kr/mnd (POPULÆR) → 500 leads, 20 forms, AI-analyse, auto-followup, email campaigns
-- Enterprise: 4990 kr/mnd → Ubegrenset leads, PDF-generering, Slack, webhooks, dedikert support
+- Starter: 499 kr/mnd → 100 henvendelser, 2 skjemaer og grunnleggende oversikt
+- Pro: 1499 kr/mnd (MEST VALGT) → 500 henvendelser, 20 skjemaer og oppfølgingsflyter
+- Enterprise: 2499 kr/mnd → Ubegrensede henvendelser, API, webhooks og tilpasset oppsett
 
 6-MÅNEDER FORHÅNDSBETALING: 20% rabatt på alle planer!
 
-GRATIS TRIAL: 14 dager med full tilgang - ingen kredittkort nødvendig!
+PRØVEPERIODE: 14 dager. Betalt abonnement velges etter prøveperioden.
 
 INSTRUKSJONER:
 - Svar kort og vennlig (maks 2-3 setninger)

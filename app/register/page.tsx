@@ -148,7 +148,7 @@ function RegisterFlow() {
                   <Layers className="h-4 w-4 text-slate-300" />
                 </div>
                 <p className="text-sm font-semibold text-white leading-tight">{niche.name}</p>
-                <p className="text-xs text-slate-400 mt-0.5">{niche.priceMonthly.toLocaleString('nb-NO')} kr/mnd</p>
+                <p className="text-xs text-slate-400 mt-0.5">Tilpasset oppsett</p>
                 <div className="mt-2 flex items-center gap-1 text-xs text-blue-400 font-medium">
                   Velg <ChevronRight className="h-3 w-3" />
                 </div>
@@ -185,7 +185,7 @@ function RegisterFlow() {
                 <div>
                   <p className="text-xs text-slate-500">Valgt nisje</p>
                   <p className="font-bold text-white text-sm">
-                    {selectedNiche.name} — {selectedNiche.priceMonthly.toLocaleString('nb-NO')} kr/mnd
+                    {selectedNiche.name}
                   </p>
                 </div>
               </div>
@@ -211,7 +211,7 @@ function RegisterFlow() {
           <div className="rounded-2xl bg-slate-900 border border-slate-800 shadow-xl shadow-black/40 p-6">
             <h2 className="text-xl font-bold text-white mb-1">{inviteToken ? 'Bli med i teamet' : 'Opprett din konto'}</h2>
             <p className="text-sm text-slate-400 mb-5">
-              {inviteToken ? 'Fyll inn dine opplysninger for å starte.' : '14 dager gratis — kortet belastes ikke nå.'}
+              {inviteToken ? 'Fyll inn dine opplysninger for å starte.' : '14 dagers prøveperiode. Velg abonnement når prøveperioden er over.'}
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-3">
@@ -263,7 +263,7 @@ function RegisterFlow() {
               </button>
               {!inviteToken && (
                 <div className="rounded-lg border border-emerald-800/30 bg-emerald-900/20 px-3 py-2 text-xs text-emerald-400 text-center">
-                  <strong>Kortet belastes IKKE nå.</strong> Abonnementet starter automatisk etter 14 dager.
+                  <strong>Ingen automatisk belastning.</strong> Velg abonnement for å fortsette etter prøveperioden.
                 </div>
               )}
               <p className="text-xs text-center text-slate-500 mt-1">

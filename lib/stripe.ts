@@ -1,76 +1,54 @@
 import Stripe from 'stripe'
 
-let _stripe: Stripe | null = null
+let stripeClient: Stripe | null = null
 
 export function getStripe(): Stripe {
-  if (!_stripe) {
-    if (!process.env.STRIPE_SECRET_KEY) {
-      throw new Error('Missing STRIPE_SECRET_KEY')
-    }
-    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-      apiVersion: '2023-10-16',
-    })
+  if (!stripeClient) {
+    const key = process.env.STRIPE_SECRET_KEY
+    if (!key) throw new Error('Missing STRIPE_SECRET_KEY')
+    stripeClient = new Stripe(key, { apiVersion: '2023-10-16' })
   }
-  return _stripe
+  return stripeClient
 }
-
-// Keep backward compat - lazily resolved
-export const stripe = new Proxy({} as Stripe, {
-  get(_target, prop) {
-    return (getStripe() as any)[prop]
-  }
-})
 
 export type SubscriptionPlan = 'starter' | 'pro' | 'enterprise'
 
 export const SUBSCRIPTION_PLANS = {
   starter: {
     name: 'Starter',
-    price: 500,
-    priceId: 'price_1SxRpVHTxh2T1zNz6jPfJtcD',
-    limits: {
-      leads: 100,
-      forms: 2
-    },
+    price: 499,
+    limits: { leads: 100, forms: 2 },
     features: [
-      'Inntil 100 leads per måned',
-      'Opptil 2 forms',
-      'E-post notifikasjoner',
-      'Grunnleggende analytics'
-    ]
+      'Inntil 100 henvendelser per måned',
+      'Opptil 2 kontaktskjemaer',
+      'E-postvarsler',
+      'Grunnleggende oversikt og rapportering',
+    ],
   },
   pro: {
     name: 'Pro',
-    price: 1500,
-    priceId: 'price_1SxRqIHTxh2T1zNz00HrfAlQ',
-    limits: {
-      leads: 500,
-      forms: 20
-    },
+    price: 1499,
+    limits: { leads: 500, forms: 20 },
     features: [
-      'Inntil 500 leads per måned',
-      'Opptil 20 forms',
-      'Avansert analytics',
-      'Webhooks og API tilgang',
+      'Inntil 500 henvendelser per måned',
+      'Opptil 20 kontaktskjemaer',
+      'AI-assistert prioritering',
+      'Oppfølgingsflyter og kampanjer',
+      'Anmeldelsesforespørsler',
       'Prioritert support',
-      'E-post notifikasjoner'
-    ]
+    ],
   },
   enterprise: {
     name: 'Enterprise',
-    price: 3500,
-    priceId: 'price_1SxRqeHTxh2T1zNzRYKM4DUl',
-    limits: {
-      leads: 999999,
-      forms: 999999
-    },
+    price: 2499,
+    limits: { leads: 999999, forms: 999999 },
     features: [
-      'Ubegrensede leads og forms',
-      'Avansert AI scoring',
-      'Full API tilgang',
-      'Custom integrasjoner',
-      'White-label muligheter',
-      'Dedikert support'
-    ]
-  }
-}
+      'Alt i Pro',
+      'Ubegrensede henvendelser og skjemaer',
+      'API og webhooks',
+      'Avansert rapportering',
+      'Tilpasset oppsett etter avtale',
+      'Prioritert support',
+    ],
+  },
+} as const

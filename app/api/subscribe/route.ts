@@ -36,15 +36,6 @@ export async function POST(request: Request) {
     const plan = (SUBSCRIPTION_PLANS as any)[planId];
     const userId = (session.user as any).id;
 
-    // Validate stripeId is set
-    const priceId = plan?.priceId;
-    if (!priceId) {
-      return NextResponse.json(
-        { error: `Stripe Price ID mangler for plan "${planId}".` },
-        { status: 500 }
-      );
-    }
-
     // Get user info
     const { data: userData } = await supabase
       .from('users')
@@ -84,7 +75,18 @@ export async function POST(request: Request) {
     const checkoutSession = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
-      line_items: [{ price: priceId, quantity: 1 }],
+      line_items: [{
+        price_data: {
+          currency: 'nok',
+          unit_amount: plan.price * 100,
+          recurring: { interval: 'month' },
+          product_data: {
+            name: `FlowPilot ${plan.name}`,
+            metadata: { plan_id: planId },
+          },
+        },
+        quantity: 1,
+      }],
       subscription_data: {
         metadata: { user_id: userData.id, company_id: companyId, plan_id: planId },
       },
