@@ -1,0 +1,2 @@
+alter table public.feedback_surveys add column if not exists testimonial_consent boolean not null default false;
+comment on column public.feedback_surveys.testimonial_consent is 'Customer explicitly consented to website publication of their written feedback.';
