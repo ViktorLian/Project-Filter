@@ -16,3 +16,15 @@ export function requireEnv(name: string): string {
   if (!value) throw new Error(`Missing ${name}`);
   return value;
 }
+
+/**
+ * Stripe secret keys are ASCII tokens. Extracting the token also protects
+ * against labels, quotes and Unicode line separators accidentally pasted
+ * into the Vercel value.
+ */
+export function requireStripeSecretKey(): string {
+  const raw = process.env.STRIPE_SECRET_KEY || '';
+  const match = raw.match(/sk_(?:test|live)_[A-Za-z0-9]+/);
+  if (!match) throw new Error('Missing or invalid STRIPE_SECRET_KEY');
+  return match[0];
+}
