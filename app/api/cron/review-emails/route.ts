@@ -1,59 +1,35 @@
 export const dynamic = 'force-dynamic';
+import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { sendReviewRequest } from '@/lib/notifications';
+import { sendEmail } from '@/lib/email';
 import { isAuthorizedCron } from '@/lib/cron-auth';
 
-// Runs daily – finds jobs completed 2 days ago and sends review request to customer
-export async function GET(req: NextRequest) {
-  if (!isAuthorizedCron(req)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+const appUrl=process.env.NEXT_PUBLIC_APP_URL||'https://flowpilot.no';
+export async function GET(req:NextRequest){
+ if(!isAuthorizedCron(req)) return NextResponse.json({error:'Unauthorized'},{status:401});
+ const db=createAdminClient();
+ const {data:settings}=await db.from('review_automation_settings').select('*').eq('enabled',true).eq('email_enabled',true);
+ let sent=0, failed=0;
+ for(const setting of settings||[]){
+  const cutoff=new Date(Date.now()-setting.delay_hours*3600000).toISOString();
+  const {data:jobs}=await db.from('jobs').select('id,job_title,customer_id,company_id,customer:customers(name,email)')
+   .eq('company_id',setting.company_id).eq('status','completed').eq('review_email_sent',false).lte('completed_at',cutoff).limit(50);
+  const {data:company}=await db.from('leads_companies').select('name,google_review_url').eq('id',setting.company_id).maybeSingle();
+  for(const job of jobs||[]){
+   const customer=job.customer as any;
+   if(!customer?.email) continue;
+   const token=randomUUID();
+   const {data:survey,error}=await db.from('feedback_surveys').upsert({
+    job_id:job.id,customer_id:job.customer_id,company_id:job.company_id,survey_token:token,
+    google_review_url:setting.google_review_url||company?.google_review_url||null,delivery_channel:'email',delivery_status:'pending'
+   },{onConflict:'job_id'}).select('id,survey_token').single();
+   if(error||!survey){failed++;continue;}
+   const result=await sendEmail(customer.email,`Hvordan var opplevelsen med ${company?.name||'oss'}?`,
+    `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto"><h2>Vi ønsker din ærlige tilbakemelding</h2><p>Hei ${customer.name||'der'}. Det tar under ett minutt.</p><p><a href="${appUrl}/survey/${survey.survey_token}" style="display:inline-block;background:#1e40af;color:white;padding:13px 22px;border-radius:8px;text-decoration:none;font-weight:700">Gi tilbakemelding</a></p><p style="font-size:12px;color:#64748b">Sendt via FlowPilot.</p></div>`);
+   await db.from('feedback_surveys').update({sent_at:result.sent?new Date().toISOString():null,delivery_status:result.sent?'sent':'configuration_required',delivery_error:result.sent?null:result.reason}).eq('id',survey.id);
+   if(result.sent){await db.from('jobs').update({review_email_sent:true}).eq('id',job.id).eq('company_id',job.company_id);sent++;}else failed++;
   }
-
-  const supabase = createAdminClient();
-
-  // Jobs completed ~2 days ago, review email not yet sent
-  const twoDaysAgo = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString();
-  const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString();
-
-  const { data: jobs } = await supabase
-    .from('jobs')
-    .select('id, job_title, company_id, customer_id, customer:customers(name, email), completed_at')
-    .eq('status', 'completed')
-    .eq('review_email_sent', false)
-    .gte('completed_at', threeDaysAgo)
-    .lte('completed_at', twoDaysAgo);
-
-  if (!jobs || jobs.length === 0) {
-    return NextResponse.json({ sent: 0, message: 'No jobs ready for review email' });
-  }
-
-  const results: string[] = [];
-
-  for (const job of jobs) {
-    const customer = job.customer as any;
-    if (!customer?.email) continue;
-
-    // Get company google review URL
-    const { data: company } = await supabase
-      .from('leads_companies')
-      .select('name, google_review_url')
-      .eq('id', job.company_id)
-      .single();
-
-    try {
-      await sendReviewRequest(
-        customer.email,
-        customer.name || '',
-        company?.name || 'bedriften',
-        company?.google_review_url || null,
-      );
-      await supabase.from('jobs').update({ review_email_sent: true }).eq('id', job.id);
-      results.push(`Review → ${customer.email} (job: ${job.job_title})`);
-    } catch (e) {
-      console.error(`[CRON] Review email failed for job ${job.id}:`, e);
-    }
-  }
-
-  return NextResponse.json({ sent: results.length, results });
+ }
+ return NextResponse.json({sent,failed});
 }
