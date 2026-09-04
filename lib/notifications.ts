@@ -152,7 +152,7 @@ export async function sendTrialDay1(to: string, name: string) {
       `<p style="margin:0 0 16px">Du har nå 14 dager gratis tilgang til FlowPilot. La oss sørge for at du får mest mulig ut av prøveperioden.</p>
       <p style="margin:0 0 8px;font-weight:700;color:#0f172a">Det første du bør gjøre:</p>
       <ol style="padding-left:20px;margin:0 0 16px;color:#475569;line-height:1.8">
-        <li><strong>Fyll inn bedriftsinformasjon</strong> under Innstillinger (brukes på fakturaer og tilbud)</li>
+        <li><strong>Fyll inn bedriftsinformasjon</strong> under Innstillinger</li>
         <li><strong>Opprett ditt første lead</strong> – gå til Leads og klikk "Ny lead"</li>
         <li><strong>Del kundeskjemaet ditt</strong> – finn lenken under Skjemaer og del den med kunder</li>
       </ol>
@@ -195,20 +195,19 @@ export async function sendTrialDay7(to: string, name: string) {
     to,
     subject: `${firstName}, har du sendt din første faktura i FlowPilot?`,
     html: trialBase(
-      'Fakturaer som ser profesjonelle ut',
-      'Lag, send og følg opp fakturaer på minutter',
-      `<p style="margin:0 0 16px">Halvveis i prøveperioden! På tide å prøve fakturafunksjonen.</p>
-      <p style="margin:0 0 8px;font-weight:700;color:#0f172a">Hva du kan gjøre:</p>
+      'Gjør oppfølgingen automatisk',
+      'La FlowPilot følge opp mens du arbeider',
+      `<p style="margin:0 0 16px">Halvveis i prøveperioden! På tide å aktivere oppfølging og anmeldelser.</p>
+      <p style="margin:0 0 8px;font-weight:700;color:#0f172a">Dette kan du aktivere:</p>
       <ul style="padding-left:20px;margin:0 0 16px;color:#475569;line-height:1.8">
-        <li>Lag fakturaer med varelinjer, timer og timepris</li>
-        <li>MVA beregnes automatisk (25%, 15% eller 0%)</li>
-        <li>Last ned som PDF med en klikk</li>
-        <li>KID-nummer genereres automatisk fra innstillingene dine</li>
-        <li>Hold oversikt over hva som er betalt og hva som forfaller</li>
+        <li>Automatisk oppfølging av nye henvendelser</li>
+        <li>Oppfølging av sendte tilbud</li>
+        <li>Anmeldelsesforespørsel etter fullført jobb</li>
+        <li>Servicepåminnelser og månedsrapport</li>
       </ul>
-      <p style="margin:0;color:#475569">Tips: Fyll inn kontonummer og org.nr under Innstillinger → Fakturering – da ser fakturaen din helt profesjonell ut.</p>`,
-      'Opprett min første faktura',
-      `${APP_URL}/dashboard/invoices`,
+      <p style="margin:0;color:#475569">Du bestemmer hvilke arbeidsflyter som skal være aktive under Automatiseringer.</p>`,
+      'Se automatiseringene',
+      `${APP_URL}/dashboard/workflows`,
     ),
   });
 }
@@ -223,14 +222,13 @@ export async function sendTrialDay14(to: string, name: string) {
       'Prøveperioden nærmer seg slutten',
       'Ikke mist tilgangen til dataene dine',
       `<p style="margin:0 0 16px">Hei ${firstName}, den gratis prøveperioden din utløper i morgen.</p>
-      <p style="margin:0 0 16px;color:#475569">For å fortsette å bruke FlowPilot og beholde alle leads, fakturaer, kunder og innstillinger du har satt opp – trenger du å aktivere abonnementet.</p>
-      <p style="margin:0 0 8px;font-weight:700;color:#0f172a">FlowPilot Starter – 1 290 kr/mnd:</p>
+      <p style="margin:0 0 16px;color:#475569">For å fortsette å bruke FlowPilot og beholde alle henvendelser, kunder og innstillinger du har satt opp – trenger du å aktivere abonnementet.</p>
+      <p style="margin:0 0 8px;font-weight:700;color:#0f172a">FlowPilot Basis – 899 kr/mnd:</p>
       <ul style="padding-left:20px;margin:0 0 16px;color:#475569;line-height:1.8">
-        <li>Ubegrenset leads og fakturaer</li>
-        <li>Automatisk lead-scoring</li>
-        <li>PDF-fakturaer med KID og MVA</li>
-        <li>Kundeskjema på nettstedet ditt</li>
-        <li>Kalender og jobbhåndtering</li>
+        <li>Inntil 100 henvendelser per måned</li>
+        <li>Kontakter, innboks og salgspipeline</li>
+        <li>Automatiske varsler og mottaksbekreftelser</li>
+        <li>Månedlig resultatrapport</li>
       </ul>
       <p style="margin:0;color:#dc2626;font-weight:600">Hvis du ikke fornyer, mister du tilgang til alt du har lagt inn.</p>`,
       'Aktiver abonnement nå',
