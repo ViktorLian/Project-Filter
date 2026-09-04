@@ -7,7 +7,7 @@
 export function readEnv(name: string): string | undefined {
   const value = process.env[name];
   if (!value) return undefined;
-  const cleaned = value.replace(/^\uFEFF/, '').trim();
+  const cleaned = value.replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200D\u2060\uFEFF]/g, '').trim();
   return cleaned || undefined;
 }
 
