@@ -1,86 +1,54 @@
 export const dynamic = 'force-dynamic';
+import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendEmail } from '@/lib/email';
 
-function makeToken() {
-  return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-}
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://flowpilot.no';
 
-// POST /api/feedback-surveys  — send survey for a job
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions as any) as any;
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!session?.user) return NextResponse.json({ error: 'Ikke innlogget' }, { status: 401 });
+  const companyId = session.user.companyId;
   const supabase = createAdminClient();
-
-  const body = await request.json();
-  const { jobId } = body;
+  const { jobId } = await request.json();
   if (!jobId) return NextResponse.json({ error: 'jobId er påkrevd' }, { status: 400 });
 
-  const { data: job, error: jobErr } = await supabase
-    .from('jobs')
-    .select('*, customer:customers(name, email)')
-    .eq('id', jobId)
-    .single();
+  const { data: job } = await supabase.from('jobs')
+    .select('id, job_title, customer_id, company_id, customer:customers(name,email)')
+    .eq('id', jobId).eq('company_id', companyId).maybeSingle();
+  if (!job) return NextResponse.json({ error: 'Jobb ikke funnet' }, { status: 404 });
+  const customer = job.customer as any;
+  if (!customer?.email) return NextResponse.json({ error: 'Kunden har ingen e-postadresse' }, { status: 400 });
 
-  if (jobErr || !job) return NextResponse.json({ error: 'Jobb ikke funnet' }, { status: 404 });
+  const { data: company } = await supabase.from('leads_companies')
+    .select('name,google_review_url').eq('id', companyId).maybeSingle();
+  const token = randomUUID();
+  const { data: survey, error } = await supabase.from('feedback_surveys').upsert({
+    job_id: job.id, customer_id: job.customer_id, company_id: companyId,
+    survey_token: token, delivery_channel: 'email', delivery_status: 'pending',
+    google_review_url: company?.google_review_url || null,
+  }, { onConflict: 'job_id' }).select('id,survey_token').single();
+  if (error || !survey) return NextResponse.json({ error: error?.message || 'Kunne ikke opprette forespørsel' }, { status: 500 });
 
-  const customer = (job as any).customer;
-  if (!customer?.email) return NextResponse.json({ error: 'Kunden har ingen e-post' }, { status: 400 });
-
-  const token = makeToken();
-
-  const { data: survey, error: surveyErr } = await supabase
-    .from('feedback_surveys')
-    .insert({
-      job_id: jobId,
-      customer_id: job.customer_id,
-      survey_token: token,
-      sent_at: new Date().toISOString(),
-    })
-    .select()
-    .single();
-
-  if (surveyErr) return NextResponse.json({ error: surveyErr.message }, { status: 500 });
-
-  const surveyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/survey/${token}`;
-
-  await sendEmail(
-    customer.email,
-    `Hvordan gikk det? Gi oss din tilbakemelding \u2B50`,
-    `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:40px 20px">
-      <h2 style="color:#1e293b">Takk for at du valgte oss, ${customer.name}!</h2>
-      <p style="color:#475569">Vi h\u00e5per du er forn\u00f8yd med jobben vi utf\u00f8rte: <strong>${job.job_title}</strong>.</p>
-      <p style="color:#475569">Din tilbakemelding hjelper oss \u00e5 bli enda bedre. Det tar bare 2 minutter:</p>
-      <div style="text-align:center;margin:30px 0">
-        <a href="${surveyUrl}" style="background:#2563eb;color:white;padding:14px 28px;text-decoration:none;border-radius:8px;font-weight:bold;display:inline-block">
-          Svar p\u00e5 5 raske sp\u00f8rsm\u00e5l \u2192
-        </a>
-      </div>
-      <p style="color:#94a3b8;font-size:13px">FlowPilot \u2014 automatiser og voks</p>
-    </div>`
-  );
-
-  return NextResponse.json({ surveyId: (survey as any).id, emailSent: true });
+  const result = await sendEmail(customer.email, `Hvordan var opplevelsen med ${company?.name || 'oss'}?`,
+    `<div style="font-family:Arial,sans-serif;max-width:560px;margin:auto;color:#1e293b"><h2>Vi ønsker din ærlige tilbakemelding</h2><p>Hei ${customer.name || 'der'}. Vurderingen tar under ett minutt og hjelper oss å forbedre tjenesten.</p><p><a href="${appUrl}/survey/${survey.survey_token}" style="display:inline-block;background:#1e40af;color:white;padding:13px 22px;border-radius:8px;text-decoration:none;font-weight:700">Gi tilbakemelding</a></p><p style="font-size:12px;color:#64748b">Sendt via FlowPilot.</p></div>`);
+  await supabase.from('feedback_surveys').update({
+    sent_at: result.sent ? new Date().toISOString() : null,
+    delivery_status: result.sent ? 'sent' : 'configuration_required',
+    delivery_error: result.sent ? null : result.reason,
+  }).eq('id', survey.id).eq('company_id', companyId);
+  return NextResponse.json({ surveyId: survey.id, sent: result.sent, configurationRequired: !result.sent });
 }
 
-// GET /api/feedback-surveys — list surveys for user
-export async function GET(request: NextRequest) {
+export async function GET() {
   const session = await getServerSession(authOptions as any) as any;
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const supabase = createAdminClient();
-  const sessAny = session as any;
-  const userId = sessAny?.user?.id;
-
-  const { data, error } = await supabase
-    .from('feedback_surveys')
-    .select('*, job:jobs(job_title, user_id), customer:customers(name, email)')
-    .order('created_at', { ascending: false });
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-
-  const filtered = (data || []).filter((s: any) => s.job?.user_id === userId);
-  return NextResponse.json({ surveys: filtered });
+  if (!session?.user) return NextResponse.json({ error: 'Ikke innlogget' }, { status: 401 });
+  const companyId = session.user.companyId;
+  const { data, error } = await createAdminClient().from('feedback_surveys')
+    .select('id,survey_token,sent_at,completed_at,question_1_rating,question_2_text,question_3_text,testimonial_display_text,testimonial_approved,delivery_channel,delivery_status,customer:customers(name,email),job:jobs(job_title)')
+    .eq('company_id', companyId).order('created_at', { ascending: false }).limit(100);
+  return error ? NextResponse.json({ error: error.message }, { status: 500 }) : NextResponse.json({ surveys: data || [] });
 }
