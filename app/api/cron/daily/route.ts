@@ -8,6 +8,7 @@ const jobs = [
   '/api/cron/review-emails',
   '/api/cron/send-sequences',
   '/api/cron/business-automations',
+  '/api/cron/seo',
 ];
 
 export async function GET(req: NextRequest) {
