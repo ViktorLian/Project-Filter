@@ -175,7 +175,7 @@ export default function DashboardOverview() {
   const niche: Niche | undefined    = nicheId ? getNiche(nicheId) : undefined;
   const nc                           = (nicheId && NICHE_COLORS[nicheId]) ? NICHE_COLORS[nicheId] : DEFAULT_COLOR;
   const NicheIcon: React.ElementType = (nicheId && NICHE_ICONS[nicheId]) ? NICHE_ICONS[nicheId] : Target;
-  const tip                          = (nicheId && NICHE_TIPS[nicheId]) ? NICHE_TIPS[nicheId] : DEFAULT_TIP;
+  const tip                          = DEFAULT_TIP;
 
   const quickKeys   = niche ? (NICHE_QUICK[nicheId!] || niche.modules.filter(m => m !== 'dashboard' && m !== 'settings').slice(0, 4)) : ['leads', 'invoices', 'cashflow', 'calendar'];
   const quickActions = quickKeys.map(k => MODULE_DEFS[k]).filter(Boolean);
@@ -385,45 +385,6 @@ export default function DashboardOverview() {
               </Link>
             ))}
           </div>
-        </div>
-      )}
-
-      {/* Niche features — no emojis, checkmark icons */}
-      {niche && niche.nicheFeatures.length > 0 && (
-        <div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
-            <div>
-              <h2 className="font-semibold text-slate-800">Spesialverktoy for {niche.name}</h2>
-              <p className="text-xs text-slate-500 mt-0.5">Inkludert i planen – konfigurert for din bransje</p>
-            </div>
-            <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${nc.light} ${nc.text} ${nc.border} border`}>
-              {niche.nicheFeatures.length} verktoy
-            </span>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-x divide-slate-100">
-            {niche.nicheFeatures.slice(0, 4).map((f, i) => (
-              <div key={i} className="p-5 hover:bg-slate-50 transition-colors border-b border-slate-100 lg:border-b-0">
-                <div className={`inline-flex h-7 w-7 rounded-md ${nc.light} ${nc.border} border items-center justify-center mb-3`}>
-                  <CheckCircle className={`h-3.5 w-3.5 ${nc.text}`} />
-                </div>
-                <p className="text-sm font-semibold text-slate-800 leading-tight">{f.name}</p>
-                <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-          {niche.nicheFeatures.length > 4 && (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-x divide-slate-100 border-t border-slate-100">
-              {niche.nicheFeatures.slice(4).map((f, i) => (
-                <div key={i} className="p-5 hover:bg-slate-50 transition-colors">
-                  <div className={`inline-flex h-7 w-7 rounded-md ${nc.light} ${nc.border} border items-center justify-center mb-3`}>
-                    <CheckCircle className={`h-3.5 w-3.5 ${nc.text}`} />
-                  </div>
-                  <p className="text-sm font-semibold text-slate-800 leading-tight">{f.name}</p>
-                  <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">{f.desc}</p>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       )}
 
