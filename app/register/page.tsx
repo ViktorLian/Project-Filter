@@ -107,7 +107,7 @@ function RegisterFlow() {
         <div className="w-full max-w-5xl">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-white">Velg din bransje</h1>
-            <p className="text-slate-400 mt-2">Vi tilpasser hele systemet for din nisje — 14 dager gratis</p>
+            <p className="text-slate-400 mt-2">Bransjevalget tilpasser språk, oppsett og anbefalte arbeidsflyter.</p>
           </div>
 
           {/* Category filter */}
@@ -193,25 +193,18 @@ function RegisterFlow() {
             </div>
           )}
 
-          {/* Features preview */}
+          {/* Industry setup preview */}
           {!inviteToken && (
             <div className="rounded-xl border border-slate-800 bg-slate-900/50 px-4 py-3 mb-5">
-              <p className="text-xs text-slate-500 mb-2">Inkludert i pakken:</p>
-              <div className="grid grid-cols-2 gap-1.5">
-                {selectedNiche.nicheFeatures.slice(0, 4).map(f => (
-                  <div key={f.name} className="flex items-center gap-1.5 text-xs text-slate-300">
-                    <Check className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" />
-                    <span className="truncate">{f.name}</span>
-                  </div>
-                ))}
-              </div>
+              <p className="text-xs font-semibold text-slate-300">Tilpasset oppsett for {selectedNiche.name}</p>
+              <p className="mt-1 text-xs leading-5 text-slate-500">Du får det samme pålitelige CRM-grunnlaget for kontakter, henvendelser og oppfølging. Bransjevalget endrer anbefalinger og oppsett, men lover ikke egne fagsystemer eller integrasjoner.</p>
             </div>
           )}
 
           <div className="rounded-2xl bg-slate-900 border border-slate-800 shadow-xl shadow-black/40 p-6">
             <h2 className="text-xl font-bold text-white mb-1">{inviteToken ? 'Bli med i teamet' : 'Opprett din konto'}</h2>
             <p className="text-sm text-slate-400 mb-5">
-              {inviteToken ? 'Fyll inn dine opplysninger for å starte.' : '14 dagers prøveperiode. Velg abonnement når prøveperioden er over.'}
+              {inviteToken ? 'Fyll inn dine opplysninger for å starte.' : 'Prøv løsningen i 14 dager uten betalingskort. Velg abonnement dersom du vil fortsette.'}
             </p>
 
             <form onSubmit={handleSubmit} className="space-y-3">
@@ -263,7 +256,7 @@ function RegisterFlow() {
               </button>
               {!inviteToken && (
                 <div className="rounded-lg border border-emerald-800/30 bg-emerald-900/20 px-3 py-2 text-xs text-emerald-400 text-center">
-                  <strong>Ingen automatisk belastning.</strong> Velg abonnement for å fortsette etter prøveperioden.
+                  <strong>Ingen automatisk belastning etter registrering.</strong> Et abonnement belastes først når du selv fullfører betaling i Stripe.
                 </div>
               )}
               <p className="text-xs text-center text-slate-500 mt-1">

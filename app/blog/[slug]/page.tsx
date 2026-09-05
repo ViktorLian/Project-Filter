@@ -142,9 +142,9 @@ export default function BlogPostPage({ params }: Props) {
         <aside className="space-y-6">
           {/* CTA card */}
           <div className="bg-slate-900 text-white rounded-2xl p-6">
-            <h3 className="font-bold text-base mb-2">Prøv FlowPilot gratis</h3>
+            <h3 className="font-bold text-base mb-2">Prøv FlowPilot</h3>
             <p className="text-slate-300 text-sm mb-4">
-              14 dager gratis. Ingen betalingskort. Kanseller når du vil.
+              14 dager uten betalingskort. Velg abonnement dersom du vil fortsette.
             </p>
             <Link
               href="/register"

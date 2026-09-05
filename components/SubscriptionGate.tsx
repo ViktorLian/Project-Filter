@@ -44,7 +44,7 @@ export function SubscriptionGate({ requiredPlan, featureName, children }: Props)
       } else {
         setAllowed(false);
       }
-    }).catch(() => setAllowed(true)); // fail open — don't block on error
+    }).catch(() => setAllowed(false));
   }, [requiredPlan]);
 
   if (allowed === null) {
@@ -63,8 +63,8 @@ export function SubscriptionGate({ requiredPlan, featureName, children }: Props)
         </div>
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Oppgradering krevd</h2>
         <p className="text-slate-500 max-w-sm mb-6">
-          <span className="font-semibold text-slate-700">{featureName}</span> er ikke inkludert i din navarende plan.
-          Oppgrader for aa fa tilgang.
+          <span className="font-semibold text-slate-700">{featureName}</span> er ikke inkludert i din nåværende plan.
+          Oppgrader for å få tilgang.
         </p>
         <button
           onClick={() => router.push(`/dashboard/upgrade?required=${requiredPlan}&feature=${encodeURIComponent(featureName)}`)}
