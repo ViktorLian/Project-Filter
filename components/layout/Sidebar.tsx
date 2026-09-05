@@ -2,262 +2,39 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
-import {
-  LayoutDashboard, MessageSquare, Calendar, Users, GitBranch,
-  Receipt, Megaphone, Zap, FileText, Star, CheckSquare, FileCheck,
-  BarChart3, Bot, Settings, Package, Briefcase, Newspaper, Users2, Sparkles, Globe,
-  Search, LogOut, DollarSign, Map, ChevronRight, ChevronRight as ChevRight, Layers
-} from 'lucide-react';
-const Globe2 = Globe;
+import { useState } from 'react';
+import { BarChart3, ChevronRight, FileText, GitBranch, LayoutDashboard, LogOut, Map, MessageSquare, Search, Settings, Star, Users, Zap } from 'lucide-react';
 import { signOut, useSession } from 'next-auth/react';
-import { getNiche } from '@/lib/niches';
+import { cn } from '@/lib/utils';
 
-// Map niche module keys → dashboard hrefs they should enable
-const MODULE_HREFS: Record<string, string[]> = {
-  dashboard:          ['/dashboard'],
-  leads:              ['/dashboard/leads'],
-  inbox:              ['/dashboard/inbox'],
-  calendar:           ['/dashboard/calendar'],
-  customers:          ['/dashboard/customers'],
-  pipeline:           ['/dashboard/pipeline'],
-  jobs:               ['/dashboard/jobs'],
-  tasks:              ['/dashboard/tasks'],
-  invoices:           ['/dashboard/invoices'],
-  cashflow:           ['/dashboard/cashflow'],
-  inventory:          ['/dashboard/inventory'],
-  proposals:          ['/dashboard/proposals'],
-  campaigns:          ['/dashboard/campaigns'],
-  workflows:          ['/dashboard/workflows'],
-  forms:              ['/dashboard/forms'],
-  'review-gatekeeper':['/dashboard/review-gatekeeper'],
-  'social-planner':   ['/dashboard/social-planner'],
-  affiliates:         ['/dashboard/affiliates'],
-  analytics:          ['/dashboard/analytics'],
-  'ai-assistant':     ['/dashboard/ai-assistant'],
-  'chatbot-widget':   ['/dashboard/chatbot-widget'],
-  'google-maps':      ['/dashboard/google-maps'],
-  'auto-seo':         ['/dashboard/auto-seo'],
-  'creative-generator':['/dashboard/creative-generator'],
-  'client-portal':    ['/dashboard/client-portal'],
-  settings:           ['/dashboard/settings'],
-};
-
-// Always enabled regardless of niche
-const ALWAYS_ENABLED = new Set(['/dashboard', '/dashboard/settings', '/dashboard/analytics']);
-
-
-
-type NavSection = { section: string; hub?: string };
-type NavItem = { href: string; label: string; icon: React.ElementType; badge?: string; active?: (p: string) => boolean };
-type NavEntry = NavSection | NavItem;
-
-const NAV: NavEntry[] = [
-  { href: '/dashboard', label: 'Oversikt', icon: LayoutDashboard, active: (p) => p === '/dashboard' },
-
+const entries = [
   { section: 'Kunder' },
   { href: '/dashboard/inbox', label: 'Innboks', icon: MessageSquare },
   { href: '/dashboard/customers', label: 'Kontakter', icon: Users },
   { href: '/dashboard/pipeline', label: 'Salgsmuligheter', icon: GitBranch },
-
   { section: 'Synlighet' },
   { href: '/dashboard/google-maps', label: 'Google-profil', icon: Map },
   { href: '/dashboard/auto-seo', label: 'SEO og innhold', icon: Search },
   { href: '/dashboard/review-gatekeeper', label: 'Anmeldelser', icon: Star },
-  { href: '/dashboard/chatbot-widget', label: 'AI-chat', icon: Globe2 },
-
-  { section: 'Automatisering' },
+  { section: 'Oppfølging' },
   { href: '/dashboard/workflows', label: 'Automatiseringer', icon: Zap },
   { href: '/dashboard/forms', label: 'Skjemaer', icon: FileText },
-
-  { section: 'Resultater' },
   { href: '/dashboard/analytics', label: 'Rapporter', icon: BarChart3 },
-
   { section: 'System' },
   { href: '/dashboard/settings', label: 'Innstillinger', icon: Settings },
-];
+] as const;
 
 export default function Sidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const sessionUserId = (session?.user as any)?.id as string | undefined;
-  const [search, setSearch] = useState('');
   const [collapsed, setCollapsed] = useState(false);
-  const [nicheId, setNicheId] = useState<string | null>(null);
-
-  // Fetch niche once per session
-  useEffect(() => {
-    if (!sessionUserId) return;
-    fetch('/api/onboarding/niche')
-      .then(r => r.json())
-      .then(d => setNicheId(d.nicheId || null))
-      .catch(() => {});
-  }, [sessionUserId]);
-
-  const niche = nicheId ? getNiche(nicheId) : null;
-  // Build set of enabled hrefs: if niche defined, filter; otherwise show all
-  const enabledHrefs: Set<string> | null = niche
-    ? new Set([
-        ...ALWAYS_ENABLED,
-        ...niche.modules.flatMap(m => MODULE_HREFS[m] ?? []),
-      ])
-    : null;
-
-  const q = search.toLowerCase().trim();
-
-  const initials = (session?.user?.name || 'FP')
-    .split(' ')
-    .map((w: string) => w[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
-
-  return (
-    <aside className={cn(
-      'relative flex flex-col bg-[#1c1c27] text-slate-200 h-screen sticky top-0 flex-shrink-0 overflow-y-auto transition-all duration-200',
-      collapsed ? 'w-[56px]' : 'w-[220px]'
-    )}>
-
-      {/* Logo */}
-      <div className={cn('flex items-center gap-2.5 px-3 py-3.5 border-b border-white/8', collapsed && 'justify-center px-2')}>
-        <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-900/40">
-          <span className="text-white font-black text-xs tracking-tight">FP</span>
-        </div>
-        {!collapsed && (
-          <div>
-            <p className="text-[13px] font-bold text-white leading-tight">FlowPilot</p>
-            <p className="text-[10px] text-slate-500">Growth OS</p>
-          </div>
-        )}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className={cn('ml-auto p-1 rounded-md hover:bg-white/8 text-slate-500 hover:text-slate-300 transition', collapsed && 'hidden')}
-        >
-          <ChevronRight className="h-3.5 w-3.5 rotate-180" />
-        </button>
-      </div>
-
-      {/* Expand button when collapsed */}
-      {collapsed && (
-        <button onClick={() => setCollapsed(false)} className="flex justify-center py-2 hover:bg-white/8 transition">
-          <ChevronRight className="h-3.5 w-3.5 text-slate-500" />
-        </button>
-      )}
-
-      {/* Search */}
-      {!collapsed && (
-        <div className="px-2.5 py-2 border-b border-white/8">
-          <div className="flex items-center gap-2 bg-white/6 rounded-lg px-2.5 py-1.5 border border-white/8">
-            <Search className="h-3.5 w-3.5 text-slate-500 flex-shrink-0" />
-            <input
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              placeholder="Søk..."
-              className="bg-transparent text-xs text-slate-300 placeholder-slate-600 outline-none w-full"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Nav items */}
-      <nav className="flex-1 py-1 overflow-y-auto">
-        {NAV.filter(item => {
-          if ('section' in item) return true;
-          if (!q && !enabledHrefs) return true;
-          if (q && !item.label.toLowerCase().includes(q)) return false;
-          if (enabledHrefs && !enabledHrefs.has(item.href)) return false;
-          return true;
-        }).map((item, idx) => {
-          if ('section' in item) {
-            if (collapsed) return null;
-            if (item.hub) {
-              return (
-                <Link key={idx} href={item.hub} className="flex items-center justify-between px-3 pt-4 pb-1 group">
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-slate-600 group-hover:text-slate-400 transition select-none">{item.section}</p>
-                  <ChevronRight className="h-3 w-3 text-slate-700 group-hover:text-slate-400 transition" />
-                </Link>
-              );
-            }
-            return (
-              <p key={idx} className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-slate-600 select-none">
-                {item.section}
-              </p>
-            );
-          }
-
-          const Icon = item.icon;
-          const isActive = item.active
-            ? item.active(pathname)
-            : (item.href !== '/dashboard' && pathname.startsWith(item.href));
-
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              title={collapsed ? item.label : undefined}
-              className={cn(
-                'flex items-center gap-2.5 mx-1.5 px-2.5 py-2 rounded-lg text-[13px] font-medium transition-all group relative',
-                isActive
-                  ? 'bg-blue-600/20 text-blue-300'
-                  : 'text-slate-400 hover:bg-white/6 hover:text-slate-200',
-                collapsed && 'justify-center mx-1'
-              )}
-            >
-              <Icon className={cn('h-4 w-4 flex-shrink-0', isActive ? 'text-blue-400' : 'text-slate-500 group-hover:text-slate-300')} />
-              {!collapsed && <span className="truncate">{item.label}</span>}
-              {!collapsed && item.badge && (
-                <span className="ml-auto text-[9px] font-bold bg-blue-500 text-white rounded-full px-1.5 py-0.5 leading-none">{item.badge}</span>
-              )}
-              {!collapsed && isActive && (
-                <span className="ml-auto h-1.5 w-1.5 rounded-full bg-blue-400 flex-shrink-0" />
-              )}
-              {collapsed && (
-                <span className="pointer-events-none absolute left-full ml-2 whitespace-nowrap text-xs bg-slate-800 text-slate-200 px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity z-50">
-                  {item.label}
-                </span>
-              )}
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* User + logout */}
-      <div className="border-t border-white/8 px-2.5 py-2.5">
-        {/* Niche badge */}
-        {!collapsed && niche && (
-          <div className="mb-2 flex items-center gap-2 px-1">
-            <Layers className="h-3.5 w-3.5 text-slate-500 flex-shrink-0" />
-            <span className="text-[10px] text-slate-500 truncate">{niche.name}-pakken</span>
-          </div>
-        )}
-        {!collapsed ? (
-          <div className="flex items-center gap-2.5">
-            <div className="h-7 w-7 rounded-full bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center flex-shrink-0">
-              <span className="text-white font-bold text-[10px]">{initials}</span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-semibold text-slate-200 truncate">{session?.user?.name || 'Bruker'}</p>
-              <p className="text-[10px] text-slate-500 truncate">{session?.user?.email || ''}</p>
-            </div>
-            <button
-              onClick={() => signOut({ callbackUrl: '/login' })}
-              className="p-1.5 rounded-md hover:bg-white/8 text-slate-500 hover:text-red-400 transition"
-              title="Logg ut"
-            >
-              <LogOut className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        ) : (
-          <button
-            onClick={() => signOut({ callbackUrl: '/login' })}
-            className="flex justify-center w-full py-1 hover:bg-white/8 rounded-md transition"
-            title="Logg ut"
-          >
-            <LogOut className="h-4 w-4 text-slate-500 hover:text-red-400" />
-          </button>
-        )}
-      </div>
-    </aside>
-  );
+  const initials = (session?.user?.name || 'FP').split(' ').map(word => word[0]).join('').toUpperCase().slice(0, 2);
+  return <aside className={cn('sticky top-0 flex h-screen shrink-0 flex-col overflow-y-auto bg-[#1c1c27] text-slate-200 transition-all', collapsed ? 'w-16' : 'w-[220px]')}>
+    <div className={cn('flex items-center gap-2.5 border-b border-white/10 px-3 py-4', collapsed && 'justify-center')}><span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-blue-600 text-xs font-black text-white">FP</span>{!collapsed && <div><p className="text-sm font-bold text-white">FlowPilot</p><p className="text-[10px] text-slate-500">Kundevekst</p></div>}<button onClick={() => setCollapsed(value => !value)} className={cn('ml-auto text-slate-500', collapsed && 'hidden')} aria-label="Skjul meny"><ChevronRight className="h-4 w-4 rotate-180" /></button></div>
+    {collapsed && <button onClick={() => setCollapsed(false)} className="flex justify-center py-3 text-slate-500" aria-label="Vis meny"><ChevronRight className="h-4 w-4" /></button>}
+    <nav className="flex-1 py-2"><Link href="/dashboard" className={linkClass(pathname === '/dashboard', collapsed)}><LayoutDashboard className="h-4 w-4 shrink-0" />{!collapsed && 'Oversikt'}</Link>{entries.map((entry, index) => 'section' in entry ? (!collapsed && <p key={`${entry.section}-${index}`} className="px-4 pb-1 pt-4 text-[10px] font-semibold uppercase tracking-widest text-slate-600">{entry.section}</p>) : <Link key={entry.href} href={entry.href} className={linkClass(pathname.startsWith(entry.href), collapsed)} title={collapsed ? entry.label : undefined}><entry.icon className="h-4 w-4 shrink-0" />{!collapsed && entry.label}</Link>)}</nav>
+    <div className="border-t border-white/10 p-3">{!collapsed && <div className="mb-3 flex items-center gap-2"><span className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">{initials}</span><div className="min-w-0"><p className="truncate text-xs font-semibold">{session?.user?.name || 'Bruker'}</p><p className="truncate text-[10px] text-slate-500">{session?.user?.email || ''}</p></div></div>}<button onClick={() => signOut({ callbackUrl: '/login' })} className={cn('flex w-full items-center gap-2 rounded-lg px-2 py-2 text-xs text-slate-500 hover:bg-white/5 hover:text-red-400', collapsed && 'justify-center')}><LogOut className="h-4 w-4" />{!collapsed && 'Logg ut'}</button></div>
+  </aside>;
 }
+
+function linkClass(active: boolean, collapsed: boolean) { return cn('mx-2 flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[13px] font-medium transition', active ? 'bg-blue-600/20 text-blue-300' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200', collapsed && 'justify-center'); }
