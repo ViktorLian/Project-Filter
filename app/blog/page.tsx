@@ -149,7 +149,7 @@ export default function BlogPage() {
       <section className="bg-slate-900 text-white py-16 px-4 text-center">
         <h2 className="text-2xl font-bold mb-3">Klar til å bruke det du har lest?</h2>
         <p className="text-slate-300 mb-6 max-w-md mx-auto">
-          Start en gratis 14-dagers prøveperiode av FlowPilot – ingen betalingskort nødvendig.
+          Prøv FlowPilot i 14 dager uten betalingskort. Velg abonnement dersom du vil fortsette.
         </p>
         <Link
           href="/register"
