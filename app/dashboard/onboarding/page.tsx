@@ -163,29 +163,20 @@ export default function OnboardingPage() {
                 <p className="text-slate-400 mt-1 text-sm">{matchedNiche.tagline}</p>
               </div>
 
-              {/* Features preview */}
+              {/* Industry setup preview */}
               <div className="rounded-xl bg-slate-800 border border-slate-700 p-4 mb-5">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-3">
-                  Dine topp-funksjoner
-                </p>
-                <div className="grid grid-cols-2 gap-2">
-                  {matchedNiche.nicheFeatures.slice(0, 6).map(f => (
-                    <div key={f.name} className="flex items-center gap-2 text-sm">
-                      <CheckCircle className="h-3.5 w-3.5 text-emerald-500 flex-shrink-0" />
-                      <span className="text-slate-300 truncate">{f.name}</span>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-xs font-semibold text-slate-300">Tilpasset oppsett</p>
+                <p className="mt-2 text-sm leading-6 text-slate-400">Bransjevalget tilpasser språk, anbefalinger og arbeidsflyter. Kjernen er det samme CRM-et for kontakter, henvendelser og oppfølging.</p>
               </div>
 
               {/* Price */}
               <div className="rounded-xl bg-gradient-to-r from-blue-900/40 to-cyan-900/40 border border-blue-700/40 p-4 mb-6 flex items-center justify-between">
                 <div>
-                  <p className="text-xs text-slate-400 mb-0.5">Tilpasset nisje-pakke</p>
-                  <p className="text-white font-bold">{matchedNiche.name}-pakken</p>
+                  <p className="text-xs text-slate-400 mb-0.5">Abonnement</p>
+                  <p className="text-white font-bold">Velges etter prøveperioden</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-xl font-extrabold text-white">{matchedNiche.priceMonthly.toLocaleString('nb-NO')} kr</p>
+                  <p className="text-xl font-extrabold text-white">Fra 899 kr</p>
                   <p className="text-xs text-slate-400">per måned</p>
                 </div>
               </div>
