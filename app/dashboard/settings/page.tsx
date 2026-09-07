@@ -2,9 +2,10 @@
 import { authOptions } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
 import Link from 'next/link';
-import { Settings, Building2, Receipt, CreditCard, Key, User, AlertTriangle, BarChart2, TrendingUp, BookOpen, Brain, Calculator, Target, ChevronRight } from 'lucide-react';
+import { Building2, CreditCard, User, AlertTriangle } from 'lucide-react';
 import SettingsEditor from '@/components/settings/SettingsEditor';
 import WebhookSettings from '@/components/settings/WebhookSettings';
+import { SUBSCRIPTION_PLANS } from '@/lib/stripe';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,17 +27,13 @@ export default async function SettingsPage() {
     user = userRes.data;
   }
 
-  const planNames: Record<string, string> = {
-    starter: 'Starter - 500 kr/mnd',
-    pro: 'Pro - 1 500 kr/mnd',
-    enterprise: 'Enterprise - 3 500 kr/mnd',
-  };
+  const plan = SUBSCRIPTION_PLANS[company?.subscription_plan as keyof typeof SUBSCRIPTION_PLANS];
 
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
         <h1 className="text-2xl font-bold text-slate-900">Innstillinger</h1>
-        <p className="text-slate-500 text-sm mt-0.5">Administrer konto, firma og fakturering</p>
+        <p className="text-slate-500 text-sm mt-0.5">Administrer konto, bedrift og kundevekst</p>
       </div>
 
       {/* Firm info */}
@@ -80,28 +77,6 @@ export default async function SettingsPage() {
         </div>
       </div>
 
-      {/* Invoice settings */}
-      <div className="rounded-xl border border-slate-200 bg-white p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <Receipt className="h-5 w-5 text-orange-600" />
-          <h2 className="font-semibold text-slate-800">Fakturainnstillinger</h2>
-        </div>
-        <div className="grid gap-3">
-          {[
-            { label: 'Kontonummer', val: company?.bank_account || '', tip: 'Brukes pa PDF-fakturaer' },
-            { label: 'KID-prefiks', val: company?.kid_prefix || '', tip: 'Eks: 2026 (arstall)' },
-            { label: 'Faktura e-post', val: company?.invoice_email || user?.email || '', tip: 'E-post for fakturavarsler' },
-          ].map(f => (
-            <div key={f.label}>
-              <label className="block text-xs font-medium text-slate-500 mb-1">{f.label}</label>
-              <div className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700">{f.val}</div>
-              {f.tip && <p className="text-xs text-slate-400 mt-0.5">{f.tip}</p>}
-            </div>
-          ))}
-        </div>
-        <p className="text-xs text-slate-400 mt-4">Kontakt support for a oppdatere bank- og KID-innstillinger.</p>
-      </div>
-
       {/* Google Review URL + SMS phone */}
       <SettingsEditor
         googleReviewUrl={company?.google_review_url || ''}
@@ -116,8 +91,8 @@ export default async function SettingsPage() {
         </div>
         <div className="flex items-center justify-between">
           <div>
-            <p className="font-semibold text-slate-800">{planNames[company?.subscription_plan] ?? 'Ingen aktiv plan'}</p>
-            <p className="text-xs text-slate-500 mt-0.5">14 dagers gratis prøveperiode inkludert</p>
+            <p className="font-semibold text-slate-800">{plan ? `${plan.name} – ${plan.price.toLocaleString('nb-NO')} kr/mnd` : 'Ingen aktiv plan'}</p>
+            <p className="text-xs text-slate-500 mt-0.5">Status: {company?.subscription_status === 'active' ? 'Aktivt abonnement' : company?.subscription_status === 'trialing' ? 'Prøveperiode' : 'Ikke aktivt'}</p>
           </div>
           <Link href="/dashboard/billing"
             className="rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors">
@@ -151,35 +126,6 @@ export default async function SettingsPage() {
       {/* Webhook section */}
       <WebhookSettings />
 
-      {/* Advanced tools / Business analysis */}
-      <div className="rounded-xl border border-slate-200 bg-white p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <BarChart2 className="h-5 w-5 text-indigo-600" />
-          <h2 className="font-semibold text-slate-800">Avanserte verktøy</h2>
-        </div>
-        <p className="text-xs text-slate-500 mb-4">Strategiske analyseverktøy for å vokse og optimere bedriften din.</p>
-        <div className="grid gap-2">
-          {[
-            { href: '/dashboard/acquisition-readiness', icon: Target, label: 'Bedrift klar for salg', desc: 'Vurder om bedriften er klar for oppkjøp eller salg' },
-            { href: '/dashboard/win-loss', icon: TrendingUp, label: 'Vinn/tap-analyse', desc: 'Forstå hvorfor du vinner og taper jobber' },
-            { href: '/dashboard/growth-playbook', icon: BookOpen, label: 'Vekstspillebok', desc: 'Konkrete tiltak for å skalere bedriften' },
-            { href: '/dashboard/business-memory', icon: Brain, label: 'Forretningshjerne', desc: 'Lagre og hent opp kunnskap om bedriften' },
-            { href: '/dashboard/roi-tracker', icon: Calculator, label: 'ROI-kalkulator', desc: 'Beregn avkastning på tiltak og investeringer' },
-          ].map(({ href, icon: Icon, label, desc }) => (
-            <Link key={href} href={href}
-              className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition group border border-transparent hover:border-slate-200">
-              <div className="h-9 w-9 flex-shrink-0 rounded-lg bg-indigo-50 flex items-center justify-center">
-                <Icon className="h-4 w-4 text-indigo-600" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-slate-800">{label}</p>
-                <p className="text-xs text-slate-500">{desc}</p>
-              </div>
-              <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-slate-500 transition" />
-            </Link>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
