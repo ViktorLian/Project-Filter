@@ -1,139 +1,44 @@
-﻿import { getServerSession } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { TrendingUp, Users, CheckCircle, XCircle, BarChart2, Star } from 'lucide-react';
-import { LeadStatusDonut } from '@/components/analytics/LeadStatusDonut';
+import { BarChart3, FileText, MessageSquare, Star, Users } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
-const STATUS_NO: Record<string, string> = {
-  NEW: 'Ny',
-  REVIEWED: 'Gjennomgatt',
-  ACCEPTED: 'Akseptert',
-  REJECTED: 'Avvist',
-  IN_PROGRESS: 'Pagaende',
-  ARCHIVED: 'Arkivert',
-};
-
-const STATUS_COLORS: Record<string, string> = {
-  NEW: 'bg-blue-500',
-  REVIEWED: 'bg-yellow-400',
-  ACCEPTED: 'bg-emerald-500',
-  REJECTED: 'bg-red-400',
-  IN_PROGRESS: 'bg-purple-500',
-  ARCHIVED: 'bg-slate-300',
-};
-
 export default async function AnalyticsPage() {
   const session = await getServerSession(authOptions);
+  const companyId = (session?.user as any)?.companyId;
+  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+  let leads: any[] = [], customers: any[] = [], surveys: any[] = [], seoItems: any[] = [];
 
-  let leads: any[] = [];
-  let invoices: any[] = [];
-
-  if (session) {
-    const companyId = (session.user as any).companyId;
-    const supabase = createAdminClient();
-    const [leadsRes, invoicesRes] = await Promise.all([
-      supabase.from('leads').select('id, status, score, created_at').eq('company_id', companyId),
-      supabase.from('invoices').select('id, amount, status, created_at').eq('company_id', companyId),
+  if (companyId) {
+    const db = createAdminClient();
+    const [leadRes, customerRes, surveyRes, seoRes] = await Promise.all([
+      db.from('leads').select('id,status,created_at').eq('company_id', companyId).gte('created_at', since),
+      db.from('customers').select('id,created_at').eq('company_id', companyId).gte('created_at', since),
+      db.from('feedback_surveys').select('id,sent_at,completed_at,question_1_rating,testimonial_approved,created_at').eq('company_id', companyId).gte('created_at', since),
+      db.from('seo_content_items').select('id,status,generated_at,published_at').eq('company_id', companyId).gte('generated_at', since),
     ]);
-    leads = leadsRes.data ?? [];
-    invoices = invoicesRes.data ?? [];
+    leads = leadRes.data ?? [];
+    customers = customerRes.data ?? [];
+    surveys = surveyRes.data ?? [];
+    seoItems = seoRes.data ?? [];
   }
 
-  const totalLeads = leads.length;
-  const accepted = leads.filter(l => l.status === 'ACCEPTED').length;
-  const rejected = leads.filter(l => l.status === 'REJECTED').length;
-  const acceptanceRate = totalLeads ? Math.round((accepted / totalLeads) * 100) : 0;
-  const avgScore = leads.length > 0 ? Math.round(leads.reduce((s, l) => s + (l.score ?? 0), 0) / leads.length) : 0;
-
-  const totalRevenue = invoices.filter(i => i.status === 'paid').reduce((s, i) => s + (i.amount ?? 0), 0);
-  const outstanding = invoices.filter(i => i.status === 'unpaid').reduce((s, i) => s + (i.amount ?? 0), 0);
-
-  const stats = [
-    { label: 'Totale leads', val: totalLeads, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', trend: '+12%' },
-    { label: 'Akseptert rate', val: `${acceptanceRate}%`, icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50', trend: `${accepted} av ${totalLeads}` },
-    { label: 'Gj.snitt score', val: avgScore, icon: Star, color: 'text-amber-600', bg: 'bg-amber-50', trend: 'av 100 poeng' },
-    { label: 'Betalt inntekt', val: `${(totalRevenue / 1000).toFixed(0)}K kr`, icon: TrendingUp, color: 'text-purple-600', bg: 'bg-purple-50', trend: `${(outstanding / 1000).toFixed(0)}K utestående` },
+  const won = leads.filter(item => ['ACCEPTED', 'WON', 'CUSTOMER'].includes(String(item.status).toUpperCase())).length;
+  const answers = surveys.filter(item => item.completed_at);
+  const average = answers.length ? (answers.reduce((sum, item) => sum + Number(item.question_1_rating || 0), 0) / answers.length).toFixed(1) : '–';
+  const published = seoItems.filter(item => item.published_at || String(item.status).toLowerCase() === 'published').length;
+  const cards = [
+    { label: 'Nye henvendelser', value: leads.length, detail: `${won} vunnet eller akseptert`, icon: MessageSquare, color: 'text-blue-600', bg: 'bg-blue-50' },
+    { label: 'Nye kontakter', value: customers.length, detail: 'Registrert siste 30 dager', icon: Users, color: 'text-violet-600', bg: 'bg-violet-50' },
+    { label: 'Anmeldelsesforespørsler', value: surveys.filter(item => item.sent_at).length, detail: `${answers.length} svar · snitt ${average}/10`, icon: Star, color: 'text-amber-600', bg: 'bg-amber-50' },
+    { label: 'Publisert SEO-innhold', value: published, detail: `${seoItems.length} generert siste 30 dager`, icon: FileText, color: 'text-emerald-600', bg: 'bg-emerald-50' },
   ];
 
-  const statuses = ['NEW', 'REVIEWED', 'ACCEPTED', 'REJECTED', 'IN_PROGRESS', 'ARCHIVED'];
-
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Analyse</h1>
-        <p className="text-slate-500 text-sm mt-0.5">Oversikt over leads, konvertering og inntekt</p>
-      </div>
-
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((s, i) => (
-          <div key={i} className="rounded-xl border border-slate-200 bg-white p-4">
-            <div className={`h-9 w-9 rounded-xl ${s.bg} flex items-center justify-center mb-3`}>
-              <s.icon className={`h-5 w-5 ${s.color}`} />
-            </div>
-            <p className="text-2xl font-bold text-slate-900">{s.val}</p>
-            <p className="text-xs text-slate-500 mt-0.5">{s.label}</p>
-            <p className="text-xs font-medium text-slate-400 mt-1">{s.trend}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="grid lg:grid-cols-2 gap-6">
-        <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <BarChart2 className="h-5 w-5 text-blue-600" />
-            <h2 className="font-semibold text-slate-800">Lead status fordeling</h2>
-          </div>
-          <LeadStatusDonut data={[
-            { name: 'Ny',         value: leads.filter(l => l.status === 'NEW').length,         color: '#3b82f6' },
-            { name: 'Akseptert',  value: leads.filter(l => l.status === 'ACCEPTED').length,    color: '#10b981' },
-            { name: 'Avvist',     value: leads.filter(l => l.status === 'REJECTED').length,    color: '#ef4444' },
-            { name: 'Pagaende',   value: leads.filter(l => l.status === 'IN_PROGRESS').length, color: '#8b5cf6' },
-            { name: 'Gjennomgatt',value: leads.filter(l => l.status === 'REVIEWED').length,    color: '#f59e0b' },
-          ]} />
-        </div>
-
-        <div className="rounded-xl border border-slate-200 bg-white p-5">
-          <div className="flex items-center gap-2 mb-4">
-            <TrendingUp className="h-5 w-5 text-emerald-600" />
-            <h2 className="font-semibold text-slate-800">Innsikt</h2>
-          </div>
-          <div className="space-y-3">
-            {[
-              { icon: Users, color: 'text-blue-600', bg: 'bg-blue-50', text: `Du har samlet inn ${totalLeads} henvendelser totalt` },
-              { icon: CheckCircle, color: 'text-emerald-600', bg: 'bg-emerald-50', text: `${acceptanceRate}% aksepteringsrate` },
-              { icon: XCircle, color: 'text-red-500', bg: 'bg-red-50', text: `${rejected} leads avvist` },
-              { icon: Star, color: 'text-amber-600', bg: 'bg-amber-50', text: `Gjennomsnitts lead-score: ${avgScore} poeng av 100` },
-              { icon: TrendingUp, color: 'text-purple-600', bg: 'bg-purple-50', text: `${(outstanding / 1000).toFixed(0)} 000 kr utestående på fakturaer` },
-            ].map((item, i) => (
-              <div key={i} className="flex items-start gap-3 rounded-lg p-3 bg-slate-50">
-                <div className={`h-7 w-7 rounded-lg ${item.bg} flex items-center justify-center flex-shrink-0`}>
-                  <item.icon className={`h-4 w-4 ${item.color}`} />
-                </div>
-                <p className="text-sm text-slate-700">{item.text}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="rounded-xl border border-slate-200 bg-white p-5">
-        <h2 className="font-semibold text-slate-800 mb-4">Faktura oversikt</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { label: 'Totale fakturaer', val: invoices.length },
-            { label: 'Betalt', val: invoices.filter(i => i.status === 'paid').length },
-            { label: 'Utestående', val: invoices.filter(i => i.status === 'unpaid').length },
-            { label: 'Forfalt', val: invoices.filter(i => i.status === 'overdue').length },
-          ].map((s, i) => (
-            <div key={i} className="text-center p-3 rounded-lg bg-slate-50">
-              <p className="text-2xl font-bold text-slate-900">{s.val}</p>
-              <p className="text-xs text-slate-500 mt-0.5">{s.label}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+  return <div className="mx-auto max-w-5xl space-y-6">
+    <header><p className="text-sm font-semibold text-blue-600">Siste 30 dager</p><h1 className="mt-1 text-2xl font-bold text-slate-900">Resultatrapport</h1><p className="mt-1 text-sm text-slate-600">Ekte aktivitet fra bedriftens henvendelser, kundeoppfølging, anmeldelser og SEO.</p></header>
+    <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">{cards.map(card => <article key={card.label} className="rounded-xl border border-slate-200 bg-white p-5"><div className={`mb-4 flex h-10 w-10 items-center justify-center rounded-xl ${card.bg}`}><card.icon className={`h-5 w-5 ${card.color}`} /></div><p className="text-3xl font-bold text-slate-900">{card.value}</p><p className="mt-1 text-sm font-semibold text-slate-800">{card.label}</p><p className="mt-1 text-xs text-slate-500">{card.detail}</p></article>)}</section>
+    <section className="rounded-xl border border-slate-200 bg-white p-6"><div className="flex items-center gap-3"><BarChart3 className="h-5 w-5 text-blue-600" /><h2 className="font-semibold text-slate-900">Slik brukes rapporten</h2></div><div className="mt-4 grid gap-3 text-sm text-slate-600 md:grid-cols-3"><p className="rounded-lg bg-slate-50 p-4"><strong className="block text-slate-900">Dokumenter arbeidet</strong>Vis hva FlowPilot faktisk har samlet inn, sendt og publisert.</p><p className="rounded-lg bg-slate-50 p-4"><strong className="block text-slate-900">Følg utviklingen</strong>Sammenlign hver måned og prioriter tiltakene som gir flere kunder.</p><p className="rounded-lg bg-slate-50 p-4"><strong className="block text-slate-900">Automatisk oppsummering</strong>Når månedsrapport er aktivert, sendes en kort e-post med lenke til denne oversikten.</p></div></section>
+  </div>;
 }
