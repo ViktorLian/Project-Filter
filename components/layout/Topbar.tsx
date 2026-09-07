@@ -17,7 +17,7 @@ const LABELS: Record<string, string> = {
   '/dashboard/campaigns': 'Markedsføring',
   '/dashboard/workflows': 'Automatisering',
   '/dashboard/forms': 'Skjemaer',
-  '/dashboard/review-gatekeeper': 'Omdømme',
+  '/dashboard/feedback': 'Anmeldelser',
   '/dashboard/analytics': 'Analyse',
   '/dashboard/ai-assistant': 'AI Assistent',
   '/dashboard/google-maps': 'Google / SEO',

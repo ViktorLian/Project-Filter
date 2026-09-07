@@ -15,7 +15,7 @@ const entries = [
   { section: 'Synlighet' },
   { href: '/dashboard/google-maps', label: 'Google-profil', icon: Map },
   { href: '/dashboard/auto-seo', label: 'SEO og innhold', icon: Search },
-  { href: '/dashboard/review-gatekeeper', label: 'Anmeldelser', icon: Star },
+  { href: '/dashboard/feedback', label: 'Anmeldelser', icon: Star },
   { section: 'Oppfølging' },
   { href: '/dashboard/workflows', label: 'Automatiseringer', icon: Zap },
   { href: '/dashboard/forms', label: 'Skjemaer', icon: FileText },
