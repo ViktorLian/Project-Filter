@@ -22,6 +22,11 @@ const nextConfig = {
         destination: '/blog/nettside-til-leads',
         permanent: true,
       },
+      {
+        source: '/dashboard/review-gatekeeper',
+        destination: '/dashboard/feedback',
+        permanent: false,
+      },
     ];
   },
 };
