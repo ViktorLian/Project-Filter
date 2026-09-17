@@ -938,5 +938,15 @@
     "replied": false,
     "bounced": false,
     "negative_reply": false
+  },
+  "605a7baede844d278b89dc95ae0a9123@sentry-next.wixpress.com": {
+    "company": "HALDEN BASKETBALLKLUBB",
+    "branch": "barberer",
+    "city": "HALDEN",
+    "sent_at": "2026-09-17T13:29:47.954516",
+    "seq_step": 1,
+    "replied": false,
+    "bounced": false,
+    "negative_reply": false
   }
 }
